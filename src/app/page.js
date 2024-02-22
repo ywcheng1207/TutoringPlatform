@@ -1,11 +1,13 @@
-import styles from "./page.module.css";
+import styles from './page.module.css'
 
-export default function Home() {
+const Home = () => {
   return (
     <main className={styles.main}>
       <div className={styles.center}>
         develope
       </div>
     </main>
-  );
+  )
 }
+
+export default Home
