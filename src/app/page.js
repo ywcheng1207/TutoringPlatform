@@ -1,6 +1,6 @@
 import styles from './page.module.css'
 
-const Home = () => {
+const RootPage = () => {
   return (
     <main className={styles.main}>
       <div className={styles.center}>
@@ -10,4 +10,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default RootPage

@@ -1,7 +1,10 @@
-import { Inter } from 'next/font/google'
+import { Inter, Comforter, Noto_Sans_TC } from 'next/font/google'
 import './globals.css'
+import { Provider } from './provider'
+import Header from '@/components/Header'
 
-const inter = Inter({ subsets: ['latin'] })
+// const engFontType = Comforter({ weight: ['400'], subsets: ['latin'] })
+const cnFontType = Noto_Sans_TC({ weight: ['400', '700', '900'], subsets: ['latin'] })
 
 export const metadata = {
   title: 'Create Next App',
@@ -11,7 +14,12 @@ export const metadata = {
 const RootLayout = ({ children }) => {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={cnFontType.className}>
+        <Provider>
+          <Header />
+          {children}
+        </Provider>
+      </body>
     </html>
   )
 }
