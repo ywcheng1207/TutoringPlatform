@@ -2,6 +2,7 @@ import { Inter, Comforter, Noto_Sans_TC } from 'next/font/google'
 import './globals.css'
 import { Provider } from './provider'
 import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 
 // const engFontType = Comforter({ weight: ['400'], subsets: ['latin'] })
 const cnFontType = Noto_Sans_TC({ weight: ['400', '700', '900'], subsets: ['latin'] })
@@ -16,8 +17,11 @@ const RootLayout = ({ children }) => {
     <html lang="en">
       <body className={cnFontType.className}>
         <Provider>
-          <Header />
-          {children}
+          <div className='flex flex-col justify-between h-screen'>
+            <Header />
+            {children}
+            <Footer />
+          </div>
         </Provider>
       </body>
     </html>

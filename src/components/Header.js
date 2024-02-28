@@ -28,7 +28,7 @@ const Header = () => {
   console.log(test)
 
   return (
-    <div>
+    <div className="bg-neutral-200 h-[70px]">
       {
         navLinks.map((link) => {
           const isActive = pathname.startsWith(link.href)
