@@ -1,14 +1,22 @@
+'use client'
 import Link from "next/link"
+import { useRouter } from 'next/navigation'
+import { Button } from "antd"
 
 export default function () {
+  const router = useRouter()
 
   return (
     <div className="h-full flex flex-col">
       歡迎光臨
-      <Link href='/home'
-        className="bg-[#66BFFF] text-[#fff] py-2 max-h-[35px] flex justify-center items-center rounded-[5px]">
-        登入按鈕
-      </Link>
+      <Button
+        style={{ color: '#fff' }}
+        onClick={() => {
+          router.push('/home')
+        }}
+      >
+        登入
+      </Button>
     </div>
   )
 }

@@ -43,9 +43,6 @@ const Header = () => {
           )
         })
       }
-      <div>
-        {test}
-      </div>
     </div>
   )
 }
