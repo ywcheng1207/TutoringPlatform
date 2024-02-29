@@ -22,7 +22,7 @@ const RootLayout = ({ children }) => {
           theme={{
             token: {
               colorPrimary: '#66BFFF',
-              colorBgContainer: '#66BFFF',
+              // colorBgContainer: '#66BFFF',
               borderRadius: 5
               // colorbgho: 'black'
             }
@@ -30,9 +30,11 @@ const RootLayout = ({ children }) => {
         >
           <AntdRegistry>
             <Provider>
-              <div className='flex flex-col justify-between min-h-screen'>
+              <div className='flex flex-col justify-between min-h-screen gap-5'>
                 <Header />
-                {children}
+                <div className='flex-1'>
+                  {children}
+                </div>
                 <Footer />
               </div>
             </Provider>

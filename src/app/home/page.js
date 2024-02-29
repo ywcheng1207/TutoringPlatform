@@ -1,5 +1,6 @@
 import test from '@/assets/icon-default-image.svg'
 import Image from 'next/image'
+import { Select } from 'antd'
 
 //
 export const metadata = {
@@ -22,9 +23,27 @@ const Home = async () => {
   console.log('資料', data)
 
   return (
-    <div>
-      首頁
-      <Image src={test} alt='' />
+    <div className='bg-yellow'>
+      <div className='flex flex-col gap-5'>
+        <Select placeholder='課程' style={{ width: '100%' }} />
+        <Select placeholder='教師國籍' style={{ width: '100%' }} />
+        <div className='border-[1px] border-solid border-[#66BFFF] rounded-[3px] p-3 flex flex-col gap-3'>
+          <div className='flex'>
+            <div className='flex-1'>
+              <div>
+                照片
+              </div>
+            </div>
+            <div className='flex-1 justify-start'>
+              <div>某位老師</div>
+              <div>非洲</div>
+            </div>
+          </div>
+          <div>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
