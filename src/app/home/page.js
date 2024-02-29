@@ -1,6 +1,11 @@
-import test from '@/assets/icon-default-image.svg'
+//
 import Image from 'next/image'
-import { Select } from 'antd'
+import { Select, Input, Button, Tooltip } from 'antd'
+
+//
+import TeacherCard from '@/components/TeacherCard'
+import iconBell from '@/assets/icon-bell.svg'
+import NoPhoto from '@/components/NoPhoto'
 
 //
 export const metadata = {
@@ -9,43 +14,65 @@ export const metadata = {
 }
 
 //
-const testFetch = async () => {
-  const res = await fetch('https://jsonplaceholder.typicode.com/todos/1')
-  const data = await res.json()
-  return data
-}
+// const testFetch = async () => {
+//   const res = await fetch('https://jsonplaceholder.typicode.com/todos/1')
+//   const data = await res.json()
+//   return data
+// }
 
 //
 const Home = async () => {
-  // throw new Error('error test')
-  const data = await testFetch()
 
-  console.log('資料', data)
+  // throw new Error('error test')
+  // const data = await testFetch()
+
+  // console.log('資料', data)
+
+  const handleNavigate = ({ id }) => {
+    console.log(id)
+  }
 
   return (
     <div className='bg-yellow'>
       <div className='flex flex-col gap-5'>
-        <Select placeholder='課程' style={{ width: '100%' }} />
-        <Select placeholder='教師國籍' style={{ width: '100%' }} />
-        <div className='border-[1px] border-solid border-[#66BFFF] rounded-[3px] p-3 flex flex-col gap-3'>
-          <div className='flex'>
-            <div className='flex-1'>
-              <div>
-                照片
-              </div>
-            </div>
-            <div className='flex-1 justify-start'>
-              <div>某位老師</div>
-              <div>非洲</div>
-            </div>
+        <Select placeholder='課程' style={{ width: '100%' }} showSearch={true} />
+        <Select placeholder='教師國籍' style={{ width: '100%' }} showSearch={true} />
+        <Input
+          placeholder='搜尋老師的名字' style={{ width: '100%' }}
+          suffix={<Button style={{ color: '#fff', background: '#66BFFF' }}>搜尋</Button>}
+        />
+        <div className='min-h-[200px] border-[1px] border-solid border-[#CCC] rounded-[3px] p-3'>
+          <div className='bg-[#DDD] text-[#fff] py-1 rounded-sm flex justify-center gap-2 items-center mb-3'>
+            <Image src={iconBell} alt='bell' />
+            <div>學習時數排行</div>
           </div>
-          <div>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+          <div className='flex flex-wrap gap-5'>
+            <NoPhoto size='avatar' />
+            <NoPhoto size='avatar' />
+            <NoPhoto size='avatar' />
+            <NoPhoto size='avatar' />
+            <NoPhoto size='avatar' />
+            <NoPhoto size='avatar' />
+            <NoPhoto size='avatar' />
+            <NoPhoto size='avatar' />
+            <NoPhoto size='avatar' />
+            <NoPhoto size='avatar' />
+            <NoPhoto size='avatar' />
           </div>
         </div>
+        <TeacherCard id='1' />
+        <TeacherCard id='2' />
+        <TeacherCard id='3' />
+        <TeacherCard id='4' />
+        <TeacherCard id='5' />
+        <TeacherCard id='6' />
+        <TeacherCard id='7' />
+        <TeacherCard id='8' />
       </div>
     </div>
   )
 }
 
 export default Home
+
+
