@@ -1,8 +1,8 @@
 'use client'
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { useContext } from "react"
-import { mainContext } from "@/context/mainContext"
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useContext } from 'react'
+import { mainContext } from '@/context/mainContext'
 
 const navLinks = [
   {

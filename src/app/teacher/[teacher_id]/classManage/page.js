@@ -1,7 +1,7 @@
-export default function ({ params }) {
-  const teacher_id = params.teacher_id
+export default function ClassManage({ params }) {
+  const teacherId = params.teacher_id
 
   return (
-    <div>編輯  {teacher_id}  老師的課程</div>
+    <div>編輯  {teacherId}  老師的課程</div>
   )
 }

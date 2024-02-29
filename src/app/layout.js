@@ -23,7 +23,7 @@ const RootLayout = ({ children }) => {
             token: {
               colorPrimary: '#66BFFF',
               colorBgContainer: '#66BFFF',
-              borderRadius: 5,
+              borderRadius: 5
               // colorbgho: 'black'
             }
           }}

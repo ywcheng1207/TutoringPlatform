@@ -24,7 +24,7 @@ const Home = async () => {
   return (
     <div>
       首頁
-      <Image src={test} alt=''/>
+      <Image src={test} alt='' />
     </div>
   )
 }

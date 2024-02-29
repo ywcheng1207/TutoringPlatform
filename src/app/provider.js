@@ -1,6 +1,6 @@
 'use client'
 
-import { MainContextProvider } from "@/context/mainContext"
+import { MainContextProvider } from '@/context/mainContext'
 
 export function Provider({ children }) {
   return (

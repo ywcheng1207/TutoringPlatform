@@ -1,9 +1,9 @@
 'use client'
-import Link from "next/link"
+// import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Button } from "antd"
+import { Button } from 'antd'
 
-export default function () {
+function SignIn() {
   const router = useRouter()
 
   return (
@@ -20,3 +20,5 @@ export default function () {
     </div>
   )
 }
+
+export default SignIn
