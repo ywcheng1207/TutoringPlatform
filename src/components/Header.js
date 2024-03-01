@@ -13,7 +13,6 @@ import iconSignOut from '@/assets/icon-sign-out.svg'
 import iconBurger from '@/assets/icon-burger.svg'
 import iconClose from '@/assets/icon-close.svg'
 
-
 //
 const Header = () => {
   const path = usePathname()
@@ -30,7 +29,7 @@ const Header = () => {
   }
 
   return (
-    <div className="bg-neutral-200 h-[70px] px-3 flex item-center justify-between">
+    <div className="bg-neutral-200 h-[80px] px-3 flex item-center justify-between">
       <div className='flex item-center gap-3'>
         <Image src={iconLogo} alt='logo' height={50} />
         <div className='items-center gap-3 hidden md:flex'>

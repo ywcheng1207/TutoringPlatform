@@ -21,7 +21,7 @@ const TeacherCard = ({ id }) => {
           <NoPhoto size='small' />
         </div>
         <div className='flex-1 justify-start'>
-          <div>某位老師</div>
+          <div>某位老師{id}</div>
           <div>非洲</div>
         </div>
       </div>
