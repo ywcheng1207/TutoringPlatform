@@ -1,79 +1,183 @@
 'use client'
 
 //
-import { Input, Form } from 'antd'
+import { useState } from 'react'
+import Image from 'next/image'
+import { Input, Select, Form, Button, Radio, Upload } from 'antd'
+import { useRouter } from 'next/navigation'
 
 //
 import NoPhoto from '@/components/NoPhoto'
 
 //
+import iconCamera from '@/assets/icon-camera.svg'
+
+//
 export default function EditTeacher({ params }) {
   const teacherId = params.teacher_id
+  const router = useRouter()
+  const [fileList, setFileList] = useState([])
+  const [imageURL, setImageURL] = useState(null)
 
-  const handleSignIn = (e) => {
-    console.table(e)
+  const handleUploadChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList)
+    if (newFileList.length > 0) {
+      const latestFile = newFileList[newFileList.length - 1]
+      if (latestFile.originFileObj) {
+        const fileURL = URL.createObjectURL(latestFile.originFileObj)
+        setImageURL(fileURL) // 保存圖片URL以便顯示
+        console.log(fileURL) // 輸出查看URL是否正確
+      }
+    } else {
+      setImageURL(null) // 清除圖片URL
+    }
+  }
+
+  const handleSubmitTeacherInfo = (e) => {
+    console.log(e.upload)
   }
 
   return (
     <div>
-      使用者{teacherId}正在編輯個人的老師資訊
       <Form
-        onFinish={handleSignIn}
         className="flex flex-col items-center gap-2"
         layout='vertical'
         colon={false}
+        requiredMark={false}
+        onFinish={handleSubmitTeacherInfo}
       >
-        <NoPhoto size='big' />
-        <div className="relative w-full">
-          <Form.Item
-            name='teacherName'
-            rules={[
-              {
-                required: true,
-                message: '請輸入您的名字'
-              }
-            ]}
-            style={{ width: '100%' }}
-          >
-            <Input
-              placeholder='請輸入您的名字'
-              style={{ width: '100%', paddingLeft: 125, height: 30 }}
-            />
-          </Form.Item>
-          <div className="absolute left-[1px] top-[2px] h-[28px] w-[120px] bg-[#CCC] text-[#FFF] flex justify-center items-center text-[18px] rounded-l-[5px]">
-            名字
-          </div>
-        </div>
-        <div className="relative w-full">
-          <Form.Item
-            name='teacherCountry'
-            rules={[
-              {
-                required: true,
-                message: '請輸入您的國籍'
-              }
-            ]}
-            style={{ width: '100%' }}
-          >
-            <Input
-              placeholder='請輸入您的國籍'
-              style={{ width: '100%', paddingLeft: 125, height: 30 }}
-            />
-          </Form.Item>
-          <div className="absolute left-[1px] top-[2px] h-[28px] w-[120px] bg-[#CCC] text-[#FFF] flex justify-center items-center text-[18px] rounded-l-[5px]">
-            國籍
-          </div>
-        </div>
         <Form.Item
-          style={{ width: '100%', position: 'relative', background: '#CCC', paddingTop: 5, borderBottomRightRadius: 10, borderBottomLeftRadius: 10 }}
-          label={<div className='flex justify-center absolute left-0 top-0 w-screen text-white'>自我介紹</div>}
+          name="upload"
+          getValueFromEvent={({ fileList: newFileList }) => newFileList}
+          rules={[
+            {
+              required: true,
+              message: '請上傳照片'
+            }
+          ]}
+        >
+          <Upload
+            fileList={fileList}
+            onChange={handleUploadChange}
+            showUploadList={false}
+          >
+            {imageURL
+              ? <div className='p-3 bg-[#ccc]'>
+                <Image src={imageURL} alt='upload' width={200} height={200} />
+              </div>
+              : <div className='relative'>
+                <NoPhoto size='big' />
+                <Image src={iconCamera} alt='camera' className='absolute bottom-2 right-2' />
+              </div>
+            }
+          </Upload>
+        </Form.Item>
+        <Form.Item
+          name='teacherName'
+          style={{ width: '100%' }}
+          label='姓名'
+          rules={[
+            {
+              required: true,
+              message: '請填入姓名'
+            }
+          ]}
+        >
+          <Input placeholder='請填入姓名' />
+        </Form.Item>
+        <Form.Item
+          name='teacherCountry'
+          style={{ width: '100%' }}
+          label='國籍'
+          rules={[
+            {
+              required: true,
+              message: '請選擇國籍'
+            }
+          ]}
+        >
+          <Select showSearch placeholder='請選擇國籍'>
+            <Select.Option value='臺灣'>臺灣</Select.Option>
+            <Select.Option value='美國'>美國</Select.Option>
+            <Select.Option value='非洲'>非洲</Select.Option>
+          </Select>
+        </Form.Item>
+        <Form.Item
+          name='about'
+          style={{ width: '100%' }}
+          label='自我介紹'
+          rules={[
+            {
+              required: true,
+              message: '請填入自我介紹'
+            }
+          ]}
         >
           <Input.TextArea
             style={{ width: '100%', height: 150, resize: 'none' }}
             showCount
             maxLength={100}
+            placeholder='請填入自我介紹'
           />
         </Form.Item>
+        <Form.Item
+          name='teachStyle'
+          style={{ width: '100%' }}
+          label='教學風格'
+          rules={[
+            {
+              required: true,
+              message: '請填入教學風格'
+            }
+          ]}
+        >
+          <Input.TextArea
+            style={{ width: '100%', height: 150, resize: 'none' }}
+            showCount
+            maxLength={100}
+            placeholder='請填入教學風格'
+          />
+        </Form.Item>
+        <div className='w-full'>
+          <div className=''>課程種類</div>
+          <Form.Item
+            name="teachType"
+            style={{ width: '100%' }}
+            rules={[
+              {
+                required: true,
+                message: '請選擇至少一項課程種類'
+              }
+            ]}
+          >
+            <Radio.Group>
+              <Radio value="1">生活英文</Radio>
+              <Radio value="2">旅遊英文</Radio>
+              <Radio value="3">商業英文</Radio>
+              <Radio value="4">兒童英文</Radio>
+            </Radio.Group>
+          </Form.Item>
+        </div>
+        <div className='flex flex-col justify-between md:flex-row-reverse w-full gap-3'>
+          <div className='min-w-[150px]'>
+            <Button
+              block
+              style={{ color: '#fff', background: '#66BFFF' }}
+              htmlType="submit"
+            >
+              提交
+            </Button>
+          </div>
+          <div className='min-w-[150px]'>
+            <Button
+              block
+              style={{ color: '#66BFFF' }}
+              onClick={() => router.push('/home')}
+            >
+              返回
+            </Button>
+          </div>
+        </div>
       </Form>
     </div>
   )

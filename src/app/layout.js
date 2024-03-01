@@ -2,6 +2,7 @@ import { Inter, Comforter, Noto_Sans_TC } from 'next/font/google'
 import './globals.css'
 import { ConfigProvider, message } from 'antd'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
+import zhTW from 'antd/lib/locale/zh_TW'
 import { Provider } from './provider'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -19,6 +20,7 @@ const RootLayout = ({ children }) => {
     <html lang="en">
       <body className={cnFontType.className}>
         <ConfigProvider
+          locale={zhTW}
           theme={{
             token: {
               colorPrimary: '#66BFFF',
@@ -32,7 +34,7 @@ const RootLayout = ({ children }) => {
             <Provider>
               <div className='flex flex-col justify-between min-h-screen gap-5'>
                 <Header />
-                <div className='flex-1'>
+                <div className='flex-1 w-full px-3 md:mx-auto md:max-w-[1280px] md:px-10'>
                   {children}
                 </div>
                 <Footer />
