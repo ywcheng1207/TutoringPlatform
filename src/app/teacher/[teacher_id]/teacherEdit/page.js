@@ -1,10 +1,10 @@
 'use client'
 
 //
-import { Input, Form } from "antd"
+import { Input, Form } from 'antd'
 
 //
-import NoPhoto from "@/components/NoPhoto"
+import NoPhoto from '@/components/NoPhoto'
 
 //
 export default function EditTeacher({ params }) {
@@ -20,9 +20,11 @@ export default function EditTeacher({ params }) {
       <Form
         onFinish={handleSignIn}
         className="flex flex-col items-center gap-2"
+        layout='vertical'
+        colon={false}
       >
         <NoPhoto size='big' />
-        <div className="relative">
+        <div className="relative w-full">
           <Form.Item
             name='teacherName'
             rules={[
@@ -42,7 +44,7 @@ export default function EditTeacher({ params }) {
             名字
           </div>
         </div>
-        <div className="relative">
+        <div className="relative w-full">
           <Form.Item
             name='teacherCountry'
             rules={[
@@ -62,6 +64,16 @@ export default function EditTeacher({ params }) {
             國籍
           </div>
         </div>
+        <Form.Item
+          style={{ width: '100%', position: 'relative', background: '#CCC', paddingTop: 5, borderBottomRightRadius: 10, borderBottomLeftRadius: 10 }}
+          label={<div className='flex justify-center absolute left-0 top-0 w-screen text-white'>自我介紹</div>}
+        >
+          <Input.TextArea
+            style={{ width: '100%', height: 150, resize: 'none' }}
+            showCount
+            maxLength={100}
+          />
+        </Form.Item>
       </Form>
     </div>
   )
