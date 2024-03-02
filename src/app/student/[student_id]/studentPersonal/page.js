@@ -39,8 +39,14 @@ export default function StudentPersonal({ params }) {
       <div className='w-full flex flex-col gap-3'>
         <div>進行中的課程</div>
         <div className='flex flex-col gap-3 md:pl-5'>
-          <div className='h-[70px] w-full border border-solid border-[#DDD]'>課程1</div>
-          <div className='h-[70px] w-full border border-solid border-[#DDD]'>課程2</div>
+          <div className='h-[70px] w-full border border-solid border-[#DDD] flex justify-between items-center'>
+            <h3>課程1</h3>
+            <Button style={{ color: '#fff', background: '#66BFFF' }}>取消課程</Button>
+          </div>
+          <div className='h-[70px] w-full border border-solid border-[#DDD] flex justify-between items-center'>
+            <h3>課程2</h3>
+            <Button style={{ color: '#fff', background: '#66BFFF' }}>取消課程</Button>
+          </div>
         </div>
       </div>
       <div className='w-full flex flex-col gap-3'>
@@ -56,7 +62,7 @@ export default function StudentPersonal({ params }) {
         <div>我的學習時數名次</div>
         <div className='flex flex-col gap-3 md:pl-5'>
           <div className='h-[70px] w-full border border-solid border-[#DDD]'>
-
+            排行?
           </div>
         </div>
       </div>
@@ -64,10 +70,14 @@ export default function StudentPersonal({ params }) {
   )
 }
 
-const LearningHistoryCard = ({ teacher, isModalOpen, showModal }) => {
+const LearningHistoryCard = ({ teacher }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const showModal = () => setIsModalOpen(!isModalOpen)
+
   const handleModalSubmit = (e) => {
     console.log(teacher)
     console.log(e)
+    showModal()
   }
 
   return (

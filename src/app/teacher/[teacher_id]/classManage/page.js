@@ -2,6 +2,8 @@ export default function ClassManage({ params }) {
   const teacherId = params.teacher_id
 
   return (
-    <div>編輯  {teacherId}  老師的課程</div>
+    <div className="text-[70px] text-[#66BFFF]">
+      老師{teacherId}的編輯畫面：頁面施工中...
+    </div>
   )
 }

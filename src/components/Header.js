@@ -31,19 +31,24 @@ const Header = () => {
   return (
     <div className="bg-neutral-200 h-[80px] px-3 flex item-center justify-between">
       <div className='flex item-center gap-3'>
-        <Image src={iconLogo} alt='logo' height={50} />
+        <Image src={iconLogo} alt='logo' height={50} className='cursor-pointer' onClick={() => router.push('/home')} />
         <div className='items-center gap-3 hidden md:flex'>
           {
-            path === '/home' &&
             <>
               <Link
-                href='student/1/studentPersonal'
+                href='/student/1/studentPersonal'
                 className='cursor-pointer hover:text-[#fff]'
               >
-                某某某
+                某已經登入的學生
               </Link>
               <Link
-                href='teacher/1/teacherEdit'
+                href='/teacher/1/teacherPersonal'
+                className='cursor-pointer hover:text-[#fff]'
+              >
+                某已經登入的老師
+              </Link>
+              <Link
+                href='/teacher/1/teacherEdit'
                 className='cursor-pointer hover:text-[#fff]'
               >
                 成為老師
@@ -53,7 +58,6 @@ const Header = () => {
         </div>
       </div>
       {
-        path === '/home' &&
         <div
           className=' items-center gap-1 cursor-pointer hover:text-[#fff] hidden md:flex'
           onClick={() => router.push('/signin')}
@@ -63,7 +67,6 @@ const Header = () => {
         </div>
       }
       {
-        path === '/home' &&
         <div className='flex md:hidden cursor-pointer' onClick={showDrawer}>
           <Image src={iconBurger} alt='burger' />
         </div>

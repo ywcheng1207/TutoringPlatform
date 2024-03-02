@@ -28,6 +28,24 @@ export default function TeacherPersonal({ params }) {
             </div>
           </div>
         </div>
+        <div className='flex justify-center items-center md:justify-start gap-3 py-6'>
+          <div className='flex items-center'>
+            <p className='text-green-600'>&#10003;</p>
+            <p className=''>生活英文</p>
+          </div>
+          <div className='flex items-center'>
+            <p className='text-green-600'>&#10003;</p>
+            <p className=''>旅遊英文</p>
+          </div>
+          <div className='flex items-center'>
+            <p className='text-green-600'>&#10003;</p>
+            <p className=''>商業英文</p>
+          </div>
+          <div className='flex items-center'>
+            <p className='text-green-600'>&#10003;</p>
+            <p className=''>兒童英文</p>
+          </div>
+        </div>
         <div className='flex flex-col gap-1'>
           <h1>簡介</h1>
           <h6 className='mb-3'>
