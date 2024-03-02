@@ -52,10 +52,10 @@ export default function StudentPersonal({ params }) {
       <div className='w-full flex flex-col gap-3'>
         <div>學習歷程</div>
         <div className='flex flex-col gap-3 md:pl-5'>
-          <LearningHistoryCard isModalOpen={isModalOpen} showModal={showModal} teacher='老師01' />
-          <LearningHistoryCard isModalOpen={isModalOpen} showModal={showModal} teacher='老師02' />
-          <LearningHistoryCard isModalOpen={isModalOpen} showModal={showModal} teacher='老師03' />
-          <LearningHistoryCard isModalOpen={isModalOpen} showModal={showModal} teacher='老師04' />
+          <LearningHistoryCard teacher='老師01' />
+          <LearningHistoryCard teacher='老師02' />
+          <LearningHistoryCard teacher='老師03' />
+          <LearningHistoryCard teacher='老師04' />
         </div>
       </div>
       <div className='w-full flex flex-col gap-3'>
