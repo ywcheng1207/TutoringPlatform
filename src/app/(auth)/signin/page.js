@@ -1,6 +1,8 @@
 'use client'
+//
 import Link from 'next/link'
 import Image from 'next/image'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button, Input, Form } from 'antd'
 
@@ -12,12 +14,35 @@ import iconEyeClose from '@/assets/icon-eye-close.svg'
 import iconGoogle from '@/assets/icon-google.svg'
 
 //
+const BASEURL = 'https://tutor-online.zeabur.app'
+
+//
 function SignIn() {
   const router = useRouter()
+  const [isSignining, setIsSignining] = useState(false)
 
-  const handleSignIn = (e) => {
-    console.table(e)
-    router.push('/home')
+  const handleSignIn = async (e) => {
+    setIsSignining(true)
+    try {
+      const res = await fetch(`${BASEURL}/signin`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: e.email, password: e.password })
+      })
+      // 200-299
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`)
+      }
+      const data = await res.json()
+      localStorage.setItem('TOKEN', data.token)
+      router.push('/home')
+    } catch (error) {
+      console.error('登入失敗:', error)
+    } finally {
+      setIsSignining(false)
+    }
   }
 
   return (
@@ -76,6 +101,7 @@ function SignIn() {
         </Link>
         <Button
           block
+          loading={isSignining && true}
           style={{ color: '#fff', background: '#66BFFF' }}
           htmlType="submit"
         >
