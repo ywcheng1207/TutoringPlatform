@@ -3,7 +3,7 @@
 //
 import { useState } from 'react'
 import Image from 'next/image'
-import { Input, Select, Form, Button, Radio, Upload } from 'antd'
+import { Input, Select, Form, Button, Radio, Upload, Checkbox } from 'antd'
 import { useRouter } from 'next/navigation'
 
 //
@@ -18,6 +18,12 @@ export default function EditTeacher({ params }) {
   const router = useRouter()
   const [fileList, setFileList] = useState([])
   const [imageURL, setImageURL] = useState(null)
+  const [checkedValues, setCheckedValues] = useState([])
+  // const change = (checkedValues) => {
+  //   setCheckedValues(checkedValues)
+  // }
+
+  const options = ['生活英文', '旅遊英文', '商業英文', '兒童英文']
 
   const handleUploadChange = ({ fileList: newFileList }) => {
     setFileList(newFileList)
@@ -34,11 +40,11 @@ export default function EditTeacher({ params }) {
   }
 
   const handleSubmitTeacherInfo = (e) => {
-    console.log(e.upload)
+    console.log(e)
   }
 
   return (
-    <div>
+    <div className='w-full'>
       <Form
         className="flex flex-col items-center gap-2"
         layout='vertical'
@@ -150,12 +156,13 @@ export default function EditTeacher({ params }) {
               }
             ]}
           >
-            <Radio.Group>
+            {/* <Radio.Group>
               <Radio value="1">生活英文</Radio>
               <Radio value="2">旅遊英文</Radio>
               <Radio value="3">商業英文</Radio>
               <Radio value="4">兒童英文</Radio>
-            </Radio.Group>
+            </Radio.Group> */}
+            <Checkbox.Group options={options} value={checkedValues} />
           </Form.Item>
         </div>
         <div className='flex flex-col justify-between md:flex-row-reverse w-full gap-3'>

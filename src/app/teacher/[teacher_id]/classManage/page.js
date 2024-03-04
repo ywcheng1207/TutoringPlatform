@@ -189,7 +189,7 @@ export default function ClassManage({ params }) {
   }
 
   return (
-    <>
+    <div className='w-full'>
       {/* title */}
       <div className='w-full bg-[#CCC] text-[#fff] text-center py-2 rounded-sm mb-3'>課程列表</div>
 
@@ -243,7 +243,7 @@ export default function ClassManage({ params }) {
         <EditBtn type='create' onEdit={handleEditClass} finalSelection={finalSelection} currentClassData={currentClassData} />
         {content()}
       </div>
-    </>
+    </div>
 
   )
 }

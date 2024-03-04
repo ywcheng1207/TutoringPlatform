@@ -34,7 +34,7 @@ const RootLayout = ({ children }) => {
             <Provider>
               <div className='flex flex-col justify-between min-h-screen gap-5'>
                 <Header />
-                <div className='flex-1 w-full px-3 md:mx-auto md:max-w-[1280px] md:px-10'>
+                <div className='h-full flex-1 w-full  px-3 md:mx-auto md:max-w-[1280px] md:px-10 flex items-center'>
                   {children}
                 </div>
                 <Footer />

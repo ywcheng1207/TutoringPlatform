@@ -21,7 +21,7 @@ function SignIn() {
   }
 
   return (
-    <div className="h-full w-full mx-auto flex flex-col items-center gap-5 max-w-lg">
+    <div className="w-full mx-auto flex flex-col justify-center items-center gap-5 max-w-lg">
       <h1 style={{ fontSize: 35, color: '#66BFFF', marginBottom: 30 }}>登入</h1>
       <Form
         style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}

@@ -39,7 +39,7 @@ export default function EditTeacher({ params }) {
   }
 
   return (
-    <div>
+    <div className='w-full'>
       <Form
         className="flex flex-col items-center gap-2"
         layout='vertical'
