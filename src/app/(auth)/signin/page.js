@@ -12,9 +12,7 @@ import iconLock from '@/assets/icon-lock.svg'
 import iconEyeOpen from '@/assets/icon-eye-open.svg'
 import iconEyeClose from '@/assets/icon-eye-close.svg'
 import iconGoogle from '@/assets/icon-google.svg'
-
-//
-const BASEURL = 'https://tutor-online.zeabur.app'
+import { postSignIn, testPost } from '@/apis/apis'
 
 //
 function SignIn() {
@@ -23,26 +21,16 @@ function SignIn() {
 
   const handleSignIn = async (e) => {
     setIsSignining(true)
-    try {
-      const res = await fetch(`${BASEURL}/signin`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email: e.email, password: e.password })
-      })
-      // 200-299
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`)
-      }
-      const data = await res.json()
+    const { data } = await postSignIn({ email: e.email, password: e.password })
+    if (data) {
+      // console.log('登入成功', data)
       localStorage.setItem('TOKEN', data.token)
       router.push('/home')
-    } catch (error) {
-      console.error('登入失敗:', error)
-    } finally {
-      setIsSignining(false)
     }
+    // const { data } = await testPost()
+    // console.log('成功', data)
+
+    setIsSignining(false)
   }
 
   return (

@@ -11,6 +11,7 @@ import TeacherCard from '@/components/TeacherCard'
 import iconBell from '@/assets/icon-bell.svg'
 import NoPhoto from '@/components/NoPhoto'
 import HomeList from '@/components/HomeList'
+import { getStudentRankData } from '@/apis/apis'
 
 //
 const BASEURL = 'https://tutor-online.zeabur.app'
@@ -49,23 +50,17 @@ const Home = () => {
   }
 
   useEffect(() => {
-    const getStudentRankData = async () => {
+    const fetchData = async () => {
       try {
-        const token = localStorage.getItem('TOKEN')
-        const response = await axios.get(`${BASEURL}/students`, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          }
-        })
-        console.log(response)
+        const res = await getStudentRankData()
+        console.log('學生排行資料', res.data)
       } catch (error) {
-        console.error('GetStudentRankData Failed:', error)
+        console.error('錯誤', error)
       }
     }
 
-    getStudentRankData()
-  }, [])
+    // fetchData()
+  }, []) // 確保這個 effect 只在組件加載時運行一次
 
   return (
     <div className='bg-yellow'>
