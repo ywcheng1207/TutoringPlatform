@@ -2,8 +2,8 @@ import axios from 'axios'
 
 // 不需要添加Authorization
 const apiWithoutToken = axios.create({
-  // baseURL: 'https://tutor-online.zeabur.app',
-  baseURL: 'https://boss-shad-deadly.ngrok-free.app/',
+  baseURL: 'https://tutor-online.zeabur.app',
+  // baseURL: 'https://boss-shad-deadly.ngrok-free.app',
   headers: {
     'Content-Type': 'application/json'
   }
@@ -12,6 +12,7 @@ const apiWithoutToken = axios.create({
 // 需要添加Authorization
 const apiWithToken = axios.create({
   baseURL: 'https://tutor-online.zeabur.app',
+  // baseURL: 'https://boss-shad-deadly.ngrok-free.app',
   headers: {
     'Content-Type': 'application/json'
   }
@@ -90,17 +91,6 @@ export const getTeacherCommentData = async ({ id }) => {
 }
 
 // 老師頁 - 開課資訊
-// "id": 3,
-// "isBooked": 1,
-// "isCompleted": 0,
-// "length": 30,
-// "dateTimeRange": "2024-03-02 20:00-20:30",
-// "name": "basic",
-// "link": "https://tw.yahoo.com/?p=us",
-// "studentId": 5,
-// "teacherId": 21,
-// "categoryId": 1,
-// "timeOrder": "2024-03-02T12:00:00.000Z"
 export const getTeacherClassesData = async ({ id }) => {
   try {
     const res = await apiWithToken.get(`/classes/:${id}`)
@@ -146,7 +136,7 @@ export const putTeacherApply = async ({ name, country, introduction, style, avat
     const res = await apiWithToken.put('/teachers', { name, country, introduction, style, avatar, categoryArray })
     return res
   } catch (error) {
-    console.error('ApplyToBeATeacher Failed:', error)
+    console.error('PutTeacherApply Failed:', error)
   }
 }
 
@@ -200,15 +190,62 @@ export const postComments = async ({ id, text, score }) => {
   }
 }
 
-// export const testPost = async () => {
-//   try {
-//     const res = await apiWithToken.post('/students', {
-//       name: 'studentC',
-//       introduction: 'want to be speak fluently',
-//       avatar: ''
-//     })
-//     return res
-//   } catch (error) {
-//     console.error('Test Failed:', error)
-//   }
-// }
+// 學生頁 - 新增一筆學生資料
+export const postToBeAStudents = async ({ name, introduction, avatar }) => {
+  try {
+    const res = await apiWithToken.get('/students', { name, introduction, avatar })
+    return res
+  } catch (error) {
+    console.error('PostToBeAStudents Failed:', error)
+  }
+}
+
+// 學生頁 - 編輯筆學生資料
+export const putToBeAStudents = async ({ name, introduction, avatar }) => {
+  try {
+    const res = await apiWithToken.get('/students', { name, introduction, avatar })
+    return res
+  } catch (error) {
+    console.error('PutToBeAStudents Failed:', error)
+  }
+}
+
+// 課程管理 - 取得一位老師開設的兩週課程，課程由最近開始排序
+export const getClassManagementData = async ({ id }) => {
+  try {
+    const res = await apiWithToken.get(`/classes/:${id}`)
+    return res
+  } catch (error) {
+    console.error('GetClassManagementData Failed:', error)
+  }
+}
+
+// 課程管理 - 一次新增一堂課程
+export const postClasses = async ({ name, dateTimeRange, link, category }) => {
+  try {
+    const res = await apiWithToken.post('/classes', { name, dateTimeRange, link, category })
+    return res
+  } catch (error) {
+    console.error('PostClasses Failed:', error)
+  }
+}
+
+// 課程管理 - 一次修改一堂課
+export const putClasses = async ({ id, name, dateTimeRange, link, category }) => {
+  try {
+    const res = await apiWithToken.post(`/classes/:${id}`, { name, dateTimeRange, link, category })
+    return res
+  } catch (error) {
+    console.error('PutClasses Failed:', error)
+  }
+}
+
+// 課程管理 - 一次刪除一堂課
+export const deleteClasses = async ({ id }) => {
+  try {
+    const res = await apiWithToken.delete(`/classes/:${id}`)
+    return res
+  } catch (error) {
+    console.error('DeleteClasses Failed:', error)
+  }
+}

@@ -1,6 +1,6 @@
 import { Inter, Comforter, Noto_Sans_TC } from 'next/font/google'
 import './globals.css'
-import { ConfigProvider, message } from 'antd'
+import { ConfigProvider } from 'antd'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
 import zhTW from 'antd/lib/locale/zh_TW'
 import { Provider } from './provider'

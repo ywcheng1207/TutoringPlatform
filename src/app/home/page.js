@@ -1,10 +1,10 @@
 'use client'
 
 //
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { Select, Input, Button, Radio, List } from 'antd'
-import axios from 'axios'
+import { Select, Input, Button, notification } from 'antd'
 
 //
 import TeacherCard from '@/components/TeacherCard'
@@ -43,6 +43,7 @@ const rankinData = [
 ]
 //
 const Home = () => {
+  const router = useRouter()
   const [studendRankData, setStudentRankData] = useState([])
 
   const handleNavigate = ({ id }) => {
@@ -50,16 +51,24 @@ const Home = () => {
   }
 
   useEffect(() => {
+    if (!localStorage.getItem('TOKEN')) {
+      notification.error({
+        message: '請先登入!',
+        duration: 1
+      })
+      return router.push('/signin')
+    }
+
     const fetchData = async () => {
       try {
         const res = await getStudentRankData()
-        console.log('學生排行資料', res.data)
+        console.log('學生排行資料', res)
       } catch (error) {
         console.error('錯誤', error)
       }
     }
 
-    // fetchData()
+    fetchData()
   }, []) // 確保這個 effect 只在組件加載時運行一次
 
   return (

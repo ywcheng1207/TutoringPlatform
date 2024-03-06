@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button, Input, Form } from 'antd'
+import { Button, Input, Form, notification } from 'antd'
 
 //
 import iconMail from '@/assets/icon-mail.svg'
@@ -12,7 +12,7 @@ import iconLock from '@/assets/icon-lock.svg'
 import iconEyeOpen from '@/assets/icon-eye-open.svg'
 import iconEyeClose from '@/assets/icon-eye-close.svg'
 import iconGoogle from '@/assets/icon-google.svg'
-import { postSignIn, testPost } from '@/apis/apis'
+import { postSignIn } from '@/apis/apis'
 
 //
 function SignIn() {
@@ -23,12 +23,15 @@ function SignIn() {
     setIsSignining(true)
     const { data } = await postSignIn({ email: e.email, password: e.password })
     if (data) {
-      // console.log('登入成功', data)
       localStorage.setItem('TOKEN', data.token)
+      notification.success({
+        message: '登入成功!',
+        duration: 1
+      })
+      localStorage.setItem('USER', JSON.stringify(data.user))
+      if (data.user.isAdmin) return router.push('/admin/dashboard')
       router.push('/home')
     }
-    // const { data } = await testPost()
-    // console.log('成功', data)
 
     setIsSignining(false)
   }

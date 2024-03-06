@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 
 import { mainContext } from '@/context/mainContext'
-import { Drawer } from 'antd'
+import { Drawer, notification } from 'antd'
 
 //
 import iconLogo from '@/assets/icon-logo.svg'
@@ -17,10 +17,9 @@ import iconClose from '@/assets/icon-close.svg'
 const Header = () => {
   const path = usePathname()
   const router = useRouter()
-  // const test = useContext(mainContext)
-  // console.log(test)
-  console.log('目前', path)
   const [open, setOpen] = useState(false)
+  const memberInfo = JSON.parse(localStorage.getItem('USER'))
+
   const showDrawer = () => {
     setOpen(true)
   }
@@ -28,41 +27,64 @@ const Header = () => {
     setOpen(false)
   }
 
+  const toBeAteacherBtn = () => {
+    if (path === '/signin' || path === '/signup') return
+    if (!memberInfo?.teacherId) {
+      return (
+        <Link
+          href='/teacher/1/teacherEdit'
+          className='cursor-pointer hover:text-[#fff]'
+        >
+          成為老師
+        </Link>
+      )
+    }
+  }
+
   return (
     <div className="bg-neutral-200 h-[80px] px-3 flex item-center justify-between">
       <div className='flex item-center gap-3'>
-        <Image src={iconLogo} alt='logo' height={50} className='cursor-pointer' onClick={() => router.push('/home')} />
+        <Image src={iconLogo} alt='logo' height={50} className='cursor-pointer'
+          onClick={() => {
+            if (!localStorage.getItem('TOKEN')) {
+              return notification.error({
+                message: '請先登入!',
+                duration: 1
+              })
+            }
+            router.push('/home')
+          }}
+        />
         <div className='items-center gap-3 hidden md:flex'>
           {
             <>
               <Link
-                href='/student/1/studentPersonal'
+                href={memberInfo?.teacherId
+                  ? `/teacher/${memberInfo?.teacherId}/teacherPersonal`
+                  : `/student/${memberInfo?.studentId}/studentPersonal`
+                }
                 className='cursor-pointer hover:text-[#fff]'
               >
-                某已經登入的學生
+                {memberInfo?.email}
               </Link>
-              <Link
-                href='/teacher/1/teacherPersonal'
-                className='cursor-pointer hover:text-[#fff]'
-              >
-                某已經登入的老師
-              </Link>
-              <Link
-                href='/teacher/1/teacherEdit'
-                className='cursor-pointer hover:text-[#fff]'
-              >
-                成為老師
-              </Link>
+              {toBeAteacherBtn()}
             </>
           }
         </div>
       </div>
       {
+        localStorage.getItem('TOKEN') &&
         <div
           className=' items-center gap-1 cursor-pointer hover:text-[#fff] hidden md:flex'
-          onClick={() => router.push('/signin')}
+          onClick={() => {
+            router.push('/signin')
+            localStorage.clear()
+            notification.success({
+              message: '登出',
+              duration: 1
+            })
+          }}
         >
-          {/* <Image src={iconSignOut} alt='sign-out' width={18} height={15} /> */}
           <div>登出</div>
         </div>
       }
@@ -107,8 +129,13 @@ const Header = () => {
             <li
               className='w-full py-5 text-center hover:bg-[#ccc] cursor-pointer'
               onClick={() => {
-                router.push('/signin')
                 onClose()
+                router.push('/signin')
+                localStorage.clear()
+                notification.success({
+                  message: '登出',
+                  duration: 1
+                })
               }}
             >
               <span>登出</span>
