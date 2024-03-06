@@ -2,8 +2,8 @@ import axios from 'axios'
 
 // 不需要添加Authorization
 const apiWithoutToken = axios.create({
-  baseURL: 'https://tutor-online.zeabur.app',
-  // baseURL: 'http://1.168.135.76:3000',
+  // baseURL: 'https://tutor-online.zeabur.app',
+  baseURL: 'https://boss-shad-deadly.ngrok-free.app/',
   headers: {
     'Content-Type': 'application/json'
   }
@@ -130,7 +130,75 @@ export const getTeacherClassesBookedData = async ({ id }) => {
   }
 }
 
-// 老師個資編輯頁 -
+// 老師個資編輯頁 - 申請成為老師
+export const postTeacherApply = async ({ name, country, introduction, style, avatar, categoryArray }) => {
+  try {
+    const res = await apiWithToken.post('/teachers', { name, country, introduction, style, avatar, categoryArray })
+    return res
+  } catch (error) {
+    console.error('ApplyToBeATeacher Failed:', error)
+  }
+}
+
+// 老師個資編輯頁 - 修改一筆老師資料
+export const putTeacherApply = async ({ name, country, introduction, style, avatar, categoryArray }) => {
+  try {
+    const res = await apiWithToken.put('/teachers', { name, country, introduction, style, avatar, categoryArray })
+    return res
+  } catch (error) {
+    console.error('ApplyToBeATeacher Failed:', error)
+  }
+}
+
+// 學生個人頁 - 取得學生個資
+export const getStudentPersonalData = async ({ id }) => {
+  try {
+    const res = await apiWithToken.get(`/students/:${id}`)
+    return res
+  } catch (error) {
+    console.error('GetStudentPersonalData Failed:', error)
+  }
+}
+
+// 學生個人頁 - 學生預訂的所有課程，顯示最近一週的課程，課程由最近開始排序
+export const getStudentClassesBookedData = async ({ id }) => {
+  try {
+    const res = await apiWithToken.get(`/classes/studentbooked/:${id}`)
+    return res
+  } catch (error) {
+    console.error('GetStudentClassesBookedData Failed:', error)
+  }
+}
+
+// 學生個人頁 - 取消預定一門課
+export const patchStudentClassesBookedData = async ({ id }) => {
+  try {
+    const res = await apiWithToken.patch(`/classes/studentbooked/:${id}`)
+    return res
+  } catch (error) {
+    console.error('PatchStudentClassesBookedData Failed:', error)
+  }
+}
+
+// 學生個人頁 - 學生上完的所有課程 ，依照最近上完課程新到舊排序
+export const getAllStudentCompletedClassesData = async ({ id }) => {
+  try {
+    const res = await apiWithToken.get(`/classes/:${id}/completed`)
+    return res
+  } catch (error) {
+    console.error('GetAllStudentCompletedClassesData Failed:', error)
+  }
+}
+
+// 學生個人頁 - 增加一則評論
+export const postComments = async ({ id, text, score }) => {
+  try {
+    const res = await apiWithToken.get(`/comments/:${id}`, { text, score })
+    return res
+  } catch (error) {
+    console.error('PostComments Failed:', error)
+  }
+}
 
 // export const testPost = async () => {
 //   try {
