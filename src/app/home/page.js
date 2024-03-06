@@ -51,7 +51,7 @@ const Home = () => {
   }
 
   useEffect(() => {
-    if (!localStorage.getItem('TOKEN')) {
+    if (!localStorage?.getItem('TOKEN')) {
       notification.error({
         message: '請先登入!',
         duration: 1
