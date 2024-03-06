@@ -23,12 +23,12 @@ function SignIn() {
     setIsSignining(true)
     const { data } = await postSignIn({ email: e.email, password: e.password })
     if (data) {
-      localStorage?.setItem('TOKEN', data.token)
+      window?.localStorage?.setItem('TOKEN', data.token)
       notification.success({
         message: '登入成功!',
         duration: 1
       })
-      localStorage?.setItem('USER', JSON.stringify(data.user))
+      window?.localStorage?.setItem('USER', JSON.stringify(data.user))
       if (data.user.isAdmin) return router.push('/admin/dashboard')
       router.push('/home')
     }
