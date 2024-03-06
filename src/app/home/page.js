@@ -51,7 +51,7 @@ const Home = () => {
   }
 
   useEffect(() => {
-    if (!window?.localStorage?.getItem('TOKEN')) {
+    if (!typeof window !== 'undefined' && window?.localStorage?.getItem('TOKEN')) {
       notification.error({
         message: '請先登入!',
         duration: 1

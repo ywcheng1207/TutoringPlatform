@@ -18,7 +18,7 @@ const Header = () => {
   const path = usePathname()
   const router = useRouter()
   const [open, setOpen] = useState(false)
-  const memberInfo = JSON.parse(window?.localStorage?.getItem('USER'))
+  const memberInfo = JSON.parse(typeof window !== 'undefined' && window?.localStorage?.getItem('USER'))
 
   const showDrawer = () => {
     setOpen(true)
@@ -46,7 +46,7 @@ const Header = () => {
       <div className='flex item-center gap-3'>
         <Image src={iconLogo} alt='logo' height={50} className='cursor-pointer'
           onClick={() => {
-            if (!window?.localStorage?.getItem('TOKEN')) {
+            if (!typeof window !== 'undefined' && window?.localStorage?.getItem('TOKEN')) {
               return notification.error({
                 message: '請先登入!',
                 duration: 1
@@ -73,12 +73,12 @@ const Header = () => {
         </div>
       </div>
       {
-        window?.localStorage?.getItem('TOKEN') &&
+        typeof window !== 'undefined' && window?.localStorage?.getItem('TOKEN') &&
         <div
           className=' items-center gap-1 cursor-pointer hover:text-[#fff] hidden md:flex'
           onClick={() => {
             router.push('/signin')
-            window?.localStorage?.clear()
+            typeof window !== 'undefined' && window?.localStorage?.clear()
             notification.success({
               message: '登出',
               duration: 1
@@ -131,7 +131,7 @@ const Header = () => {
               onClick={() => {
                 onClose()
                 router.push('/signin')
-                window?.localStorage?.clear()
+                typeof window !== 'undefined' && window?.localStorage?.clear()
                 notification.success({
                   message: '登出',
                   duration: 1
