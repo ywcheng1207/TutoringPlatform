@@ -46,19 +46,70 @@ const Home = () => {
   const router = useRouter()
   const [studentRankData, setStudentRankData] = useState([])
   const [teacherListData, setTeacherListData] = useState([])
-  const [classFilter, setClassFilter] = useState('全部')
+  const [filterTeacherListData, setFilterTeacherListData] = useState([])
+  const [searchValue, setSearchValue] = useState('')
+  //
+  const [classFilter, setClassFilter] = useState(0)
   const [countryFilter, setCountryFilter] = useState('全部')
-  const classType = ['全部', '生活英文', '商業英文', '旅遊英文', '兒童英文']
-  const teacherCountry = ['全部', '美國', '非洲', '台灣', '印度']
+  // const classType = ['全部', '生活英文', '商業英文', '旅遊英文', '兒童英文']
+  const teacherCountry = ['全部', '美國', '澳洲', '加拿大']
+
+  const classType = [
+    { key: 0, type: '全部' },
+    { key: 1, type: '生活英文' },
+    { key: 2, type: '商業英文' },
+    { key: 3, type: '旅遊英文' },
+    { key: 4, type: '兒童英文' }
+  ]
+
+  const teacherCountryType = [
+    { key: 0, type: '全部' },
+    { key: 1, type: '美國' },
+    { key: 2, type: '澳洲' },
+    { key: 3, type: '加拿大' }
+  ]
+  //
   const [currentPage, setCurrentPage] = useState(1)
   const [dataCount, setDataCount] = useState(1)
   const pageSize = 6
+  const currentData = teacherListData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+  const finalData = currentData.filter(item => {
+    // 國家篩選條件，檢查是否符合選定的國家
+    const isCountryMatch = teacherCountry.indexOf(countryFilter) >= 0 && item.country === countryFilter
+    // 關鍵字篩選條件，不區分大小寫地檢查名字中是否包含搜尋關鍵字
+    const isNameMatch = item.name.toLowerCase().includes(searchValue.toLowerCase())
+    const isClassTypeMatch = item.categories?.includes(classFilter)
+    console.log('這是match', isClassTypeMatch)
+    // 如果沒有設置國家篩選（countryFilter為空），則只根據關鍵字篩選
+    // 如果設置了國家篩選，則項目需要同時符合國家和關鍵字的篩選條件
+    // return countryFilter !== '全部' ? isCountryMatch && isNameMatch : isNameMatch
+    return (countryFilter !== '全部' ? isCountryMatch : true) &&
+      (searchValue ? isNameMatch : true) &&
+      (classFilter !== 0 ? isClassTypeMatch : true)
+  })
 
   const handleNavigate = ({ id }) => {
     console.log(id)
   }
   const handlePage = page => {
     setCurrentPage(page)
+  }
+
+  const handleClassFilter = (item) => {
+    setClassFilter(item)
+  }
+
+  const handleCountryFilter = (item) => {
+    setCountryFilter(item)
+  }
+
+  let searchingKeyWord = ''
+  const handleSearchTyping = (e) => {
+    searchingKeyWord = e.target.value
+  }
+
+  const handleSearch = () => {
+    setSearchValue(searchingKeyWord)
   }
 
   useEffect(() => {
@@ -76,54 +127,72 @@ const Home = () => {
         // console.log('學生排行資料', res.data.data)
         setStudentRankData(res.data.data)
       } catch (error) {
-        console.error('學生排行資料錯誤', error)
+        // console.error('學生排行資料錯誤', error)
       }
     }
     const fetchTeacherListDataData = async () => {
       try {
         const res = await getTeacherListData({
-          page: currentPage
+          page: currentPage,
+          limit: 999999
         })
-        console.log('老師清單資料', res)
+        // console.log('老師清單資料', res)
         setTeacherListData(res.data.data.teacherLimit)
         setDataCount(res.data.data.count)
       } catch (error) {
-        console.error('老師清單資料錯誤', error)
+        // console.error('老師清單資料錯誤', error)
       }
     }
     fetchTeacherListDataData()
     fetchStudentRankDataData()
-  }, [currentPage])
+  }, [])
 
   return (
-    <div className='bg-yellow'>
+    <div className='bg-yellow w-full'>
       <div className='flex flex-col gap-5 md:hidden'>
-        <Select placeholder='課程' style={{ width: '100%' }} showSearch={true} />
-        <Select placeholder='教師國籍' style={{ width: '100%' }} showSearch={true} />
+        <Select placeholder='課程' style={{ width: '100%' }} onChange={(e) => handleClassFilter(e)}>
+          {
+            classType.map(ele =>
+              <Select.Option
+                value={ele.key}
+                key={ele.key}>{ele.type}
+              </Select.Option>
+            )
+          }
+        </Select>
+        <Select placeholder='教師國籍' style={{ width: '100%' }} onChange={(e) => handleClassFilter(e)}>
+          {
+            teacherCountryType.map(ele =>
+              <Select.Option
+                value={ele.type}
+                key={ele.key}>{ele.type}
+              </Select.Option>
+            )
+          }
+        </Select>
         <Input
           placeholder='搜尋老師的名字' style={{ width: '100%' }}
+          onChange={handleSearchTyping}
+          onPressEnter={handleSearch}
           suffix={<Button style={{ color: '#fff', background: '#66BFFF' }}>搜尋</Button>}
         />
         <StudyRanking studentRankData={studentRankData} />
-        <MobileCardList />
+        <MobileCardList finalData={finalData} />
       </div>
-      <div className='hidden md:flex gap-5'>
-        <div className='flex flex-col gap-5'>
+      <div className='hidden md:flex gap-5 w-full'>
+        <div className='flex flex-col gap-5' style={{ flex: 0.9 }}>
           <div className='flex gap-3'>
             <div>課程：</div>
             {classType.map((item) => (
               <div
-                key={item}
+                key={item.key}
                 style={{
-                  color: classFilter === item && '#66BFFF',
+                  color: classFilter === item.key && '#66BFFF',
                   cursor: 'pointer'
                 }}
-                onClick={() => {
-                  setClassFilter(item)
-                  console.log(item)
-                }}
+                onClick={() => handleClassFilter(item.key)}
               >
-                {item}
+                {item.type}
               </div>
             ))}
           </div>
@@ -136,25 +205,36 @@ const Home = () => {
                   color: countryFilter === item && '#66BFFF',
                   cursor: 'pointer'
                 }}
-                onClick={() => {
-                  setCountryFilter(item)
-                  console.log(item)
-                }}
+                onClick={() => handleCountryFilter(item)}
               >
                 {item}
               </div>
             ))}
           </div>
+          <Input
+            placeholder='搜尋老師的名字' style={{ width: '100%' }}
+            onChange={handleSearchTyping}
+            onPressEnter={handleSearch}
+            suffix={
+              <Button
+                onClick={handleSearch}
+                style={{ color: '#fff', background: '#66BFFF' }}>
+                搜尋
+              </Button>
+            }
+          />
           <HomeList
-            data={data}
             teacherListData={teacherListData}
             currentPage={currentPage}
             onPage={handlePage}
             pageSize={pageSize}
             dataCount={dataCount}
+            currentData={finalData}
           />
         </div>
-        <StudyRanking studentRankData={studentRankData} />
+        <div style={{ flex: 0.1 }}>
+          <StudyRanking studentRankData={studentRankData} />
+        </div>
       </div>
     </div>
   )
@@ -184,10 +264,10 @@ const StudyRanking = ({ studentRankData }) => {
   )
 }
 
-const MobileCardList = () => {
+const MobileCardList = ({ finalData }) => {
   return (
     <div className='flex flex-col gap-3'>
-      {data.map(teacher => <TeacherCard id={teacher.id} key={teacher.id} />)}
+      {finalData.map(teacher => <TeacherCard item={teacher} key={teacher.id} />)}
     </div>
   )
 }

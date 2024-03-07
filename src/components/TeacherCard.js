@@ -10,6 +10,7 @@ import NoPhoto from './NoPhoto'
 //
 const TeacherCard = ({ id, item }) => {
   const router = useRouter()
+  const classType = ['全部', '生活英文', '商業英文', '旅遊英文', '兒童英文']
 
   return (
     <div
@@ -18,11 +19,14 @@ const TeacherCard = ({ id, item }) => {
     >
       <div className='flex flex-row items-center'>
         <div className='flex-1'>
-          <NoPhoto size='small' photo={item?.avatar}/>
+          <NoPhoto size='small' photo={item?.avatar} />
         </div>
         <div className='flex-1 justify-start'>
           <div>{item?.name}</div>
           <div>{item?.country}</div>
+          <div className='flex gap-3'>
+            {item?.categories.map(ele => <div key={ele} className='text-[#66BFFF]'>{classType[ele]}</div>)}
+          </div>
         </div>
       </div>
       <div>
