@@ -21,18 +21,23 @@ function SignIn() {
 
   const handleSignIn = async (e) => {
     setIsSignining(true)
-    const { data } = await postSignIn({ email: e.email, password: e.password })
-    if (data) {
-      typeof window !== 'undefined' && window?.localStorage?.setItem('TOKEN', data.token)
+    try {
+      const res = await postSignIn({ email: e.email, password: e.password })
+      typeof window !== 'undefined' && window?.localStorage?.setItem('TOKEN', res.data.token)
       notification.success({
         message: '登入成功!',
         duration: 1
       })
-      typeof window !== 'undefined' && window?.localStorage?.setItem('USER', JSON.stringify(data.user))
-      if (data.user.isAdmin) return router.push('/admin/dashboard')
+      typeof window !== 'undefined' && window?.localStorage?.setItem('USER', JSON.stringify(res.data.user))
+      if (res.data.user.isAdmin) return router.push('/admin/dashboard')
       router.push('/home')
+      // console.log('登入資料', res)
+    } catch (error) {
+      notification.success({
+        message: '登入失敗，請重新嘗試!',
+        duration: 1
+      })
     }
-
     setIsSignining(false)
   }
 

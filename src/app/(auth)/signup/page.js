@@ -2,7 +2,10 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { Button, Input, Form } from 'antd'
+import { Button, Input, Form, notification } from 'antd'
+
+//
+import { postSignUp } from '@/apis/apis'
 
 //
 import iconMail from '@/assets/icon-mail.svg'
@@ -16,9 +19,27 @@ import iconGoogle from '@/assets/icon-google.svg'
 function SignUp() {
   const router = useRouter()
 
-  const handleSignUp = (e) => {
-    console.table(e)
-    router.push('/home')
+  const handleSignUp = async (e) => {
+    // console.table(e)
+    try {
+      const res = await postSignUp({
+        email: e.email,
+        password: e.password,
+        passwordCheck: e.confirm
+      })
+      router.push('/home')
+      notification.success({
+        message: '註冊成功!',
+        duration: 1
+      })
+      // console.log('註冊資訊回傳', res)
+    } catch (error) {
+      notification.error({
+        message: '註冊失敗! 註冊都能失敗，搞笑?',
+        duration: 1
+      })
+      // console.log('錯誤', error)
+    }
   }
 
   return (
@@ -101,7 +122,7 @@ function SignUp() {
           style={{ color: '#fff', background: '#66BFFF' }}
           htmlType="submit"
         >
-          登入
+          註冊
         </Button>
       </Form>
     </div>

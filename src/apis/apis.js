@@ -37,6 +37,7 @@ export const postSignIn = async ({ email, password }) => {
     return res
   } catch (error) {
     console.error('SignIn Failed:', error)
+    throw error
   }
 }
 
@@ -47,6 +48,7 @@ export const postSignUp = async ({ email, password, passwordCheck }) => {
     return res
   } catch (error) {
     console.error('SignUp Failed:', error)
+    throw error
   }
 }
 
@@ -57,6 +59,7 @@ export const getStudentRankData = async () => {
     return res
   } catch (error) {
     console.error('GetStudentRankData Failed:', error)
+    throw error
   }
 }
 

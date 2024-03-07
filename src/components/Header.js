@@ -19,6 +19,7 @@ const Header = () => {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const memberInfo = JSON.parse(typeof window !== 'undefined' && window?.localStorage?.getItem('USER'))
+  console.log('抓一下資料', memberInfo)
 
   const showDrawer = () => {
     setOpen(true)
