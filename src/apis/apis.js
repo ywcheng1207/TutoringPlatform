@@ -64,12 +64,13 @@ export const getStudentRankData = async () => {
 }
 
 // 首頁 - 老師資訊
-export const getTeacherListData = async ({ page }) => {
+export const getTeacherListData = async ({ page, limit = 6 }) => {
   try {
-    const res = await apiWithToken.get(`/teachers?page=${page}`)
+    const res = await apiWithToken.get(`/teachers?page=${page}&limit=${limit}`)
     return res
   } catch (error) {
     console.error('GetTeacherListData Failed:', error)
+    throw error
   }
 }
 

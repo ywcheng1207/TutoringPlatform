@@ -11,7 +11,7 @@ import TeacherCard from '@/components/TeacherCard'
 import iconBell from '@/assets/icon-bell.svg'
 import NoPhoto from '@/components/NoPhoto'
 import HomeList from '@/components/HomeList'
-import { getStudentRankData } from '@/apis/apis'
+import { getStudentRankData, getTeacherListData } from '@/apis/apis'
 
 //
 const BASEURL = 'https://tutor-online.zeabur.app'
@@ -33,21 +33,32 @@ const data = [
   { id: 8 },
   { id: 9 }
 ]
-const rankinData = [
-  { id: 1 },
-  { id: 2 },
-  { id: 3 },
-  { id: 4 },
-  { id: 5 },
-  { id: 6 }
-]
+// const rankinData = [
+//   { id: 1 },
+//   { id: 2 },
+//   { id: 3 },
+//   { id: 4 },
+//   { id: 5 },
+//   { id: 6 }
+// ]
 //
 const Home = () => {
   const router = useRouter()
-  const [studendRankData, setStudentRankData] = useState([])
+  const [studentRankData, setStudentRankData] = useState([])
+  const [teacherListData, setTeacherListData] = useState([])
+  const [classFilter, setClassFilter] = useState('全部')
+  const [countryFilter, setCountryFilter] = useState('全部')
+  const classType = ['全部', '生活英文', '商業英文', '旅遊英文', '兒童英文']
+  const teacherCountry = ['全部', '美國', '非洲', '台灣', '印度']
+  const [currentPage, setCurrentPage] = useState(1)
+  const [dataCount, setDataCount] = useState(1)
+  const pageSize = 6
 
   const handleNavigate = ({ id }) => {
     console.log(id)
+  }
+  const handlePage = page => {
+    setCurrentPage(page)
   }
 
   useEffect(() => {
@@ -59,17 +70,30 @@ const Home = () => {
       return router.push('/signin')
     }
 
-    const fetchData = async () => {
+    const fetchStudentRankDataData = async () => {
       try {
         const res = await getStudentRankData()
-        console.log('學生排行資料', res)
+        // console.log('學生排行資料', res.data.data)
+        setStudentRankData(res.data.data)
       } catch (error) {
-        console.error('錯誤', error)
+        console.error('學生排行資料錯誤', error)
       }
     }
-
-    fetchData()
-  }, []) // 確保這個 effect 只在組件加載時運行一次
+    const fetchTeacherListDataData = async () => {
+      try {
+        const res = await getTeacherListData({
+          page: currentPage
+        })
+        console.log('老師清單資料', res)
+        setTeacherListData(res.data.data.teacherLimit)
+        setDataCount(res.data.data.count)
+      } catch (error) {
+        console.error('老師清單資料錯誤', error)
+      }
+    }
+    fetchTeacherListDataData()
+    fetchStudentRankDataData()
+  }, [currentPage])
 
   return (
     <div className='bg-yellow'>
@@ -80,38 +104,82 @@ const Home = () => {
           placeholder='搜尋老師的名字' style={{ width: '100%' }}
           suffix={<Button style={{ color: '#fff', background: '#66BFFF' }}>搜尋</Button>}
         />
-        <StudyRanking />
+        <StudyRanking studentRankData={studentRankData} />
         <MobileCardList />
       </div>
       <div className='hidden md:flex gap-5'>
-        <HomeList data={data} />
-        <StudyRanking />
+        <div className='flex flex-col gap-5'>
+          <div className='flex gap-3'>
+            <div>課程：</div>
+            {classType.map((item) => (
+              <div
+                key={item}
+                style={{
+                  color: classFilter === item && '#66BFFF',
+                  cursor: 'pointer'
+                }}
+                onClick={() => {
+                  setClassFilter(item)
+                  console.log(item)
+                }}
+              >
+                {item}
+              </div>
+            ))}
+          </div>
+          <div className='flex gap-3'>
+            <div>教師國籍：</div>
+            {teacherCountry.map((item) => (
+              <div
+                key={item}
+                style={{
+                  color: countryFilter === item && '#66BFFF',
+                  cursor: 'pointer'
+                }}
+                onClick={() => {
+                  setCountryFilter(item)
+                  console.log(item)
+                }}
+              >
+                {item}
+              </div>
+            ))}
+          </div>
+          <HomeList
+            data={data}
+            teacherListData={teacherListData}
+            currentPage={currentPage}
+            onPage={handlePage}
+            pageSize={pageSize}
+            dataCount={dataCount}
+          />
+        </div>
+        <StudyRanking studentRankData={studentRankData} />
       </div>
     </div>
   )
 }
 export default Home
 
-const StudyRanking = () => {
+const StudyRanking = ({ studentRankData }) => {
   return (
     <div className='min-h-[100px] border-[1px] border-solid border-[#CCC] rounded-[3px] p-3'>
       <div className='bg-[#DDD] text-[#fff] py-1 rounded-sm flex justify-center gap-2 items-center mb-3'>
         <Image src={iconBell} alt='bell' />
         <div>學習時數排行</div>
       </div>
-      <div className='flex flex-wrap gap-3 md:justify-center md:block md:w-[200px]'>
-        {rankinData.map(item => (
-          <div key={item.id} className='flex items-center py-2'>
+      <div className='flex flex-wrap gap-3 md:justify-center md:block md:w-[240px]'>
+        {studentRankData?.map(item => (
+          <div key={item.id} className='flex items-center py-2 md:w-full'>
             <div className='flex items-center gap-3'>
-              <NoPhoto size='avatar' />
-              <h2 className='hidden md:block w-20 overflow-hidden text-nowrap text-ellipsis'>
-                同學{item.id}
+              <NoPhoto size='avatar' photo={item.avatar} username={item.name} />
+              <h2 className='hidden md:block flex-1 max-w-[130px] overflow-hidden text-nowrap text-ellipsis'>
+                {item.name}
               </h2>
             </div>
           </div>
         ))}
       </div>
-      <h2 className='mt-3 text-red-600'>還在等什麼? 每天在過年?</h2>
     </div>
   )
 }

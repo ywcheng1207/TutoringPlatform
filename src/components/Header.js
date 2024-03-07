@@ -1,5 +1,5 @@
 'use client'
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
@@ -17,9 +17,11 @@ import iconClose from '@/assets/icon-close.svg'
 const Header = () => {
   const path = usePathname()
   const router = useRouter()
+  const [isMounted, setIsMounted] = useState(false)
   const [open, setOpen] = useState(false)
+  // const [memberInfo, setMemberInfo] = useState(null)
   const memberInfo = JSON.parse(typeof window !== 'undefined' && window?.localStorage?.getItem('USER'))
-  console.log('抓一下資料', memberInfo)
+  // console.log('抓一下資料', memberInfo)
 
   const showDrawer = () => {
     setOpen(true)
@@ -42,12 +44,15 @@ const Header = () => {
     }
   }
 
+  // useEffect(() => {
+  //   setMemberInfo(localStorage?.getItem('USER'))
+  // }, [])
   return (
     <div className="bg-neutral-200 h-[80px] px-3 flex item-center justify-between">
       <div className='flex item-center gap-3'>
         <Image src={iconLogo} alt='logo' height={50} className='cursor-pointer'
           onClick={() => {
-            if (!typeof window !== 'undefined' && window?.localStorage?.getItem('TOKEN')) {
+            if (!typeof window !== 'undefined' && !window?.localStorage?.getItem('TOKEN')) {
               return notification.error({
                 message: '請先登入!',
                 duration: 1
@@ -58,7 +63,7 @@ const Header = () => {
         />
         <div className='items-center gap-3 hidden md:flex'>
           {
-            <>
+            <div>
               <Link
                 href={memberInfo?.teacherId
                   ? `/teacher/${memberInfo?.teacherId}/teacherPersonal`
@@ -69,7 +74,7 @@ const Header = () => {
                 {memberInfo?.email}
               </Link>
               {toBeAteacherBtn()}
-            </>
+            </div>
           }
         </div>
       </div>
@@ -119,7 +124,7 @@ const Header = () => {
               <span>首頁</span>
             </li>
             <li
-              className='w-full py-5 text-center hover:bg-[#ccc] cursor-pointer'
+              className='w-full py-5 text-center hover:bg-[#6d6a6a] cursor-pointer'
               onClick={() => {
                 router.push('student/1/studentPersonal')
                 onClose()
