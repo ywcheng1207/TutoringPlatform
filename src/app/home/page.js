@@ -48,6 +48,7 @@ const Home = () => {
   const [teacherListData, setTeacherListData] = useState([])
   const [filterTeacherListData, setFilterTeacherListData] = useState([])
   const [searchValue, setSearchValue] = useState('')
+  const [theTeacherData, setTheTeacherData] = useState('試試看')
   //
   const [classFilter, setClassFilter] = useState(0)
   const [countryFilter, setCountryFilter] = useState('全部')
@@ -150,7 +151,7 @@ const Home = () => {
   return (
     <div className='bg-yellow w-full'>
       <div className='flex flex-col gap-5 md:hidden'>
-        <Select placeholder='課程' style={{ width: '100%' }} onChange={(e) => handleClassFilter(e)}>
+        <Select placeholder='課程' value={classFilter} style={{ width: '100%' }} onChange={(e) => handleClassFilter(e)}>
           {
             classType.map(ele =>
               <Select.Option
@@ -160,7 +161,7 @@ const Home = () => {
             )
           }
         </Select>
-        <Select placeholder='教師國籍' style={{ width: '100%' }} onChange={(e) => handleClassFilter(e)}>
+        <Select placeholder='教師國籍' value={countryFilter} style={{ width: '100%' }} onChange={(e) => handleClassFilter(e)}>
           {
             teacherCountryType.map(ele =>
               <Select.Option
@@ -230,6 +231,7 @@ const Home = () => {
             pageSize={pageSize}
             dataCount={dataCount}
             currentData={finalData}
+
           />
         </div>
         <div style={{ flex: 0.1 }}>

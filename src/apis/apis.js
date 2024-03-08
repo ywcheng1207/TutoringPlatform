@@ -81,6 +81,7 @@ export const getTeacherPageData = async ({ id }) => {
     return res
   } catch (error) {
     console.error('GetTeacherPageData Failed:', error)
+    throw error
   }
 }
 
@@ -97,7 +98,7 @@ export const getTeacherCommentData = async ({ id }) => {
 // 老師頁 - 開課資訊
 export const getTeacherClassesData = async ({ id }) => {
   try {
-    const res = await apiWithToken.get(`/classes/:${id}`)
+    const res = await apiWithToken.get(`/classes/${id}`)
     return res
   } catch (error) {
     console.error('GetTeacherClassesData Failed:', error)

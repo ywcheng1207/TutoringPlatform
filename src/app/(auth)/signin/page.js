@@ -2,7 +2,7 @@
 //
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button, Input, Form, notification } from 'antd'
 
@@ -40,6 +40,14 @@ function SignIn() {
     }
     setIsSignining(false)
   }
+
+  useEffect(() => {
+    // 客戶端檢查 token，並導向home
+    const token = typeof window !== 'undefined' ? localStorage.getItem('TOKEN') : null
+    if (token) {
+      router.replace('/home') // 使用 replace 避免導航歷史中留下記錄
+    }
+  }, [router])
 
   return (
     <div className="w-full mx-auto flex flex-col justify-center items-center gap-5 max-w-lg">
