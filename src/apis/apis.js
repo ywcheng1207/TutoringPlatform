@@ -92,6 +92,7 @@ export const getTeacherCommentData = async ({ id }) => {
     return res
   } catch (error) {
     console.error('GetTeacherCommentData Failed:', error)
+    throw error
   }
 }
 
@@ -102,6 +103,7 @@ export const getTeacherClassesData = async ({ id }) => {
     return res
   } catch (error) {
     console.error('GetTeacherClassesData Failed:', error)
+    throw error
   }
 }
 
@@ -112,6 +114,7 @@ export const patchTeacherClasses = async ({ id }) => {
     return res
   } catch (error) {
     console.error('PatchTeacherClasses Failed:', error)
+    throw error
   }
 }
 
@@ -122,6 +125,7 @@ export const getTeacherClassesBookedData = async ({ id }) => {
     return res
   } catch (error) {
     console.error('GetTeacherClassesBookedData Failed:', error)
+    throw error
   }
 }
 
@@ -132,6 +136,7 @@ export const postTeacherApply = async ({ name, country, introduction, style, ava
     return res
   } catch (error) {
     console.error('ApplyToBeATeacher Failed:', error)
+    throw error
   }
 }
 
@@ -142,26 +147,29 @@ export const putTeacherApply = async ({ name, country, introduction, style, avat
     return res
   } catch (error) {
     console.error('PutTeacherApply Failed:', error)
+    throw error
   }
 }
 
 // 學生個人頁 - 取得學生個資
 export const getStudentPersonalData = async ({ id }) => {
   try {
-    const res = await apiWithToken.get(`/students/:${id}`)
+    const res = await apiWithToken.get(`/students/${id}`)
     return res
   } catch (error) {
     console.error('GetStudentPersonalData Failed:', error)
+    throw error
   }
 }
 
 // 學生個人頁 - 學生預訂的所有課程，顯示最近一週的課程，課程由最近開始排序
 export const getStudentClassesBookedData = async ({ id }) => {
   try {
-    const res = await apiWithToken.get(`/classes/studentbooked/:${id}`)
+    const res = await apiWithToken.get(`/classes/studentbooked/${id}`)
     return res
   } catch (error) {
     console.error('GetStudentClassesBookedData Failed:', error)
+    throw error
   }
 }
 
@@ -172,6 +180,7 @@ export const patchStudentClassesBookedData = async ({ id }) => {
     return res
   } catch (error) {
     console.error('PatchStudentClassesBookedData Failed:', error)
+    throw error
   }
 }
 
@@ -182,6 +191,7 @@ export const getAllStudentCompletedClassesData = async ({ id }) => {
     return res
   } catch (error) {
     console.error('GetAllStudentCompletedClassesData Failed:', error)
+    throw error
   }
 }
 
@@ -192,26 +202,29 @@ export const postComments = async ({ id, text, score }) => {
     return res
   } catch (error) {
     console.error('PostComments Failed:', error)
+    throw error
   }
 }
 
 // 學生頁 - 新增一筆學生資料
 export const postToBeAStudents = async ({ name, introduction, avatar }) => {
   try {
-    const res = await apiWithToken.get('/students', { name, introduction, avatar })
+    const res = await apiWithToken.post('/students', { name, introduction, avatar })
     return res
   } catch (error) {
     console.error('PostToBeAStudents Failed:', error)
+    throw error
   }
 }
 
 // 學生頁 - 編輯筆學生資料
-export const putToBeAStudents = async ({ name, introduction, avatar }) => {
+export const putToBeAStudents = async ({ id, name, introduction, avatar }) => {
   try {
-    const res = await apiWithToken.get('/students', { name, introduction, avatar })
+    const res = await apiWithToken.put(`/students/${id}`, { name, introduction, avatar })
     return res
   } catch (error) {
     console.error('PutToBeAStudents Failed:', error)
+    throw error
   }
 }
 
@@ -222,6 +235,7 @@ export const getClassManagementData = async ({ id }) => {
     return res
   } catch (error) {
     console.error('GetClassManagementData Failed:', error)
+    throw error
   }
 }
 
@@ -232,6 +246,7 @@ export const postClasses = async ({ name, dateTimeRange, link, category }) => {
     return res
   } catch (error) {
     console.error('PostClasses Failed:', error)
+    throw error
   }
 }
 
@@ -242,6 +257,7 @@ export const putClasses = async ({ id, name, dateTimeRange, link, category }) =>
     return res
   } catch (error) {
     console.error('PutClasses Failed:', error)
+    throw error
   }
 }
 
@@ -252,5 +268,6 @@ export const deleteClasses = async ({ id }) => {
     return res
   } catch (error) {
     console.error('DeleteClasses Failed:', error)
+    throw error
   }
 }

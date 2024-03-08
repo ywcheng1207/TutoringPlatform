@@ -1,9 +1,13 @@
 'use client'
 //
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Button, Modal, Form, Input } from 'antd'
+
+//
+import { getStudentPersonalData, getStudentClassesBookedData } from '@/apis/apis'
+
 //
 import NoPhoto from '@/components/NoPhoto'
 
@@ -11,21 +15,47 @@ import NoPhoto from '@/components/NoPhoto'
 export default function StudentPersonal({ params }) {
   const studentId = params.student_id
   const router = useRouter()
+  const [studentPersonalData, setStudentPersonalData] = useState([])
+  const [studentClassesBookedData, setStudentClassesBookedData] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const showModal = () => {
     setIsModalOpen(!isModalOpen)
   }
 
+  useEffect(() => {
+    const fetchStudentPersonalData = async () => {
+      try {
+        const res = await getStudentPersonalData({ id: studentId })
+        console.log('學生個人資料', res.data.data)
+        setStudentPersonalData(res.data.data)
+      } catch (error) {
+        console.error('學生個人資料', error)
+      }
+    }
+    const fetchStudentClassesBookedData = async () => {
+      try {
+        const res = await getStudentClassesBookedData({ id: studentId })
+        console.log('學生預訂的課程', res)
+        // setStudentClassesBookedData(res.data.data)
+      } catch (error) {
+        console.error('學生預訂的課程', error)
+      }
+    }
+
+    fetchStudentPersonalData()
+    // fetchStudentClassesBookedData()
+  }, [])
+
   return (
     <div className="w-full h-full flex flex-col gap-3 md:flex-row">
       <div className=' flex flex-col items-start gap-3 md:w-4/12'>
         <div className='w-full flex justify-center md:justify-start'>
-          <NoPhoto size='big' />
+          <NoPhoto size='big' photo={studentPersonalData.avatar} />
         </div>
         <div className='w-full flex flex-col gap-2'>
-          <div className='text-center md:text-start text-2xl py-5'>學生{studentId}</div>
-          <div className='text-center md:text-start'>非洲</div>
-          <AboutMe />
+          <div className='text-center md:text-start text-2xl py-5'>{studentPersonalData.name}</div>
+          <span className='text-orange-400'>(還沒命名怎麼有名字?)</span>
+          <AboutMe introduction={studentPersonalData.introduction} />
         </div>
         <div className='w-full flex justify-center md:justify-start'>
           <div className='w-full max-w-[300px] md:max-w-[150px]'>
@@ -66,22 +96,22 @@ export default function StudentPersonal({ params }) {
         <div className='w-full flex flex-col gap-3'>
           <div>我的學習時數名次</div>
           <div className='flex flex-col gap-3 md:pl-5'>
-            <div className='h-[70px] w-full border border-solid border-[#DDD]'>
-              排行?
+            <div className='h-[70px] w-full border border-solid border-[#DDD] flex flex-col justify-center'>
+              <div>學習時數: {studentPersonalData.totalLearningTime || '尚未開始學習'}</div>
+              <div>名次: {studentPersonalData.rank || '尚未開始學習'}</div>
             </div>
           </div>
         </div>
       </div>
-
     </div>
   )
 }
 
-const AboutMe = () => {
+const AboutMe = ({ introduction }) => {
   return (
     <>
       <div>關於我</div>
-      <div className='md:pl-5'>果今就元，威士樂夷的總轉記啦數影睏二顧要於冀科它郵道要來音應大！；戰大作星。興等計！阱係先的攻翔家度單也時瓣人常使避大孟新跟樂中且如到延！回中法大謝慾議機；如其不！。統偏的回上各喵麼知，不得也岳的隊的</div>
+      <div className='md:pl-5'>{introduction}</div>
     </>
   )
 }

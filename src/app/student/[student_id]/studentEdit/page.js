@@ -1,13 +1,14 @@
 'use client'
 
 //
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { Input, Select, Form, Button, Radio, Upload } from 'antd'
 import { useRouter } from 'next/navigation'
+import { Input, Select, Form, Button, Radio, Upload, notification } from 'antd'
 
 //
 import NoPhoto from '@/components/NoPhoto'
+import { getStudentPersonalData, postToBeAStudents, putToBeAStudents } from '@/apis/apis'
 
 //
 import iconCamera from '@/assets/icon-camera.svg'
@@ -15,8 +16,9 @@ import iconCamera from '@/assets/icon-camera.svg'
 //
 export default function EditTeacher({ params }) {
   const studentId = params.student_id
-
   const router = useRouter()
+  const [form] = Form.useForm()
+  const [studentPersonalData, setStudentPersonalData] = useState([])
   const [fileList, setFileList] = useState([])
   const [imageURL, setImageURL] = useState(null)
 
@@ -34,9 +36,46 @@ export default function EditTeacher({ params }) {
     }
   }
 
-  const handleSubmitTeacherInfo = (e) => {
-    console.log(e.upload)
+  const handleSubmitTeacherInfo = async (e) => {
+    const imgFile = e.upload[0].originFileObj
+    console.log('imgFile', imgFile)
+    const uploadImg = new FormData()
+    uploadImg.append('avatar', imgFile)
+    console.log(uploadImg)
+
+    try {
+      const res = await putToBeAStudents({
+        id: studentId,
+        name: e.studentName,
+        introduction: e.about,
+        avatar: uploadImg
+      })
+      console.log('修改學生個資成功', res)
+      notification.success({
+        message: '修改資料成功!',
+        duration: 1
+      })
+      router.push(`/student/${studentId}/studentPersonal`)
+    } catch (error) {
+      console.log('修改學生個資失敗', error)
+    }
   }
+
+  useEffect(() => {
+    const fetchStudentPersonalData = async () => {
+      try {
+        const res = await getStudentPersonalData({ id: studentId })
+        console.log('學生個人資料', res.data.data.name)
+        setStudentPersonalData(res.data.data)
+        if (res.data.data.name) form.setFieldsValue({ studentName: res.data.data.name })
+        if (res.data.data.introduction) form.setFieldsValue({ about: res.data.data.introduction })
+      } catch (error) {
+        console.error('學生個人資料', error)
+      }
+    }
+
+    fetchStudentPersonalData()
+  }, [])
 
   return (
     <div className='w-full'>
@@ -46,6 +85,8 @@ export default function EditTeacher({ params }) {
         colon={false}
         requiredMark={false}
         onFinish={handleSubmitTeacherInfo}
+        form={form}
+      // initialValues={{ studentName: studentPersonalData.name }}
       >
         <Form.Item
           name="upload"
@@ -74,7 +115,7 @@ export default function EditTeacher({ params }) {
           </Upload>
         </Form.Item>
         <Form.Item
-          name='teacherName'
+          name='studentName'
           style={{ width: '100%' }}
           label='姓名'
           rules={[
@@ -118,7 +159,7 @@ export default function EditTeacher({ params }) {
             <Button
               block
               style={{ color: '#66BFFF' }}
-              onClick={() => router.push('/home')}
+              onClick={() => router.push(`/student/${studentId}/studentPersonal`)}
             >
               返回
             </Button>

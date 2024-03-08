@@ -22,6 +22,8 @@ export default function TeacherPersonal({ params }) {
   const classOptions = classFilter === 0
     ? classesOpenedInTwoWeeks
     : classesOpenedInTwoWeeks.filter(ele => ele.categoryId === classFilter)
+  const currentClassesType =
+    Array.from(new Set(classesOpenedInTwoWeeks.map(item => item.categoryId))).sort((a, b) => a - b)
 
   const classType = [
     { key: 0, type: '全部' },
@@ -59,7 +61,7 @@ export default function TeacherPersonal({ params }) {
     const fetchTeacherClassesDataData = async () => {
       try {
         const res = await getTeacherClassesData({ id: teacherId })
-        // console.log('學生看老師頁的老師開課資訊', res.data.data)
+        console.log('學生看老師頁的老師開課資訊', res.data.data)
         setClassesOpenedInTwoWeeks(res.data.data)
       } catch (error) {
         console.error('學生看老師頁的老師開課資訊', error)
@@ -86,22 +88,7 @@ export default function TeacherPersonal({ params }) {
           </div>
         </div>
         <div className='flex justify-center items-center md:justify-start gap-3 py-6'>
-          <div className='flex items-center'>
-            <p className='text-green-600'>&#10003;</p>
-            <p className=''>生活英文</p>
-          </div>
-          <div className='flex items-center'>
-            <p className='text-green-600'>&#10003;</p>
-            <p className=''>旅遊英文</p>
-          </div>
-          <div className='flex items-center'>
-            <p className='text-green-600'>&#10003;</p>
-            <p className=''>商業英文</p>
-          </div>
-          <div className='flex items-center'>
-            <p className='text-green-600'>&#10003;</p>
-            <p className=''>兒童英文</p>
-          </div>
+          {currentClassesType.map(ele => <ClassesTypeTag key={ele} text={classType2[ele]} />)}
         </div>
         <div className='flex flex-col gap-1'>
           <h1>簡介</h1>
@@ -111,10 +98,6 @@ export default function TeacherPersonal({ params }) {
           <h1>教學風格</h1>
           <h6 className='mb-3'>
             {theTeacherData.style}
-          </h6>
-          <h1>經歷</h1>
-          <h6 className='mb-3 text-orange-400'>
-            缺老師經歷
           </h6>
         </div>
       </div>
@@ -151,6 +134,15 @@ export default function TeacherPersonal({ params }) {
           預約
         </Button>
       </div>
+    </div>
+  )
+}
+
+const ClassesTypeTag = ({ text }) => {
+  return (
+    <div className='flex items-center'>
+      <p className='text-green-600'>&#10003;</p>
+      <p className=''>{text}</p>
     </div>
   )
 }
