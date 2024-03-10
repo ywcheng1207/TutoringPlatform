@@ -162,9 +162,9 @@ export const getTeacherClassesBookedData = async ({ id }) => {
 }
 
 // 老師個資編輯頁 - 申請成為老師
-export const postTeacherApply = async ({ name, country, introduction, style, avatar, categoryArray }) => {
+export const postTeacherApply = async ({ data }) => {
   try {
-    const res = await apiWithToken.post('/teachers', { name, country, introduction, style, avatar, categoryArray })
+    const res = await apiWithTokenByFormData.post('/teachers', data)
     return res
   } catch (error) {
     console.error('ApplyToBeATeacher Failed:', error)

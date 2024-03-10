@@ -2,11 +2,12 @@
 //
 import { useState } from 'react'
 import Image from 'next/image'
-import { Input, Select, Form, Button, Radio, Upload, Checkbox } from 'antd'
+import { Input, Select, Form, Button, Radio, Upload, Checkbox, notification } from 'antd'
 import { useRouter } from 'next/navigation'
 
 //
 import NoPhoto from '@/components/NoPhoto'
+import { postTeacherApply } from '@/apis/apis'
 
 //
 import iconCamera from '@/assets/icon-camera.svg'
@@ -37,8 +38,33 @@ export default function TeacherApply() {
     }
   }
 
-  const handleSubmitTeacherInfo = (e) => {
-    console.log(e)
+  const handleSubmitTeacherInfo = async (e) => {
+    // console.log(e)
+    const imgFile = e.upload[0].originFileObj
+    const formData = new FormData()
+    formData.append('name', e.teacherName)
+    formData.append('country', e.teacherCountry)
+    formData.append('introduction', e.about)
+    formData.append('style', e.teachStyle)
+    formData.append('avatar', imgFile)
+    formData.append('categoryArray', e.teachType.map(option => options.indexOf(option)))
+
+    try {
+      const res = await postTeacherApply({
+        data: formData
+      })
+      console.log('申請成為老師成功!', res)
+      notification.success({
+        message: '申請成為老師成功!',
+        duration: 1
+      })
+      router.push('/home')
+    } catch (error) {
+      notification.error({
+        message: '申請成為老師失敗!',
+        duration: 1
+      })
+    }
   }
 
   return (
@@ -101,9 +127,9 @@ export default function TeacherApply() {
           ]}
         >
           <Select showSearch placeholder='請選擇國籍'>
-            <Select.Option value='臺灣'>臺灣</Select.Option>
             <Select.Option value='美國'>美國</Select.Option>
-            <Select.Option value='非洲'>非洲</Select.Option>
+            <Select.Option value='澳洲'>澳洲</Select.Option>
+            <Select.Option value='加拿大'>加拿大</Select.Option>
           </Select>
         </Form.Item>
         <Form.Item
