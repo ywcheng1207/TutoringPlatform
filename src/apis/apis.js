@@ -239,9 +239,9 @@ export const postComments = async ({ id, text, score }) => {
 }
 
 // 學生頁 - 新增一筆學生資料
-export const postToBeAStudents = async ({ name, introduction, avatar }) => {
+export const postToBeAStudents = async ({ data }) => {
   try {
-    const res = await apiWithToken.post('/students', { name, introduction, avatar })
+    const res = await apiWithTokenByFormData.post('/students', data)
     return res
   } catch (error) {
     console.error('PostToBeAStudents Failed:', error)

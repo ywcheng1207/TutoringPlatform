@@ -98,14 +98,21 @@ export default function StudentPersonal({ params }) {
         </div>
         <div className='w-full flex flex-col gap-3'>
           <div>學習歷程</div>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-3 md:pl-5'>
-            {classesComplete.map(ele =>
-              <LearningHistoryCard
-                data={ele}
-                teacher='老師01'
-                key={ele.dateTimeRange}
-              />)}
-          </div>
+          {
+            typeof classesComplete !== 'string'
+              ? <div className='grid grid-cols-1 md:grid-cols-2 gap-3 md:pl-5'>
+                {
+                  classesComplete.map(ele =>
+                    <LearningHistoryCard
+                      data={ele}
+                      key={ele.dateTimeRange}
+                    />)
+                }
+              </div>
+              : <div className='h-[100px] w-full flex justify-center items-center text-gray-300 text-2xl'>
+                Oops...沒有已經完成的課程
+              </div>
+          }
         </div>
         <div className='w-full flex flex-col gap-3'>
           <div>我的學習時數名次</div>
@@ -155,7 +162,7 @@ const ClassesYouBooked = ({ classes, fetchStudentClassesBookedData }) => {
   }
 
   const classesContent = () => {
-    if (classes) {
+    if (typeof classes !== 'string') {
       // console.log('取得預約中的課程', classes)
       return (
         <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-3 md:pl-5'>
@@ -184,7 +191,7 @@ const ClassesYouBooked = ({ classes, fetchStudentClassesBookedData }) => {
       )
     }
     return (
-      <div className='h-[50px] w-full flex justify-center items-center text-gray-300 text-2xl'>
+      <div className='h-[100px] w-full flex justify-center items-center text-gray-300 text-2xl'>
         Oops...沒有進行中的課程
       </div>
     )

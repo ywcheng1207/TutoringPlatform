@@ -45,14 +45,17 @@ export default function StudentApply() {
       const res = await postToBeAStudents({
         data: formData
       })
-      console.log('申請成為學生成功!', res)
+      // console.log('申請成為學生成功!', res)
       notification.success({
         message: '申請成為學生成功!',
         duration: 1
       })
-      // router.push(`/student/${studentId}/studentPersonal`)
+      router.push('/home')
     } catch (error) {
-      console.log('申請成為學生失敗!', error)
+      notification.error({
+        message: '申請成為學生失敗!',
+        duration: 1
+      })
     }
   }
 
@@ -131,15 +134,6 @@ export default function StudentApply() {
               htmlType="submit"
             >
               提交
-            </Button>
-          </div>
-          <div className='min-w-[150px]'>
-            <Button
-              block
-              style={{ color: '#66BFFF' }}
-              onClick={() => router.push(`/student/${studentId}/studentPersonal`)}
-            >
-              返回
             </Button>
           </div>
         </div>
