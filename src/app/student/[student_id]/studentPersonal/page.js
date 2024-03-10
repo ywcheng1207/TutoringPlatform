@@ -3,10 +3,16 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { Button, Modal, Form, Input } from 'antd'
+import { Button, Modal, Form, Input, Popconfirm, notification } from 'antd'
 
 //
-import { getStudentPersonalData, getStudentClassesBookedData } from '@/apis/apis'
+import {
+  getStudentPersonalData,
+  getStudentClassesBookedData,
+  getAllStudentCompletedClassesData,
+  patchStudentClassesBookedData,
+  postComments
+} from '@/apis/apis'
 
 //
 import NoPhoto from '@/components/NoPhoto'
@@ -17,18 +23,23 @@ export default function StudentPersonal({ params }) {
   const router = useRouter()
   const [studentPersonalData, setStudentPersonalData] = useState([])
   const [studentClassesBookedData, setStudentClassesBookedData] = useState([])
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const [imgLink, setImgLInk] = useState('')
+  const [classesComplete, setClassesComplete] = useState([])
 
-  const showModal = () => {
-    setIsModalOpen(!isModalOpen)
+  const fetchStudentClassesBookedData = async () => {
+    try {
+      const res = await getStudentClassesBookedData({ id: studentId })
+      // console.log('學生預訂的課程', res.data.data)
+      setStudentClassesBookedData(res.data.data)
+    } catch (error) {
+      console.error('學生預訂的課程', error)
+    }
   }
-
   useEffect(() => {
     const fetchStudentPersonalData = async () => {
       try {
         const res = await getStudentPersonalData({ id: studentId })
-        console.log('學生個人資料', res.data.data)
+        // console.log('學生個人資料', res.data.data)
         setStudentPersonalData(res.data.data)
         // 照片處理資料
         if (!isCompleteUrl(res.data.data?.avatar)) {
@@ -40,18 +51,18 @@ export default function StudentPersonal({ params }) {
         console.error('學生個人資料', error)
       }
     }
-    const fetchStudentClassesBookedData = async () => {
+    const fetchStudentClassesCompleteData = async () => {
       try {
-        const res = await getStudentClassesBookedData({ id: studentId })
-        console.log('學生預訂的課程', res)
-        // setStudentClassesBookedData(res.data.data)
+        const res = await getAllStudentCompletedClassesData({ id: studentId })
+        console.log('學生完成的課程', res)
+        setClassesComplete(res.data.data)
       } catch (error) {
-        console.error('學生預訂的課程', error)
+        console.error('學生完成的課程', error)
       }
     }
-
     fetchStudentPersonalData()
     fetchStudentClassesBookedData()
+    fetchStudentClassesCompleteData()
   }, [])
   // const BASEURL = 'http://10.0.0.136:3000'
   const BASEURL = 'https://tutor-online.zeabur.app'
@@ -66,7 +77,6 @@ export default function StudentPersonal({ params }) {
         </div>
         <div className='w-full flex flex-col gap-2'>
           <div className='text-center md:text-start text-2xl py-5'>{studentPersonalData.name}</div>
-          <span className='text-orange-400'>(還沒命名怎麼有名字?)</span>
           <AboutMe introduction={studentPersonalData.introduction} />
         </div>
         <div className='w-full flex justify-center md:justify-start'>
@@ -84,17 +94,18 @@ export default function StudentPersonal({ params }) {
       <div className='w-full md:w-8/12 h-full flex flex-col items-start gap-5 '>
         <div className='w-full flex flex-col gap-3'>
           <div className='w-full'>進行中的課程</div>
-          <ClassesYouBooked />
+          <ClassesYouBooked classes={studentClassesBookedData} fetchStudentClassesBookedData={fetchStudentClassesBookedData} />
         </div>
         <div className='w-full flex flex-col gap-3'>
           <div>學習歷程</div>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-3 md:pl-5'>
-            <LearningHistoryCard teacher='老師01' />
-            <LearningHistoryCard teacher='老師02' />
-            <LearningHistoryCard teacher='老師03' />
-            <LearningHistoryCard teacher='老師04' />
+            {classesComplete.map(ele =>
+              <LearningHistoryCard
+                data={ele}
+                teacher='老師01'
+                key={ele.dateTimeRange}
+              />)}
           </div>
-
         </div>
         <div className='w-full flex flex-col gap-3'>
           <div>我的學習時數名次</div>
@@ -119,16 +130,53 @@ const AboutMe = ({ introduction }) => {
   )
 }
 
-const ClassesYouBooked = ({ classes }) => {
+const ClassesYouBooked = ({ classes, fetchStudentClassesBookedData }) => {
+  const [canceling, setCanceling] = useState(false)
+
+  const handleDeleteBookedClasses = async (id) => {
+    console.log('取消這堂課', id)
+    setCanceling(true)
+    try {
+      const res = await patchStudentClassesBookedData({ id })
+      fetchStudentClassesBookedData()
+      console.log(res)
+      notification.success({
+        message: '課程取消成功!',
+        duration: 1
+      })
+    } catch (error) {
+      console.error(error)
+      notification.error({
+        message: '課程取消失敗，請稍後再試一次!',
+        duration: 1
+      })
+    }
+    setCanceling(false)
+  }
+
   const classesContent = () => {
     if (classes) {
+      // console.log('取得預約中的課程', classes)
       return (
         <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-3 md:pl-5'>
           {
             classes.map(ele =>
-              <div className='h-[70px] w-full border border-solid border-[#DDD] flex justify-between items-center' key={ele}>
-                <h3>{ele}</h3>
-                <Button style={{ color: '#fff', background: '#66BFFF' }}>取消課程</Button>
+              <div className='min-h-[70px] w-full border border-solid border-[#DDD] flex justify-between p-3' key={ele.id}>
+                <div className='flex flex-col gap-2'>
+                  <h3>課程：{ele.name}</h3>
+                  <h3>老師：{ele.Teacher.name}</h3>
+                  <h3>日期：{ele.dateTimeRange}</h3>
+                  <a href={ele.link} target='_blank' className='text-[#66BFFF]'>上課連結</a>
+                </div>
+                <Popconfirm
+                  title="取消這項課程"
+                  description="確定要取消預約的這項課程嗎?"
+                  onConfirm={() => handleDeleteBookedClasses(ele.id)}
+                  okText="確認"
+                  cancelText="取消"
+                >
+                  <Button loading={canceling} style={{ color: '#fff', background: '#66BFFF' }}>取消課程</Button>
+                </Popconfirm>
               </div>
             )
           }
@@ -149,25 +197,39 @@ const ClassesYouBooked = ({ classes }) => {
   )
 }
 
-const LearningHistoryCard = ({ teacher }) => {
+const LearningHistoryCard = ({ data }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const showModal = () => setIsModalOpen(!isModalOpen)
 
-  const handleModalSubmit = (e) => {
-    console.log(teacher)
-    console.log(e)
+  const handleModalSubmit = async (e) => {
+    try {
+      const res = await postComments({ id: data.Teacher.id, text: e.text, score: e.score })
+      console.log(res)
+      notification.success({
+        message: `感謝您對${data.Teacher.name}老師的評價!`,
+        duration: 1
+      })
+    } catch (error) {
+      console.error(error)
+      notification.error({
+        message: '評價送出失敗，請稍後再試一次!',
+        duration: 1
+      })
+    }
+
     showModal()
   }
 
   return (
     <div className='flex items-center gap-3 '>
       <div className=''>
-        <NoPhoto size='avatar2' />
+        <NoPhoto size='avatar2' photo={data.Teacher.avatar} />
       </div>
-      <div className='h-[70px] w-full border border-solid border-[#DDD] flex justify-between items-center'>
+      <div className='min-h-[70px] w-full border border-solid border-[#DDD] flex justify-between  p-3'>
         <div className='flex flex-col gap-1'>
-          <div>課程1</div>
-          <div>{teacher}</div>
+          <div>課程：{data.name}</div>
+          <div>老師：{data.Teacher.name}</div>
+          <div>日期：{data.dateTimeRange}</div>
         </div>
         <Button
           style={{ color: '#fff', background: '#66BFFF' }}
@@ -177,7 +239,7 @@ const LearningHistoryCard = ({ teacher }) => {
         </Button>
       </div>
       <Modal
-        title={`評分這位老師:${teacher}`}
+        title={<div className='py-4 text-2xl'>評分這位老師： {data.Teacher.name}</div>}
         open={isModalOpen}
         onCancel={showModal}
         footer={[]}
@@ -187,6 +249,7 @@ const LearningHistoryCard = ({ teacher }) => {
           colon={false}
           requiredMark={false}
           onFinish={handleModalSubmit}
+          className='flex flex-col items-end gap-3'
         >
           <Form.Item
             name="score"
@@ -197,11 +260,25 @@ const LearningHistoryCard = ({ teacher }) => {
                 message: '請輸入評分'
               }
             ]}
+            className='w-full'
           >
             <Input />
           </Form.Item>
+          <Form.Item
+            name="text"
+            label='評論'
+            rules={[
+              {
+                required: true,
+                message: '請輸入評論'
+              }
+            ]}
+            className='w-full'
+          >
+            <Input.TextArea style={{ resize: 'none' }} showCount maxLength={100} />
+          </Form.Item>
           <Button
-            style={{ color: '#fff', background: '#66BFFF' }}
+            style={{ color: '#fff', background: '#66BFFF', width: '70px' }}
             htmlType="submit"
           >
             提交

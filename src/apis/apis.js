@@ -208,7 +208,7 @@ export const getStudentClassesBookedData = async ({ id }) => {
 // 學生個人頁 - 取消預定一門課
 export const patchStudentClassesBookedData = async ({ id }) => {
   try {
-    const res = await apiWithToken.patch(`/classes/studentbooked/:${id}`)
+    const res = await apiWithToken.patch(`/classes/studentbooked/${id}`)
     return res
   } catch (error) {
     console.error('PatchStudentClassesBookedData Failed:', error)
@@ -219,7 +219,7 @@ export const patchStudentClassesBookedData = async ({ id }) => {
 // 學生個人頁 - 學生上完的所有課程 ，依照最近上完課程新到舊排序
 export const getAllStudentCompletedClassesData = async ({ id }) => {
   try {
-    const res = await apiWithToken.get(`/classes/:${id}/completed`)
+    const res = await apiWithToken.get(`/classes/${id}/completed`)
     return res
   } catch (error) {
     console.error('GetAllStudentCompletedClassesData Failed:', error)
@@ -230,7 +230,7 @@ export const getAllStudentCompletedClassesData = async ({ id }) => {
 // 學生個人頁 - 增加一則評論
 export const postComments = async ({ id, text, score }) => {
   try {
-    const res = await apiWithToken.get(`/comments/:${id}`, { text, score })
+    const res = await apiWithToken.post(`/comments/${id}`, { text, score })
     return res
   } catch (error) {
     console.error('PostComments Failed:', error)

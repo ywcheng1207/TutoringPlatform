@@ -44,7 +44,7 @@ function SignIn() {
 
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      // console.log('確定一下', tokenResponse.access_token)
+      console.log('確定一下', tokenResponse)
       try {
         const res = await postGoogle({ token: tokenResponse.access_token })
         console.log('Token 已成功傳送到後端', res)
