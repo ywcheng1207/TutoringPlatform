@@ -18,6 +18,8 @@ export default function StudentPersonal({ params }) {
   const [studentPersonalData, setStudentPersonalData] = useState([])
   const [studentClassesBookedData, setStudentClassesBookedData] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [imgLink, setImgLInk] = useState('')
+
   const showModal = () => {
     setIsModalOpen(!isModalOpen)
   }
@@ -28,6 +30,12 @@ export default function StudentPersonal({ params }) {
         const res = await getStudentPersonalData({ id: studentId })
         console.log('學生個人資料', res.data.data)
         setStudentPersonalData(res.data.data)
+        // 照片處理資料
+        if (!isCompleteUrl(res.data.data?.avatar)) {
+          setImgLInk(`${BASEURL}${res.data.data?.avatar}`)
+        } else {
+          setImgLInk(res.data.data?.avatar)
+        }
       } catch (error) {
         console.error('學生個人資料', error)
       }
@@ -43,16 +51,17 @@ export default function StudentPersonal({ params }) {
     }
 
     fetchStudentPersonalData()
-    // fetchStudentClassesBookedData()
+    fetchStudentClassesBookedData()
   }, [])
   // const BASEURL = 'http://10.0.0.136:3000'
   const BASEURL = 'https://tutor-online.zeabur.app'
-  console.log('照片', `${BASEURL}${studentPersonalData?.avatar}`)
+  // console.log('照片連結', `${BASEURL}${studentPersonalData?.avatar}`)
+
   return (
     <div className="w-full h-full flex flex-col gap-3 md:flex-row">
       <div className=' flex flex-col items-start gap-3 md:w-4/12'>
         <div className='w-full flex justify-center md:justify-start'>
-          <NoPhoto size='big' photo={studentPersonalData?.avatar && `${BASEURL}${studentPersonalData?.avatar}`} />
+          <NoPhoto size='big' photo={imgLink} />
           {/* <NoPhoto size='big' photo={studentPersonalData?.avatar} /> */}
         </div>
         <div className='w-full flex flex-col gap-2'>
@@ -75,16 +84,7 @@ export default function StudentPersonal({ params }) {
       <div className='w-full md:w-8/12 h-full flex flex-col items-start gap-5 '>
         <div className='w-full flex flex-col gap-3'>
           <div className='w-full'>進行中的課程</div>
-          <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-3 md:pl-5'>
-            <div className='h-[70px] w-full border border-solid border-[#DDD] flex justify-between items-center'>
-              <h3>課程1</h3>
-              <Button style={{ color: '#fff', background: '#66BFFF' }}>取消課程</Button>
-            </div>
-            <div className='h-[70px] w-full border border-solid border-[#DDD] flex justify-between items-center'>
-              <h3>課程2</h3>
-              <Button style={{ color: '#fff', background: '#66BFFF' }}>取消課程</Button>
-            </div>
-          </div>
+          <ClassesYouBooked />
         </div>
         <div className='w-full flex flex-col gap-3'>
           <div>學習歷程</div>
@@ -116,6 +116,36 @@ const AboutMe = ({ introduction }) => {
       <div>關於我</div>
       <div className='md:pl-5'>{introduction}</div>
     </>
+  )
+}
+
+const ClassesYouBooked = ({ classes }) => {
+  const classesContent = () => {
+    if (classes) {
+      return (
+        <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-3 md:pl-5'>
+          {
+            classes.map(ele =>
+              <div className='h-[70px] w-full border border-solid border-[#DDD] flex justify-between items-center' key={ele}>
+                <h3>{ele}</h3>
+                <Button style={{ color: '#fff', background: '#66BFFF' }}>取消課程</Button>
+              </div>
+            )
+          }
+        </div>
+      )
+    }
+    return (
+      <div className='h-[50px] w-full flex justify-center items-center text-gray-300 text-2xl'>
+        Oops...沒有進行中的課程
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      {classesContent()}
+    </div>
   )
 }
 
@@ -180,4 +210,9 @@ const LearningHistoryCard = ({ teacher }) => {
       </Modal>
     </div>
   )
+}
+
+function isCompleteUrl(url) {
+  const pattern = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-zA-Z0-9]+([\-\.]{1}[a-zA-Z0-9]+)*\.[a-zA-Z]{2,5}(:[0-9]{1,5})?(\/.*)?$/
+  return pattern.test(url)
 }

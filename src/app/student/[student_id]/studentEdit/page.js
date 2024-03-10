@@ -58,6 +58,8 @@ export default function EditTeacher({ params }) {
       console.log('修改學生個資失敗', error)
     }
   }
+  // const BASEURL = 'http://10.0.0.136:3000'
+  const BASEURL = 'https://tutor-online.zeabur.app'
 
   useEffect(() => {
     const fetchStudentPersonalData = async () => {
@@ -65,6 +67,17 @@ export default function EditTeacher({ params }) {
         const res = await getStudentPersonalData({ id: studentId })
         console.log('學生個人資料', res.data.data.name)
         setStudentPersonalData(res.data.data)
+        if (res.data.data.avatar) {
+          setImageURL(`${BASEURL}${res.data.data.avatar}`)
+          // 照片處理資料
+          if (!isCompleteUrl(res.data.data?.avatar)) {
+            form.setFieldsValue({ upload: res.data.data.avatar })
+            setImageURL(`${BASEURL}${res.data.data?.avatar}`)
+          } else {
+            form.setFieldsValue({ upload: res.data.data?.avatar })
+            setImageURL(res.data.data?.avatar)
+          }
+        }
         if (res.data.data.name) form.setFieldsValue({ studentName: res.data.data.name })
         if (res.data.data.introduction) form.setFieldsValue({ about: res.data.data.introduction })
       } catch (error) {
@@ -165,4 +178,9 @@ export default function EditTeacher({ params }) {
       </Form>
     </div>
   )
+}
+
+function isCompleteUrl(url) {
+  const pattern = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-zA-Z0-9]+([\-\.]{1}[a-zA-Z0-9]+)*\.[a-zA-Z]{2,5}(:[0-9]{1,5})?(\/.*)?$/
+  return pattern.test(url)
 }
