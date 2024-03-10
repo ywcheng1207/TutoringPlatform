@@ -20,7 +20,7 @@ const Header = () => {
   const [open, setOpen] = useState(false)
   // const [memberInfo, setMemberInfo] = useState(null)
   const memberInfo = JSON.parse(typeof window !== 'undefined' && window?.localStorage?.getItem('USER'))
-  // console.log('抓一下資料', memberInfo)
+  console.log('抓一下資料', memberInfo)
 
   const showDrawer = () => {
     setOpen(true)
@@ -30,50 +30,9 @@ const Header = () => {
   }
 
   const toBeAteacherBtn = () => {
-    if (path === '/signin' || path === '/signup') return
-    if (!memberInfo?.teacherId) {
+    if (memberInfo) {
       return (
-        <Link
-          href='/teacher/1/teacherEdit'
-          className='cursor-pointer hover:text-[#fff]'
-        >
-          成為老師
-        </Link>
-      )
-    }
-  }
-
-  return (
-    <div className="bg-neutral-200 h-[80px] px-3 flex item-center justify-between">
-      <div className='flex item-center gap-3'>
-        <Image src={iconLogo} alt='logo' height={50} className='cursor-pointer'
-          onClick={() => {
-            if (!typeof window !== 'undefined' && !window?.localStorage?.getItem('TOKEN')) {
-              return notification.error({
-                message: '請先登入!',
-                duration: 1
-              })
-            }
-            router.push('/home')
-          }}
-        />
-        <div className='items-center gap-3 hidden md:flex'>
-          {/* {
-            memberInfo && !memberInfo?.studentId && !memberInfo?.teacherId &&
-            <div className='flex item-center gap-3'>
-              <div>歡迎user{memberInfo?.id}</div>
-              <div>
-                <Link href='/teacher/apply'>
-                  成為老師
-                </Link>
-              </div>
-              <div>
-                <Link href='/student/apply'>
-                  成為學生
-                </Link>
-              </div>
-            </div>
-          } */}
+        <>
           {memberInfo?.studentId
             ? <div>
               <Link href={`/student/${memberInfo?.studentId}/studentPersonal`}>
@@ -98,6 +57,27 @@ const Header = () => {
               </Link>
             </div>
           }
+        </>
+      )
+    }
+  }
+
+  return (
+    <div className="bg-neutral-200 h-[80px] px-3 flex item-center justify-between">
+      <div className='flex item-center gap-3'>
+        <Image src={iconLogo} alt='logo' height={50} className='cursor-pointer'
+          onClick={() => {
+            if (!typeof window !== 'undefined' && !window?.localStorage?.getItem('TOKEN')) {
+              return notification.error({
+                message: '請先登入!',
+                duration: 1
+              })
+            }
+            router.push('/home')
+          }}
+        />
+        <div className='items-center gap-3 hidden md:flex'>
+          {toBeAteacherBtn()}
         </div>
       </div>
       {
