@@ -17,11 +17,10 @@ import iconClose from '@/assets/icon-close.svg'
 const Header = () => {
   const path = usePathname()
   const router = useRouter()
-  const [isMounted, setIsMounted] = useState(false)
   const [open, setOpen] = useState(false)
   // const [memberInfo, setMemberInfo] = useState(null)
   const memberInfo = JSON.parse(typeof window !== 'undefined' && window?.localStorage?.getItem('USER'))
-  console.log('抓一下資料', memberInfo)
+  // console.log('抓一下資料', memberInfo)
 
   const showDrawer = () => {
     setOpen(true)
@@ -44,9 +43,6 @@ const Header = () => {
     }
   }
 
-  // useEffect(() => {
-  //   setMemberInfo(localStorage?.getItem('USER'))
-  // }, [])
   return (
     <div className="bg-neutral-200 h-[80px] px-3 flex item-center justify-between">
       <div className='flex item-center gap-3'>
@@ -63,7 +59,7 @@ const Header = () => {
         />
         <div className='items-center gap-3 hidden md:flex'>
           {
-            !typeof window !== 'undefined' && window?.localStorage?.getItem('TOKEN') && !memberInfo?.studentId && !memberInfo?.teacherId &&
+            memberInfo && !memberInfo?.studentId && !memberInfo?.teacherId &&
             <div className='flex item-center gap-3'>
               <div>歡迎user{memberInfo?.id}</div>
               <div>
