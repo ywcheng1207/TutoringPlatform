@@ -12,7 +12,7 @@ import iconLock from '@/assets/icon-lock.svg'
 import iconEyeOpen from '@/assets/icon-eye-open.svg'
 import iconEyeClose from '@/assets/icon-eye-close.svg'
 import iconGoogle from '@/assets/icon-google.svg'
-import { postSignIn } from '@/apis/apis'
+import { postSignIn, postGoogle } from '@/apis/apis'
 import { useGoogleLogin } from '@react-oauth/google'
 
 //
@@ -43,9 +43,16 @@ function SignIn() {
   }
 
   const handleGoogleLogin = useGoogleLogin({
-    onSuccess: tokenResponse => console.log(tokenResponse),
+    onSuccess: async (tokenResponse) => {
+      // console.log('確定一下', tokenResponse.access_token)
+      try {
+        const res = await postGoogle({ token: tokenResponse.access_token })
+        console.log('Token 已成功傳送到後端', res)
+      } catch (error) {
+        console.error('傳送 Token 至後端時發生錯誤', error)
+      }
+    },
     onError: () => console.log('Google 登入失敗')
-    // 可以選擇性添加其他設定，例如 scope
   })
 
   useEffect(() => {

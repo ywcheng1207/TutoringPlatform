@@ -73,6 +73,17 @@ export const postSignUp = async ({ email, password, passwordCheck }) => {
   }
 }
 
+// Google註冊
+export const postGoogle = async ({ token }) => {
+  try {
+    const res = await apiWithoutToken.post('/auth2/google', { token })
+    return res
+  } catch (error) {
+    console.error('Google Login Failed:', error)
+    throw error
+  }
+}
+
 // 首頁 - 學生排行資料
 export const getStudentRankData = async () => {
   try {

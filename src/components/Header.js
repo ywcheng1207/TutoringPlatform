@@ -58,7 +58,7 @@ const Header = () => {
           }}
         />
         <div className='items-center gap-3 hidden md:flex'>
-          {
+          {/* {
             memberInfo && !memberInfo?.studentId && !memberInfo?.teacherId &&
             <div className='flex item-center gap-3'>
               <div>歡迎user{memberInfo?.id}</div>
@@ -73,18 +73,28 @@ const Header = () => {
                 </Link>
               </div>
             </div>
-          }
-          {memberInfo?.studentId &&
-            <div>
+          } */}
+          {memberInfo?.studentId
+            ? <div>
               <Link href={`/student/${memberInfo?.studentId}/studentPersonal`}>
                 我是學生
               </Link>
             </div>
+            : <div>
+              <Link href='/student/apply'>
+                成為學生
+              </Link>
+            </div>
           }
-          {memberInfo?.teacherId &&
-            <div>
+          {memberInfo?.teacherId
+            ? <div>
               <Link href={`/teacher/${memberInfo?.teacherId}/teacherPersonal`}>
                 我是老師
+              </Link>
+            </div>
+            : <div>
+              <Link href='/teacher/apply'>
+                成為老師
               </Link>
             </div>
           }

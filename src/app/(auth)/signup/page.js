@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Button, Input, Form, notification } from 'antd'
 
 //
-import { postSignUp } from '@/apis/apis'
+import { postSignUp, postGoogle } from '@/apis/apis'
 
 //
 import iconMail from '@/assets/icon-mail.svg'
@@ -15,6 +15,7 @@ import iconLockConfirm from '@/assets/icon-lock-confirm.svg'
 import iconEyeOpen from '@/assets/icon-eye-open.svg'
 import iconEyeClose from '@/assets/icon-eye-close.svg'
 import iconGoogle from '@/assets/icon-google.svg'
+import { useGoogleLogin } from '@react-oauth/google'
 
 //
 function SignUp() {
@@ -42,6 +43,19 @@ function SignUp() {
       // console.log('錯誤', error)
     }
   }
+
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      // console.log('這是傳給後端的token', tokenResponse.access_token)
+      try {
+        const res = await postGoogle({ token: tokenResponse.access_token })
+        console.log('Token 已成功傳送到後端', res)
+      } catch (error) {
+        console.error('傳送 Token 至後端時發生錯誤', error)
+      }
+    },
+    onError: () => console.log('Google 登入失敗')
+  })
 
   useEffect(() => {
     // 客戶端檢查 token，並導向home
@@ -116,7 +130,10 @@ function SignUp() {
             }}
           />
         </Form.Item>
-        <h6 className='flex items-center  text-[#66BFFF] text-[18px] font-[700] cursor-pointer'>
+        <h6
+         className='flex items-center  text-[#66BFFF] text-[18px] font-[700] cursor-pointer'
+          onClick={handleGoogleLogin}
+        >
           <Image src={iconGoogle} alt='google' width={25} />
           mail註冊
         </h6>
