@@ -38,17 +38,15 @@ export default function EditTeacher({ params }) {
 
   const handleSubmitTeacherInfo = async (e) => {
     const imgFile = e.upload[0].originFileObj
-    console.log('imgFile', imgFile)
-    const uploadImg = new FormData()
-    uploadImg.append('avatar', imgFile)
-    console.log(uploadImg)
+    const formData = new FormData()
+    formData.append('name', e.studentName)
+    formData.append('introduction', e.about)
+    formData.append('avatar', imgFile)
 
     try {
       const res = await putToBeAStudents({
         id: studentId,
-        name: e.studentName,
-        introduction: e.about,
-        avatar: uploadImg
+        data: formData
       })
       console.log('修改學生個資成功', res)
       notification.success({
@@ -86,7 +84,6 @@ export default function EditTeacher({ params }) {
         requiredMark={false}
         onFinish={handleSubmitTeacherInfo}
         form={form}
-      // initialValues={{ studentName: studentPersonalData.name }}
       >
         <Form.Item
           name="upload"

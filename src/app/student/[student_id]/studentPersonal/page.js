@@ -45,12 +45,15 @@ export default function StudentPersonal({ params }) {
     fetchStudentPersonalData()
     // fetchStudentClassesBookedData()
   }, [])
-
+  // const BASEURL = 'http://10.0.0.136:3000'
+  const BASEURL = 'https://tutor-online.zeabur.app'
+  console.log('照片', `${BASEURL}${studentPersonalData?.avatar}`)
   return (
     <div className="w-full h-full flex flex-col gap-3 md:flex-row">
       <div className=' flex flex-col items-start gap-3 md:w-4/12'>
         <div className='w-full flex justify-center md:justify-start'>
-          <NoPhoto size='big' photo={studentPersonalData.avatar} />
+          <NoPhoto size='big' photo={studentPersonalData?.avatar && `${BASEURL}${studentPersonalData?.avatar}`} />
+          {/* <NoPhoto size='big' photo={studentPersonalData?.avatar} /> */}
         </div>
         <div className='w-full flex flex-col gap-2'>
           <div className='text-center md:text-start text-2xl py-5'>{studentPersonalData.name}</div>

@@ -13,6 +13,7 @@ import iconEyeOpen from '@/assets/icon-eye-open.svg'
 import iconEyeClose from '@/assets/icon-eye-close.svg'
 import iconGoogle from '@/assets/icon-google.svg'
 import { postSignIn } from '@/apis/apis'
+import { useGoogleLogin } from '@react-oauth/google'
 
 //
 function SignIn() {
@@ -40,6 +41,12 @@ function SignIn() {
     }
     setIsSignining(false)
   }
+
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: tokenResponse => console.log(tokenResponse),
+    onError: () => console.log('Google 登入失敗')
+    // 可以選擇性添加其他設定，例如 scope
+  })
 
   useEffect(() => {
     // 客戶端檢查 token，並導向home
@@ -93,9 +100,12 @@ function SignIn() {
             }}
           />
         </Form.Item>
-        <h6 className='flex items-center  text-[#66BFFF] text-[18px] font-[700] cursor-pointer'>
+        <h6
+          className='flex items-center  text-[#66BFFF] text-[18px] font-[700] cursor-pointer'
+          onClick={handleGoogleLogin}
+        >
           <Image src={iconGoogle} alt='google' width={25} />
-          mail註冊
+          mail登入
         </h6>
         <Link
           href='/signup'

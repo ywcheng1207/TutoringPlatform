@@ -21,7 +21,7 @@ const Header = () => {
   const [open, setOpen] = useState(false)
   // const [memberInfo, setMemberInfo] = useState(null)
   const memberInfo = JSON.parse(typeof window !== 'undefined' && window?.localStorage?.getItem('USER'))
-  // console.log('抓一下資料', memberInfo)
+  console.log('抓一下資料', memberInfo)
 
   const showDrawer = () => {
     setOpen(true)
@@ -63,17 +63,33 @@ const Header = () => {
         />
         <div className='items-center gap-3 hidden md:flex'>
           {
+            !typeof window !== 'undefined' && window?.localStorage?.getItem('TOKEN') && !memberInfo?.studentId && !memberInfo?.teacherId &&
+            <div className='flex item-center gap-3'>
+              <div>歡迎user{memberInfo?.id}</div>
+              <div>
+                <Link href='/teacher/apply'>
+                  成為老師
+                </Link>
+              </div>
+              <div>
+                <Link href='/student/apply'>
+                  成為學生
+                </Link>
+              </div>
+            </div>
+          }
+          {memberInfo?.studentId &&
             <div>
-              <Link
-                href={memberInfo?.teacherId
-                  ? `/teacher/${memberInfo?.teacherId}/teacherPersonal`
-                  : `/student/${memberInfo?.studentId}/studentPersonal`
-                }
-                className='cursor-pointer hover:text-[#fff]'
-              >
-                {memberInfo?.email}
+              <Link href={`/student/${memberInfo?.studentId}/studentPersonal`}>
+                我是學生
               </Link>
-              {toBeAteacherBtn()}
+            </div>
+          }
+          {memberInfo?.teacherId &&
+            <div>
+              <Link href={`/teacher/${memberInfo?.teacherId}/teacherPersonal`}>
+                我是老師
+              </Link>
             </div>
           }
         </div>

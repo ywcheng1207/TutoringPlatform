@@ -1,29 +1,24 @@
 'use client'
 
 //
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { Input, Select, Form, Button, Radio, Upload, Checkbox } from 'antd'
 import { useRouter } from 'next/navigation'
+import { Input, Select, Form, Button, Radio, Upload, notification } from 'antd'
 
 //
 import NoPhoto from '@/components/NoPhoto'
+import { postToBeAStudents } from '@/apis/apis'
 
 //
 import iconCamera from '@/assets/icon-camera.svg'
 
 //
-export default function EditTeacher({ params }) {
-  const teacherId = params.teacher_id
+export default function StudentApply() {
   const router = useRouter()
+  const [form] = Form.useForm()
   const [fileList, setFileList] = useState([])
   const [imageURL, setImageURL] = useState(null)
-  const [checkedValues, setCheckedValues] = useState([])
-  // const change = (checkedValues) => {
-  //   setCheckedValues(checkedValues)
-  // }
-
-  const options = ['生活英文', '旅遊英文', '商業英文', '兒童英文']
 
   const handleUploadChange = ({ fileList: newFileList }) => {
     setFileList(newFileList)
@@ -31,16 +26,34 @@ export default function EditTeacher({ params }) {
       const latestFile = newFileList[newFileList.length - 1]
       if (latestFile.originFileObj) {
         const fileURL = URL.createObjectURL(latestFile.originFileObj)
-        setImageURL(fileURL) // 保存圖片URL以便顯示
-        console.log(fileURL) // 輸出查看URL是否正確
+        setImageURL(fileURL)
+        console.log(fileURL)
       }
     } else {
-      setImageURL(null) // 清除圖片URL
+      setImageURL(null)
     }
   }
 
-  const handleSubmitTeacherInfo = (e) => {
-    console.log(e)
+  const handleApplyStudent = async (e) => {
+    const imgFile = e.upload[0].originFileObj
+    const formData = new FormData()
+    formData.append('name', e.studentName)
+    formData.append('introduction', e.about)
+    formData.append('avatar', imgFile)
+
+    try {
+      const res = await postToBeAStudents({
+        data: formData
+      })
+      console.log('申請成為學生成功!', res)
+      notification.success({
+        message: '申請成為學生成功!',
+        duration: 1
+      })
+      // router.push(`/student/${studentId}/studentPersonal`)
+    } catch (error) {
+      console.log('申請成為學生失敗!', error)
+    }
   }
 
   return (
@@ -50,7 +63,8 @@ export default function EditTeacher({ params }) {
         layout='vertical'
         colon={false}
         requiredMark={false}
-        onFinish={handleSubmitTeacherInfo}
+        onFinish={handleApplyStudent}
+        form={form}
       >
         <Form.Item
           name="upload"
@@ -79,7 +93,7 @@ export default function EditTeacher({ params }) {
           </Upload>
         </Form.Item>
         <Form.Item
-          name='teacherName'
+          name='studentName'
           style={{ width: '100%' }}
           label='姓名'
           rules={[
@@ -90,23 +104,6 @@ export default function EditTeacher({ params }) {
           ]}
         >
           <Input placeholder='請填入姓名' />
-        </Form.Item>
-        <Form.Item
-          name='teacherCountry'
-          style={{ width: '100%' }}
-          label='國籍'
-          rules={[
-            {
-              required: true,
-              message: '請選擇國籍'
-            }
-          ]}
-        >
-          <Select showSearch placeholder='請選擇國籍'>
-            <Select.Option value='臺灣'>臺灣</Select.Option>
-            <Select.Option value='美國'>美國</Select.Option>
-            <Select.Option value='非洲'>非洲</Select.Option>
-          </Select>
         </Form.Item>
         <Form.Item
           name='about'
@@ -126,39 +123,6 @@ export default function EditTeacher({ params }) {
             placeholder='請填入自我介紹'
           />
         </Form.Item>
-        <Form.Item
-          name='teachStyle'
-          style={{ width: '100%' }}
-          label='教學風格'
-          rules={[
-            {
-              required: true,
-              message: '請填入教學風格'
-            }
-          ]}
-        >
-          <Input.TextArea
-            style={{ width: '100%', height: 150, resize: 'none' }}
-            showCount
-            maxLength={100}
-            placeholder='請填入教學風格'
-          />
-        </Form.Item>
-        <div className='w-full'>
-          <div className=''>課程種類</div>
-          <Form.Item
-            name="teachType"
-            style={{ width: '100%' }}
-            rules={[
-              {
-                required: true,
-                message: '請選擇至少一項課程種類'
-              }
-            ]}
-          >
-            <Checkbox.Group options={options} value={checkedValues} />
-          </Form.Item>
-        </div>
         <div className='flex flex-col justify-between md:flex-row-reverse w-full gap-3'>
           <div className='min-w-[150px]'>
             <Button
@@ -173,7 +137,7 @@ export default function EditTeacher({ params }) {
             <Button
               block
               style={{ color: '#66BFFF' }}
-              onClick={() => router.push('/home')}
+              onClick={() => router.push(`/student/${studentId}/studentPersonal`)}
             >
               返回
             </Button>

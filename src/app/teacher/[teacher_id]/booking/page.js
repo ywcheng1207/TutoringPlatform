@@ -52,7 +52,7 @@ export default function TeacherPersonal({ params }) {
     const fetchTeacherPageData = async () => {
       try {
         const res = await getTeacherPageData({ id: teacherId })
-        // console.log('學生看老師頁的老師頁資料', res.data.data)
+        console.log('學生看老師頁的老師頁資料', res.data.data)
         setTheTeacherData(res.data.data)
       } catch (error) {
         console.error('學生看老師頁的老師資料', error)
@@ -80,15 +80,15 @@ export default function TeacherPersonal({ params }) {
             <div className='flex justify-center md:justify-start'>
               {theTeacherData.name}
             </div>
-            <div className='flex'>
+            <div className='flex item-center gap-1'>
               <h3 className='mr-3'>{theTeacherData.country}</h3>
-              <Image src={iconHeart} alt='like' />
-              <h3 className='text-orange-400'>4.8 (缺老師評分)</h3>
+              <Image src={iconHeart} alt='like' width={20} />
+              <h3 className=''>{theTeacherData.ScoreAvg}</h3>
             </div>
           </div>
         </div>
         <div className='flex justify-center items-center md:justify-start gap-3 py-6'>
-          {currentClassesType.map(ele => <ClassesTypeTag key={ele} text={classType2[ele]} />)}
+          {theTeacherData.categoryId?.map(ele => <ClassesTypeTag key={ele} text={classType2[ele]} />)}
         </div>
         <div className='flex flex-col gap-1'>
           <h1>簡介</h1>

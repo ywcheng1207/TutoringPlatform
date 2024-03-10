@@ -6,6 +6,7 @@ import zhTW from 'antd/lib/locale/zh_TW'
 import { Provider } from './provider'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import { GoogleOAuthProvider } from '@react-oauth/google'
 
 // const engFontType = Comforter({ weight: ['400'], subsets: ['latin'] })
 const cnFontType = Noto_Sans_TC({ weight: ['400', '700', '900'], subsets: ['latin'] })
@@ -31,15 +32,17 @@ const RootLayout = ({ children }) => {
           }}
         >
           <AntdRegistry>
-            <Provider>
-              <div className='flex flex-col justify-between min-h-screen gap-5'>
-                <Header />
-                <div className='h-full flex-1 w-full  px-3 md:mx-auto md:max-w-[1280px] md:px-10 flex items-center'>
-                  {children}
+            <GoogleOAuthProvider clientId='303422650660-1vqckog59tsnnvf423324ni7uepcpu4f.apps.googleusercontent.com'>
+              <Provider>
+                <div className='flex flex-col justify-between min-h-screen gap-5'>
+                  <Header />
+                  <div className='h-full flex-1 w-full  px-3 md:mx-auto md:max-w-[1280px] md:px-10 flex items-center'>
+                    {children}
+                  </div>
+                  <Footer />
                 </div>
-                <Footer />
-              </div>
-            </Provider>
+              </Provider>
+            </GoogleOAuthProvider>
           </AntdRegistry>
         </ConfigProvider>
       </body>

@@ -118,7 +118,7 @@ function SignUp() {
         </Form.Item>
         <h6 className='flex items-center  text-[#66BFFF] text-[18px] font-[700] cursor-pointer'>
           <Image src={iconGoogle} alt='google' width={25} />
-          mail登入
+          mail註冊
         </h6>
         <Link
           href='/signin'

@@ -4,6 +4,7 @@ import axios from 'axios'
 const apiWithoutToken = axios.create({
   baseURL: 'https://tutor-online.zeabur.app',
   // baseURL: 'https://boss-shad-deadly.ngrok-free.app',
+  // baseURL: 'http://10.0.0.136:3000',
   headers: {
     'Content-Type': 'application/json'
   }
@@ -13,12 +14,32 @@ const apiWithoutToken = axios.create({
 const apiWithToken = axios.create({
   baseURL: 'https://tutor-online.zeabur.app',
   // baseURL: 'https://boss-shad-deadly.ngrok-free.app',
+  // baseURL: 'http://10.0.0.136:3000',
   headers: {
     'Content-Type': 'application/json'
   }
 })
 
 apiWithToken.interceptors.request.use(config => {
+  const TOKEN = typeof window !== 'undefined' && window?.localStorage?.getItem('TOKEN')
+  if (TOKEN) {
+    config.headers.Authorization = `Bearer ${TOKEN}`
+  }
+  return config
+}, error => {
+  return Promise.reject(error)
+})
+
+const apiWithTokenByFormData = axios.create({
+  baseURL: 'https://tutor-online.zeabur.app',
+  // baseURL: 'https://boss-shad-deadly.ngrok-free.app',
+  // baseURL: 'http://10.0.0.136:3000',
+  headers: {
+    'Content-Type': 'multipart/form-data'
+  }
+})
+
+apiWithTokenByFormData.interceptors.request.use(config => {
   const TOKEN = typeof window !== 'undefined' && window?.localStorage?.getItem('TOKEN')
   if (TOKEN) {
     config.headers.Authorization = `Bearer ${TOKEN}`
@@ -218,9 +239,9 @@ export const postToBeAStudents = async ({ name, introduction, avatar }) => {
 }
 
 // 學生頁 - 編輯筆學生資料
-export const putToBeAStudents = async ({ id, name, introduction, avatar }) => {
+export const putToBeAStudents = async ({ id, data }) => {
   try {
-    const res = await apiWithToken.put(`/students/${id}`, { name, introduction, avatar })
+    const res = await apiWithTokenByFormData.put(`/students/${id}`, data)
     return res
   } catch (error) {
     console.error('PutToBeAStudents Failed:', error)

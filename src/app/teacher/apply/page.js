@@ -1,5 +1,4 @@
 'use client'
-
 //
 import { useState } from 'react'
 import Image from 'next/image'
@@ -13,8 +12,7 @@ import NoPhoto from '@/components/NoPhoto'
 import iconCamera from '@/assets/icon-camera.svg'
 
 //
-export default function EditTeacher({ params }) {
-  const teacherId = params.teacher_id
+export default function TeacherApply() {
   const router = useRouter()
   const [fileList, setFileList] = useState([])
   const [imageURL, setImageURL] = useState(null)
