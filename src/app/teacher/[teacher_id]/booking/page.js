@@ -19,11 +19,14 @@ export default function TeacherPersonal({ params }) {
   const [classOption, setClassOption] = useState(null)
   const [theTeacherData, setTheTeacherData] = useState([])
   const [classesOpenedInTwoWeeks, setClassesOpenedInTwoWeeks] = useState([])
-  const classOptions = classFilter === 0
-    ? classesOpenedInTwoWeeks
-    : classesOpenedInTwoWeeks.filter(ele => ele.categoryId === classFilter)
-  const currentClassesType =
-    Array.from(new Set(classesOpenedInTwoWeeks.map(item => item.categoryId))).sort((a, b) => a - b)
+  let classOptions = ''
+  if (typeof classesOpenedInTwoWeeks !== 'string') {
+    classOptions = classFilter === 0
+      ? classesOpenedInTwoWeeks
+      : classesOpenedInTwoWeeks?.filter(ele => ele.categoryId === classFilter)
+  }
+  // const currentClassesType =
+  //   Array.from(new Set(classesOpenedInTwoWeeks.map(item => item.categoryId))).sort((a, b) => a - b)
 
   const classType = [
     { key: 0, type: '全部' },
@@ -137,7 +140,7 @@ export default function TeacherPersonal({ params }) {
           showSearch={true}
           onChange={handleClassOption}
         >
-          {
+          {typeof classOptions !== 'string' &&
             classOptions.map(ele => <Select.Option value={ele.dateTimeRange} key={ele.id}>
               {ele.name} {`(${ele.dateTimeRange})`} <span className='bg-[#66BFFF] text-[#FFF] px-2 rounded-lg '>{classType2[ele.categoryId]}</span>
             </Select.Option>)

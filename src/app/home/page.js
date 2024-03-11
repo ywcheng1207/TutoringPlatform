@@ -252,10 +252,10 @@ const StudyRanking = ({ studentRankData }) => {
       </div>
       <div className='flex flex-wrap gap-3 md:justify-center md:block md:w-[240px]'>
         {studentRankData?.map(item => (
-          <div key={item.id} className='flex items-center py-2 md:w-full'>
+          <div key={item.id} className='flex items-center py-2 md:w-full '>
             <div className='flex items-center gap-3'>
               <NoPhoto size='avatar' photo={item.avatar} username={item.name} />
-              <h2 className='hidden md:block flex-1 max-w-[130px] overflow-hidden text-nowrap text-ellipsis'>
+              <h2 className='hidden md:block flex-1 max-w-[130px] overflow-hidden text-nowrap text-ellipsis '>
                 {item.name}
               </h2>
             </div>
