@@ -285,7 +285,7 @@ export const postClasses = async ({ name, dateTimeRange, link, category }) => {
 // 課程管理 - 一次修改一堂課
 export const putClasses = async ({ id, name, dateTimeRange, link, category }) => {
   try {
-    const res = await apiWithToken.post(`/classes/:${id}`, { name, dateTimeRange, link, category })
+    const res = await apiWithToken.put(`/classes/${id}`, { name, dateTimeRange, link, category })
     return res
   } catch (error) {
     console.error('PutClasses Failed:', error)
@@ -296,7 +296,7 @@ export const putClasses = async ({ id, name, dateTimeRange, link, category }) =>
 // 課程管理 - 一次刪除一堂課
 export const deleteClasses = async ({ id }) => {
   try {
-    const res = await apiWithToken.delete(`/classes/:${id}`)
+    const res = await apiWithToken.delete(`/classes/${id}`)
     return res
   } catch (error) {
     console.error('DeleteClasses Failed:', error)

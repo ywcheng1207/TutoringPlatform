@@ -2,101 +2,22 @@
 
 //
 import Image from 'next/image'
-import { Button, Select, Modal, Form, Input } from 'antd'
+import { Button, Select, Modal, Form, Input, notification } from 'antd'
 import { useState, useEffect, useRef } from 'react'
+
+//
+import {
+  getTeacherClassesData,
+  postClasses,
+  putClasses,
+  deleteClasses
+} from '@/apis/apis'
 
 //
 import iconEdit from '@/assets/icon-edit.svg'
 import iconArrow from '@/assets/icon-arrow.svg'
 import iconRunningMan from '@/assets/icon-running-man.svg'
 import iconDelete from '@/assets/icon-delete.svg'
-
-const dummyClassesData = [
-  {
-    id: 1,
-    isBooked: 0,
-    isCompleted: 0,
-    length: 60,
-    dateTimeRange: '2024-03-05 19:00-20:00',
-    name: '試試看保證不虧',
-    link: '/class/1',
-    studentId: null,
-    teacherId: 21,
-    categoryId: 1,
-    createdAt: '2024-03-01T11:50:52.000Z',
-    updatedAt: '2024-03-01T11:50:52.000Z'
-  },
-  {
-    id: 2,
-    isBooked: 0,
-    isCompleted: 0,
-    length: 30,
-    dateTimeRange: '2024-03-05 20:00-20:30',
-    name: '試了你就知道會虧',
-    link: '/class/2',
-    studentId: null,
-    teacherId: 21,
-    categoryId: 1,
-    createdAt: '2024-03-01T11:51:09.000Z',
-    updatedAt: '2024-03-01T11:51:09.000Z'
-  },
-  {
-    id: 3,
-    isBooked: 0,
-    isCompleted: 0,
-    length: 30,
-    dateTimeRange: '2024-03-05 20:30-21:00',
-    name: '沒錢還想上課',
-    link: '/class/3',
-    studentId: null,
-    teacherId: 21,
-    categoryId: 1,
-    createdAt: '2024-03-01T11:51:09.000Z',
-    updatedAt: '2024-03-01T11:51:09.000Z'
-  },
-  {
-    id: 4,
-    isBooked: 0,
-    isCompleted: 0,
-    length: 60,
-    dateTimeRange: '2024-03-06 19:00-20:00',
-    name: '試試看保證不虧',
-    link: '/class/6',
-    studentId: null,
-    teacherId: 21,
-    categoryId: 1,
-    createdAt: '2024-03-01T11:50:52.000Z',
-    updatedAt: '2024-03-01T11:50:52.000Z'
-  },
-  {
-    id: 5,
-    isBooked: 0,
-    isCompleted: 0,
-    length: 30,
-    dateTimeRange: '2024-03-06 20:00-20:30',
-    name: '試了你就知道會虧',
-    link: '/class/7',
-    studentId: null,
-    teacherId: 21,
-    categoryId: 1,
-    createdAt: '2024-03-01T11:51:09.000Z',
-    updatedAt: '2024-03-01T11:51:09.000Z'
-  },
-  {
-    id: 6,
-    isBooked: 0,
-    isCompleted: 0,
-    length: 30,
-    dateTimeRange: '2024-03-07 20:00-20:30',
-    name: '試了你就知道會虧',
-    link: '/class/8',
-    studentId: null,
-    teacherId: 21,
-    categoryId: 1,
-    createdAt: '2024-03-01T11:51:09.000Z',
-    updatedAt: '2024-03-01T11:51:09.000Z'
-  }
-]
 
 //
 export default function ClassManage({ params }) {
@@ -117,28 +38,64 @@ export default function ClassManage({ params }) {
     setCurrentTime(e)
   }
 
-  const handleDeleteClass = (id) => {
-    setClassData(pre => pre.filter(ele => ele.id !== id))
+  const handleDeleteClass = async (id) => {
+    try {
+      const res = await deleteClasses({ id })
+      notification.success({
+        message: '刪除課程成功!',
+        duration: 1
+      })
+      setClassData(pre => pre.filter(ele => ele.id !== id))
+    } catch (error) {
+      notification.success({
+        message: '刪除課程失敗!',
+        duration: 1
+      })
+    }
   }
 
-  const handleEditClass = (e, type) => {
+  const handleEditClass = async (e, type) => {
     if (type === 'edit') {
       // console.log('編個輯', e)
-      setClassData(pre => pre.map(ele => {
-        if (ele.id === e.id) {
-          return {
-            ...ele,
-            name: e.name,
-            dateTimeRange: e.dateTimeRange,
-            link: e.link,
-            categoryId: e.categoryId
+      try {
+        const res = await putClasses({ id: teacherId, ...e })
+        notification.success({
+          message: '編輯課程成功!',
+          duration: 1
+        })
+        setClassData(pre => pre.map(ele => {
+          if (ele.id === e.id) {
+            return {
+              ...ele,
+              name: e.name,
+              dateTimeRange: e.dateTimeRange,
+              link: e.link,
+              categoryId: e.categoryId
+            }
           }
-        }
-        return ele
-      }))
+          return ele
+        }))
+      } catch (error) {
+        notification.success({
+          message: '編輯課程失敗!',
+          duration: 1
+        })
+      }
     }
     if (type === 'create') {
-      setClassData([...classData, { ...e, id: generateRandomString() }])
+      try {
+        const res = await postClasses({ ...e })
+        notification.success({
+          message: '新增課程成功!',
+          duration: 1
+        })
+        setClassData([...classData, { ...e, id: generateRandomString() }])
+      } catch (error) {
+        notification.success({
+          message: '新增課程失敗!',
+          duration: 1
+        })
+      }
     }
   }
 
@@ -157,8 +114,17 @@ export default function ClassManage({ params }) {
   }
 
   useEffect(() => {
+    const fetchTeacherClassesDataData = async () => {
+      try {
+        const res = await getTeacherClassesData({ id: teacherId })
+        // console.log('老師開課資訊', res.data.data)
+        setClassData(res.data.data)
+      } catch (error) {
+        console.error('老師開課資訊', error)
+      }
+    }
+    fetchTeacherClassesDataData()
     setIsLoading(true)
-    setClassData(dummyClassesData)
     setIsLoading(false)
   }, [])
 
@@ -274,7 +240,7 @@ const ClassCard = ({ info, onEdit, onDeleteClass, finalSelection, currentClassDa
         <a href={info.link} target='_blank' className='text-[#66BFFF] hover:opacity-70'>課程連結</a>
       </div>
       <div className='flex justify-between'>
-        <Image src={iconDelete} alt='delete' className='cursor-pointer' onClick={() => onDeleteClass(info.id)}/>
+        <Image src={iconDelete} alt='delete' className='cursor-pointer' onClick={() => onDeleteClass(info.id)} />
         <EditBtn type='edit' info={info} onEdit={onEdit} finalSelection={finalSelection} currentClassData={currentClassData} />
       </div>
     </div>
@@ -332,7 +298,7 @@ const EditBtn = ({ type, info, onEdit, finalSelection, currentClassData }) => {
             <Input />
           </Form.Item>
           <Form.Item
-            name="categoryId"
+            name="category"
             label='課程分類'
             rules={[
               {
