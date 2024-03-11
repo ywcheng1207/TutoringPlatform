@@ -120,7 +120,7 @@ export const getTeacherPageData = async ({ id }) => {
 // 老師頁, 老師個人頁 - 學生評論：score, text, studentId, teacherId
 export const getTeacherCommentData = async ({ id }) => {
   try {
-    const res = await apiWithToken.get(`/comments/:${id}`)
+    const res = await apiWithToken.get(`/comments/${id}`)
     return res
   } catch (error) {
     console.error('GetTeacherCommentData Failed:', error)

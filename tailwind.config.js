@@ -10,6 +10,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      boxShadow: {
+        'inner-black-fog': 'inset 0 -4px 6px -4px rgba(107, 114, 128, 0.7)'
+      }
     }
   },
   plugins: []

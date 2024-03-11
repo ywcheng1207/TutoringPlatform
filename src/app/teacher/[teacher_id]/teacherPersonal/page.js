@@ -1,12 +1,17 @@
 'use client'
 //
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Button, Modal, Form, Input } from 'antd'
 
 //
 import NoPhoto from '@/components/NoPhoto'
+import {
+  getTeacherPageData,
+  getTeacherClassesData,
+  getTeacherCommentData
+} from '@/apis/apis'
 
 //
 import iconHeart from '@/assets/icon-heart.svg'
@@ -15,45 +20,74 @@ import iconHeart from '@/assets/icon-heart.svg'
 export default function StudentPersonal({ params }) {
   const teacherId = params.teacher_id
   const router = useRouter()
+  const [teacherPersonalData, setTeacherPersonalData] = useState([])
+  const [classesOpenedInTwoWeeks, setClassesOpenedInTwoWeeks] = useState([])
+  const [teacherCommentData, setTeacherCommentData] = useState([])
+
+  const classType2 = ['全部', '生活英文', '商業英文', '旅遊英文', '兒童英文']
+
+  useEffect(() => {
+    const fetchTeacherPersonalData = async () => {
+      try {
+        const res = await getTeacherPageData({ id: teacherId })
+        // console.log('老師個人資料', res.data.data)
+        setTeacherPersonalData(res.data.data)
+        // 照片處理資料
+        // if (!isCompleteUrl(res.data.data?.avatar)) {
+        //   setImgLInk(`${BASEURL}${res.data.data?.avatar}`)
+        // } else {
+        //   setImgLInk(res.data.data?.avatar)
+        // }
+      } catch (error) {
+        console.error('老師個人資料', error)
+      }
+    }
+    const fetchTeacherClassesDataData = async () => {
+      try {
+        const res = await getTeacherClassesData({ id: teacherId })
+        // console.log('老師開課資訊', res.data.data)
+        setClassesOpenedInTwoWeeks(res.data.data)
+      } catch (error) {
+        console.error('老師開課資訊', error)
+      }
+    }
+    const fetchTeacherCommentsData = async () => {
+      try {
+        const res = await getTeacherCommentData({ id: teacherId })
+        // console.log('老師得到的評論', res.data.data)
+        setTeacherCommentData(res.data.data)
+      } catch (error) {
+        console.error('老師得到的評論', error)
+      }
+    }
+    fetchTeacherPersonalData()
+    fetchTeacherClassesDataData()
+    fetchTeacherCommentsData()
+  }, [])
 
   return (
     <div className="w-full h-full flex flex-col gap-3 md:flex-row">
       {/* 基礎資訊 */}
       <div className=' flex flex-col items-start gap-3 md:w-4/12'>
         <div className='w-full flex justify-center md:justify-start'>
-          <NoPhoto size='big' />
+          <NoPhoto size='big' photo={teacherPersonalData.avatar} />
         </div>
         <div className='w-full flex flex-col gap-2'>
-          <div className='text-center md:text-start text-2xl py-5'>老師{teacherId}</div>
-          <div className='text-center md:text-start py-2'>非洲</div>
+          <div className='text-center md:text-start text-2xl py-5'>{teacherPersonalData.name}</div>
+          <div className='text-center md:text-start py-2'>{teacherPersonalData.country}</div>
           <div className='flex justify-center md:justify-start gap-10 py-2'>
             <Image src={iconHeart} alt='like' />
-            <h3>4.8</h3>
+            <h3>{teacherPersonalData.ScoreAvg}</h3>
           </div>
-          <div>課程種類</div>
+          <div>專業</div>
           <div className='py-2 md:pl-5'>
             <div className='grid grid-cols-2 gap-2'>
-              <div className='flex items-center justify-center'>
-                <p className='text-green-600'>&#10003;</p>
-                <p className=''>生活英文</p>
-              </div>
-              <div className='flex items-center justify-center'>
-                <p className='text-green-600'>&#10003;</p>
-                <p className=''>旅遊英文</p>
-              </div>
-              <div className='flex items-center justify-center'>
-                <p className='text-green-600'>&#10003;</p>
-                <p className=''>商業英文</p>
-              </div>
-              <div className='flex items-center justify-center'>
-                <p className='text-green-600'>&#10003;</p>
-                <p className=''>兒童英文</p>
-              </div>
+              {teacherPersonalData.categoryId?.map(ele => <ClassesTypeTag key={ele} text={classType2[ele]} />)}
             </div>
           </div>
-          <AboutMe />
+          <AboutMe content={teacherPersonalData.introduction} />
           <div className='w-full md:hidden'>
-            <TeachingStyle />
+            <TeachingStyle content={teacherPersonalData.style} />
           </div>
         </div>
         <div className='w-full md:hidden'>
@@ -65,19 +99,47 @@ export default function StudentPersonal({ params }) {
       <div className='md:w-8/12 h-full flex flex-col items-start gap-5'>
         <div className='w-full flex flex-col gap-3'>
           <div>最新行程</div>
-          <div className='flex flex-col gap-3 md:pl-5'>
-            <div className='h-[70px] w-full border border-solid border-[#DDD]'>課程1</div>
-            <div className='h-[70px] w-full border border-solid border-[#DDD]'>課程2</div>
+          <div className='max-h-[210px] overflow-y-scroll flex flex-col gap-3 md:pl-5'>
+            {
+              typeof classesOpenedInTwoWeeks !== 'string' && classesOpenedInTwoWeeks.map(ele =>
+                <div className='min-h-[90px] w-full border border-solid border-[#DDD] flex justify-between p-3' key={ele.id}>
+                  <div className='flex flex-col gap-2'>
+                    <h3>課程：{ele.name}</h3>
+                    <h3>日期：{ele.dateTimeRange}</h3>
+                    <a href={ele.link} target='_blank' className='text-[#66BFFF]'>上課連結</a>
+                  </div>
+                </div>
+              )
+            }
+            {
+              typeof classesOpenedInTwoWeeks === 'string' &&
+              <div className='h-[100px] w-full flex justify-center items-center text-gray-300 text-2xl'>
+                Oops...目前沒有安排行程
+              </div>
+            }
           </div>
         </div>
         <div className='w-full hidden md:block'>
-          <TeachingStyle />
+          <TeachingStyle content={teacherPersonalData.style} />
         </div>
         <div className='w-full flex flex-col gap-3'>
           <div>近期評論</div>
-          <div className='flex flex-col gap-3 md:pl-5'>
-            <div className='h-[70px] w-full border border-solid border-[#DDD]'>XXX學生：這老師課不好</div>
-            <div className='h-[70px] w-full border border-solid border-[#DDD]'>YYY學生：每天早8是在哭?</div>
+          <div className='max-h-[210px] overflow-y-scroll flex flex-col gap-3 md:pl-5'>
+            {
+              typeof teacherCommentData !== 'string' && teacherCommentData.map(ele =>
+                <div key={ele.id} className='h-[90px] w-full border border-solid border-[#DDD] flex flex-col gap-2 p-3'>
+                  <h1>學生{ele.studentId}</h1>
+                  <h1>評分：{ele.score}</h1>
+                  <h1>評論：{ele.text}</h1>
+                </div>
+              )
+            }
+            {
+              typeof teacherCommentData === 'string' &&
+              <div className='h-[100px] w-full flex justify-center items-center text-gray-300 text-2xl'>
+                Oops...目前還沒收到學生的評論
+              </div>
+            }
           </div>
         </div>
         <div className='w-full hidden md:block'>
@@ -88,20 +150,29 @@ export default function StudentPersonal({ params }) {
   )
 }
 
-const AboutMe = () => {
+const AboutMe = ({ content }) => {
   return (
     <div className='flex flex-col gap-2'>
       <div>關於我</div>
-      <div className='md:pl-5'>果今就元，威士樂夷的總轉記啦數影睏二顧要於冀科它郵道要來音應大！；戰大作星。興等計！阱係先的攻翔家度單也時瓣人常使避大孟新跟樂中且如到延！回中法大謝慾議機；如其不！。統偏的回上各喵麼知，不得也岳的隊的</div>
+      <div className='md:pl-5'>{content}</div>
     </div>
   )
 }
 
-const TeachingStyle = () => {
+const TeachingStyle = ({ content }) => {
   return (
     <div className='flex flex-col gap-2'>
       <div>教學風格</div>
-      <div className='md:pl-5'>果今就元，威士樂夷的總轉記啦數影睏二顧要於冀科它郵道要來音應大！；戰大作星。興等計！阱係先的攻翔家度單也時瓣人常使避大孟新跟樂中且如到延！回中法大謝慾議機；如其不！。統偏的回上各喵麼知，不得也岳的隊的</div>
+      <div className='md:pl-5'>{content}</div>
+    </div>
+  )
+}
+
+const ClassesTypeTag = ({ text }) => {
+  return (
+    <div className='flex items-center'>
+      <p className='text-green-600'>&#10003;</p>
+      <p className=''>{text}</p>
     </div>
   )
 }
