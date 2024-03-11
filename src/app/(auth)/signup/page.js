@@ -49,9 +49,20 @@ function SignUp() {
       // console.log('這是傳給後端的token', tokenResponse.access_token)
       try {
         const res = await postGoogle({ token: tokenResponse.access_token })
-        console.log('Token 已成功傳送到後端', res)
+        typeof window !== 'undefined' && window?.localStorage?.setItem('TOKEN', res.data.token)
+        typeof window !== 'undefined' && window?.localStorage?.setItem('USER', JSON.stringify(res.data.user))
+        notification.success({
+          message: 'Google登入成功!',
+          duration: 1
+        })
+        if (res.data.user.isAdmin) return router.push('/admin/dashboard')
+        router.push('/home')
       } catch (error) {
-        console.error('傳送 Token 至後端時發生錯誤', error)
+        // console.error('傳送 Token 至後端時發生錯誤', error)
+        notification.success({
+          message: 'Google登入失敗，請重新嘗試!',
+          duration: 1
+        })
       }
     },
     onError: () => console.log('Google 登入失敗')
@@ -135,7 +146,7 @@ function SignUp() {
           onClick={handleGoogleLogin}
         >
           <Image src={iconGoogle} alt='google' width={25} />
-          mail註冊
+          mail登入
         </h6>
         <Link
           href='/signin'

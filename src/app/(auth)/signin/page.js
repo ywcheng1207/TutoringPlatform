@@ -44,12 +44,23 @@ function SignIn() {
 
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      console.log('確定一下', tokenResponse)
+      // console.log('確定一下', tokenResponse)
       try {
         const res = await postGoogle({ token: tokenResponse.access_token })
-        console.log('Token 已成功傳送到後端', res)
+        typeof window !== 'undefined' && window?.localStorage?.setItem('TOKEN', res.data.token)
+        typeof window !== 'undefined' && window?.localStorage?.setItem('USER', JSON.stringify(res.data.user))
+        notification.success({
+          message: 'Google登入成功!',
+          duration: 1
+        })
+        if (res.data.user.isAdmin) return router.push('/admin/dashboard')
+        router.push('/home')
       } catch (error) {
-        console.error('傳送 Token 至後端時發生錯誤', error)
+        // console.error('傳送 Token 至後端時發生錯誤', error)
+        notification.success({
+          message: 'Google登入失敗，請重新嘗試!',
+          duration: 1
+        })
       }
     },
     onError: () => console.log('Google 登入失敗')
