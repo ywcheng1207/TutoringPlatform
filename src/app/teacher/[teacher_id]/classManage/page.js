@@ -2,7 +2,7 @@
 
 //
 import Image from 'next/image'
-import { Button, Select, Modal, Form, Input, notification } from 'antd'
+import { Button, Select, Modal, Form, Input, notification, Popconfirm } from 'antd'
 import { useState, useEffect, useRef } from 'react'
 
 //
@@ -47,7 +47,7 @@ export default function ClassManage({ params }) {
       })
       setClassData(pre => pre.filter(ele => ele.id !== id))
     } catch (error) {
-      notification.success({
+      notification.error({
         message: '刪除課程失敗!',
         duration: 1
       })
@@ -70,13 +70,13 @@ export default function ClassManage({ params }) {
               name: e.name,
               dateTimeRange: e.dateTimeRange,
               link: e.link,
-              categoryId: e.categoryId
+              categoryId: e.category
             }
           }
           return ele
         }))
       } catch (error) {
-        notification.success({
+        notification.error({
           message: '編輯課程失敗!',
           duration: 1
         })
@@ -90,8 +90,9 @@ export default function ClassManage({ params }) {
           duration: 1
         })
         setClassData([...classData, { ...e, id: generateRandomString() }])
+        fetchTeacherClassesDataData()
       } catch (error) {
-        notification.success({
+        notification.error({
           message: '新增課程失敗!',
           duration: 1
         })
@@ -113,16 +114,17 @@ export default function ClassManage({ params }) {
     }
   }
 
-  useEffect(() => {
-    const fetchTeacherClassesDataData = async () => {
-      try {
-        const res = await getTeacherClassesData({ id: teacherId })
-        // console.log('老師開課資訊', res.data.data)
-        setClassData(res.data.data)
-      } catch (error) {
-        console.error('老師開課資訊', error)
-      }
+  const fetchTeacherClassesDataData = async () => {
+    try {
+      const res = await getTeacherClassesData({ id: teacherId })
+      // console.log('老師開課資訊', res.data.data)
+      setClassData(res.data.data)
+    } catch (error) {
+      console.error('老師開課資訊', error)
     }
+  }
+
+  useEffect(() => {
     fetchTeacherClassesDataData()
     setIsLoading(true)
     setIsLoading(false)
@@ -132,7 +134,9 @@ export default function ClassManage({ params }) {
     const data = classData.filter(ele => ele.dateTimeRange.split(' ')[0] === currentTime)
     if (isLoading) {
       return (
-        <div>載入中...</div>
+        <div className='text-7xl text-gray-400 h-full flex justify-center items-center opacity-30'>
+          載入中...
+        </div>
       )
     }
     if (data.length > 0 && !isLoading) {
@@ -151,7 +155,11 @@ export default function ClassManage({ params }) {
         </div >
       )
     }
-    return <div>沒有資料</div>
+    return (
+      <div className='text-7xl text-gray-400 h-full flex justify-center items-center opacity-30'>
+        沒有資料...
+      </div>
+    )
   }
 
   return (
@@ -180,8 +188,10 @@ export default function ClassManage({ params }) {
             <Image src={iconArrow} alt='arrow' />
           </div>
         </div>
-        <div className='bg-[#CCC] w-full min-h-[500px] rounded-md p-3 flex flex-col justify-between'>
-          {content()}
+        <div className='bg-[#CCC] h-full w-full min-h-[500px] rounded-md p-3 flex flex-col justify-between'>
+          <div className='h-[400px]' >
+            {content()}
+          </div>
           <div className='flex justify-end'>
             <EditBtn type='create' onEdit={handleEditClass} finalSelection={finalSelection} currentClassData={currentClassData} />
           </div>
@@ -189,7 +199,7 @@ export default function ClassManage({ params }) {
       </div>
 
       {/* mobile */}
-      <div className="w-full flex flex-col gap-3 md:hidden">
+      <div className="w-full h-[500px] flex flex-col gap-3 md:hidden">
         <h6>請選擇要編輯的日期</h6>
         <Select onChange={handleSelectTime} placeholder='日期' value={currentTime}>
           {getNextTwoWeeksDates().map(ele =>
@@ -218,29 +228,40 @@ export default function ClassManage({ params }) {
 const ClassCard = ({ info, onEdit, onDeleteClass, finalSelection, currentClassData }) => {
   return (
     <div
-      className='w-full min-h-[150px] border-[1px] border-solid border-[#CCC] rounded-[3px] p-3 flex flex-col gap-2 md:bg-[#FFF] md:max-w-[230px] md:rounded-lg md:text-[15px]'
+      className='w-full min-h-[150px] border-[1px] border-solid border-[#CCC] rounded-[3px] p-3 flex flex-col justify-between  gap-2 md:bg-[#FFF] md:max-w-[230px] md:rounded-lg md:text-[15px]'
     >
-      <div className='flex md:flex-col'>
-        <h1>課程名稱：</h1>
-        <h1>{info.name}</h1>
+      <div className='flex flex-col gap-2'>
+        <div className='flex md:flex-col'>
+          <h1>課程名稱：</h1>
+          <h1 className='max-w-[95%] min-h-[20px] overflow-hidden text-wrap text-ellipsis'>{info.name}</h1>
+        </div>
+        <div className='flex'>
+          <h1>課程分類：</h1>
+          <h1>{info.categoryId}</h1>
+        </div>
+        <div className='flex md:flex-col'>
+          <h1>上課時間：</h1>
+          <h1>{info.dateTimeRange}</h1>
+        </div>
+        <div className='flex'>
+          <h1>上課時長：</h1>
+          <h1>{info.length}</h1>
+        </div>
+        <div className='flex md:flex-col'>
+          <a href={info.link} target='_blank' className='text-[#66BFFF] hover:opacity-70'>課程連結</a>
+        </div>
       </div>
-      <div className='flex'>
-        <h1>課程分類：</h1>
-        <h1>{info.categoryId}</h1>
-      </div>
-      <div className='flex md:flex-col'>
-        <h1>上課時間：</h1>
-        <h1>{info.dateTimeRange}</h1>
-      </div>
-      <div className='flex'>
-        <h1>上課時長：</h1>
-        <h1>{info.length}</h1>
-      </div>
-      <div className='flex md:flex-col'>
-        <a href={info.link} target='_blank' className='text-[#66BFFF] hover:opacity-70'>課程連結</a>
-      </div>
-      <div className='flex justify-between'>
-        <Image src={iconDelete} alt='delete' className='cursor-pointer' onClick={() => onDeleteClass(info.id)} />
+      <div className='flex justify-between '>
+        <Popconfirm
+          title="刪除這堂課"
+          description="確定要刪除這堂課嗎?"
+          onConfirm={() => onDeleteClass(info.id)}
+          okText="確認"
+          cancelText="取消"
+          placement="bottom"
+        >
+          <Image src={iconDelete} alt='delete' className='cursor-pointer' />
+        </Popconfirm>
         <EditBtn type='edit' info={info} onEdit={onEdit} finalSelection={finalSelection} currentClassData={currentClassData} />
       </div>
     </div>
@@ -280,7 +301,7 @@ const EditBtn = ({ type, info, onEdit, finalSelection, currentClassData }) => {
           onFinish={handleModalSubmit}
           initialValues={{
             name: info?.name || null,
-            categoryId: info?.categoryId || null,
+            category: info?.categoryId || null,
             dateTimeRange: info?.dateTimeRange || null,
             link: info?.link || null
           }}
