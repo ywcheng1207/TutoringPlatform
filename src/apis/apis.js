@@ -173,12 +173,12 @@ export const postTeacherApply = async ({ data }) => {
 }
 
 // 老師個資編輯頁 - 修改一筆老師資料
-export const putTeacherApply = async ({ name, country, introduction, style, avatar, categoryArray }) => {
+export const putTeacherData = async ({ id, data }) => {
   try {
-    const res = await apiWithToken.put('/teachers', { name, country, introduction, style, avatar, categoryArray })
+    const res = await apiWithTokenByFormData.put(`/teachers/${id}`, data)
     return res
   } catch (error) {
-    console.error('PutTeacherApply Failed:', error)
+    console.error('putTeacherData Failed:', error)
     throw error
   }
 }
