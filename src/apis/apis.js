@@ -140,9 +140,9 @@ export const getTeacherClassesData = async ({ id }) => {
 }
 
 // 老師頁 - 預約課程 ** body應該要塞這次是預約哪個課程? **
-export const patchTeacherClasses = async ({ id }) => {
+export const patchTeacherClasses = async ({ id, dateTimeRange }) => {
   try {
-    const res = await apiWithToken.patch(`/classes/:${id}`)
+    const res = await apiWithToken.patch(`/classes/${id}`, { dateTimeRange })
     return res
   } catch (error) {
     console.error('PatchTeacherClasses Failed:', error)

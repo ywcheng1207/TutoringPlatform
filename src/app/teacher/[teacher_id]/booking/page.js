@@ -3,14 +3,14 @@
 //
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { Select, Input, Button } from 'antd'
+import { Select, Input, Button, notification } from 'antd'
 
 //
 import iconHeart from '@/assets/icon-heart.svg'
 
 //
 import NoPhoto from '@/components/NoPhoto'
-import { getTeacherPageData, getTeacherClassesData } from '@/apis/apis'
+import { getTeacherPageData, getTeacherClassesData, patchTeacherClasses } from '@/apis/apis'
 
 //
 export default function TeacherPersonal({ params }) {
@@ -40,12 +40,29 @@ export default function TeacherPersonal({ params }) {
   }
 
   const handleClassOption = (e) => {
+    // console.log(e)
     setClassOption(e)
   }
 
-  const handleSendBooking = () => {
-    console.log('選哪位老師的課=>老師id:', teacherId)
-    console.log('選哪一門課=>該老師的這門課程的id:', classOption)
+  const handleSendBooking = async () => {
+    try {
+      const res = await patchTeacherClasses({ id: teacherId, dateTimeRange: classOption })
+      notification.success({
+        message: '預約成功!',
+        duration: 1
+      })
+    } catch (error) {
+      if (error.response.data.message === 'Error: This class is booked!') {
+        return notification.error({
+          message: '您已經預約過這項課程!',
+          duration: 1
+        })
+      }
+      notification.error({
+        message: '預約失敗，請稍後再試一次!',
+        duration: 1
+      })
+    }
   }
 
   useEffect(() => {
@@ -121,7 +138,7 @@ export default function TeacherPersonal({ params }) {
           onChange={handleClassOption}
         >
           {
-            classOptions.map(ele => <Select.Option value={ele.id} key={ele.id}>
+            classOptions.map(ele => <Select.Option value={ele.dateTimeRange} key={ele.id}>
               {ele.name} {`(${ele.dateTimeRange})`} <span className='bg-[#66BFFF] text-[#FFF] px-2 rounded-lg '>{classType2[ele.categoryId]}</span>
             </Select.Option>)
           }
