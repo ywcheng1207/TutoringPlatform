@@ -119,21 +119,52 @@ const Header = () => {
             <li
               className='w-full py-5 text-center hover:bg-[#ccc] cursor-pointer'
               onClick={() => {
-                router.push('/home')
                 onClose()
+                router.push('/home')
               }}
             >
               <span>首頁</span>
             </li>
-            <li
-              className='w-full py-5 text-center hover:bg-[#6d6a6a] cursor-pointer'
-              onClick={() => {
-                router.push('student/1/studentPersonal')
-                onClose()
-              }}
-            >
-              <span>個人資訊</span>
-            </li>
+            {memberInfo?.studentId
+              ? <li
+                className='w-full py-5 text-center hover:bg-[#ccc] cursor-pointer'
+                onClick={() => {
+                  onClose()
+                  router.push(`/student/${memberInfo?.studentId}/studentPersonal`)
+                }}
+              >
+                我是學生
+              </li>
+              : <li
+                className='w-full py-5 text-center hover:bg-[#ccc] cursor-pointer'
+                onClick={() => {
+                  onClose()
+                  router.push('/student/apply')
+                }}
+              >
+                成為學生
+              </li>
+            }
+            {memberInfo?.teacherId
+              ? <li
+                className='w-full py-5 text-center hover:bg-[#ccc] cursor-pointer'
+                onClick={() => {
+                  onClose()
+                  router.push(`/teacher/${memberInfo?.teacherId}/teacherPersonal`)
+                }}
+              >
+                我是老師
+              </li>
+              : <li
+                className='w-full py-5 text-center hover:bg-[#ccc] cursor-pointer'
+                onClick={() => {
+                  onClose()
+                  router.push('/teacher/apply')
+                }}
+              >
+                成為老師
+              </li>
+            }
             <li
               className='w-full py-5 text-center hover:bg-[#ccc] cursor-pointer'
               onClick={() => {
