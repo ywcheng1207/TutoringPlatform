@@ -20,7 +20,7 @@ const Header = () => {
   const [open, setOpen] = useState(false)
   // const [memberInfo, setMemberInfo] = useState(null)
   const memberInfo = JSON.parse(typeof window !== 'undefined' && window?.localStorage?.getItem('USER'))
-  console.log('抓一下資料', memberInfo)
+  // console.log('抓一下資料', memberInfo)
 
   const showDrawer = () => {
     setOpen(true)

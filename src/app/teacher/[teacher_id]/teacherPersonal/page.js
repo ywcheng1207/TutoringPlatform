@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { Button, Modal, Form, Input } from 'antd'
+import { Button, Modal, Form, Input, Skeleton } from 'antd'
 
 //
 import NoPhoto from '@/components/NoPhoto'
@@ -15,6 +15,7 @@ import {
 
 //
 import iconHeart from '@/assets/icon-heart.svg'
+const BASEURL = 'https://tutor-online.zeabur.app'
 
 //
 export default function StudentPersonal({ params }) {
@@ -23,6 +24,8 @@ export default function StudentPersonal({ params }) {
   const [teacherPersonalData, setTeacherPersonalData] = useState([])
   const [classesOpenedInTwoWeeks, setClassesOpenedInTwoWeeks] = useState([])
   const [teacherCommentData, setTeacherCommentData] = useState([])
+  const [imgLink, setImgLInk] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
 
   const classType2 = ['全部', '生活英文', '商業英文', '旅遊英文', '兒童英文']
 
@@ -33,11 +36,11 @@ export default function StudentPersonal({ params }) {
         // console.log('老師個人資料', res.data.data)
         setTeacherPersonalData(res.data.data)
         // 照片處理資料
-        // if (!isCompleteUrl(res.data.data?.avatar)) {
-        //   setImgLInk(`${BASEURL}${res.data.data?.avatar}`)
-        // } else {
-        //   setImgLInk(res.data.data?.avatar)
-        // }
+        if (!isCompleteUrl(res.data.data?.avatar)) {
+          setImgLInk(`${BASEURL}${res.data.data?.avatar}`)
+        } else {
+          setImgLInk(res.data.data?.avatar)
+        }
       } catch (error) {
         console.error('老師個人資料', error)
       }
@@ -59,6 +62,7 @@ export default function StudentPersonal({ params }) {
       } catch (error) {
         console.error('老師得到的評論', error)
       }
+      setIsLoading(false)
     }
     fetchTeacherPersonalData()
     fetchTeacherClassesDataData()
@@ -66,87 +70,122 @@ export default function StudentPersonal({ params }) {
   }, [])
 
   return (
-    <div className="w-full h-full flex flex-col gap-3 md:flex-row">
-      {/* 基礎資訊 */}
-      <div className=' flex flex-col items-start gap-3 md:w-4/12'>
-        <div className='w-full flex justify-center md:justify-start'>
-          <NoPhoto size='big' photo={teacherPersonalData.avatar} />
-        </div>
-        <div className='w-full flex flex-col gap-2'>
-          <div className='text-center md:text-start text-2xl py-5'>{teacherPersonalData.name}</div>
-          <div className='text-center md:text-start py-2'>{teacherPersonalData.country}</div>
-          <div className='flex justify-center md:justify-start gap-10 py-2'>
-            <Image src={iconHeart} alt='like' />
-            <h3>{teacherPersonalData.ScoreAvg}</h3>
-          </div>
-          <div>專業</div>
-          <div className='py-2 md:pl-5'>
-            <div className='grid grid-cols-2 gap-2'>
-              {teacherPersonalData.categoryId?.map(ele => <ClassesTypeTag key={ele} text={classType2[ele]} />)}
+    <>
+      {!isLoading &&
+        <div className="w-full h-full flex flex-col gap-3 md:flex-row">
+          {/* 基礎資訊 */}
+          <div className=' flex flex-col items-start gap-3 md:w-4/12'>
+            <div className='w-full flex justify-center md:justify-start'>
+              <NoPhoto size='big' photo={imgLink} />
+            </div>
+            <div className='w-full flex flex-col gap-2'>
+              <div className='text-center md:text-start text-2xl py-5'>{teacherPersonalData.name}</div>
+              <div className='text-center md:text-start py-2'>{teacherPersonalData.country}</div>
+              <div className='flex justify-center md:justify-start gap-10 py-2'>
+                <Image src={iconHeart} alt='like' />
+                <h3>{teacherPersonalData.ScoreAvg}</h3>
+              </div>
+              <div>專業</div>
+              <div className='py-2 md:pl-5'>
+                <div className='grid grid-cols-2 gap-2'>
+                  {teacherPersonalData.categoryId?.map(ele => <ClassesTypeTag key={ele} text={classType2[ele]} />)}
+                </div>
+              </div>
+              <AboutMe content={teacherPersonalData.introduction} />
+              <div className='w-full md:hidden'>
+                <TeachingStyle content={teacherPersonalData.style} />
+              </div>
+            </div>
+            <div className='w-full md:hidden'>
+              <ButtonGroup teacherId={teacherId} />
             </div>
           </div>
-          <AboutMe content={teacherPersonalData.introduction} />
-          <div className='w-full md:hidden'>
-            <TeachingStyle content={teacherPersonalData.style} />
-          </div>
-        </div>
-        <div className='w-full md:hidden'>
-          <ButtonGroup teacherId={teacherId} />
-        </div>
-      </div>
 
-      {/* 主要資訊 */}
-      <div className='md:w-8/12 h-full flex flex-col items-start gap-5'>
-        <div className='w-full flex flex-col gap-3'>
-          <div>最新行程</div>
-          <div className='max-h-[210px] overflow-y-scroll flex flex-col gap-3 md:pl-5'>
-            {
-              typeof classesOpenedInTwoWeeks !== 'string' && classesOpenedInTwoWeeks.map(ele =>
-                <div className='min-h-[90px] w-full border border-solid border-[#DDD] flex justify-between p-3' key={ele.id}>
-                  <div className='flex flex-col gap-2'>
-                    <h3>課程：{ele.name}</h3>
-                    <h3>日期：{ele.dateTimeRange}</h3>
-                    <a href={ele.link} target='_blank' className='text-[#66BFFF]'>上課連結</a>
+          {/* 主要資訊 */}
+          <div className='md:w-8/12 h-full flex flex-col items-start gap-5'>
+            <div className='w-full flex flex-col gap-3'>
+              <div>最新行程</div>
+              <div className='max-h-[210px] overflow-y-scroll flex flex-col gap-3 md:pl-5'>
+                {
+                  typeof classesOpenedInTwoWeeks !== 'string' && classesOpenedInTwoWeeks.map(ele =>
+                    <div className='min-h-[90px] w-full border border-solid border-[#DDD] flex justify-between p-3' key={ele.id}>
+                      <div className='flex flex-col gap-2'>
+                        <h3>課程：{ele.name}</h3>
+                        <h3>日期：{ele.dateTimeRange}</h3>
+                        <a href={ele.link} target='_blank' className='text-[#66BFFF]'>上課連結</a>
+                      </div>
+                    </div>
+                  )
+                }
+                {
+                  typeof classesOpenedInTwoWeeks === 'string' &&
+                  <div className='h-[100px] w-full flex justify-center items-center text-gray-300 text-2xl'>
+                    Oops...目前沒有安排行程
                   </div>
-                </div>
-              )
-            }
-            {
-              typeof classesOpenedInTwoWeeks === 'string' &&
-              <div className='h-[100px] w-full flex justify-center items-center text-gray-300 text-2xl'>
-                Oops...目前沒有安排行程
+                }
               </div>
-            }
+            </div>
+            <div className='w-full hidden md:block'>
+              <TeachingStyle content={teacherPersonalData.style} />
+            </div>
+            <div className='w-full flex flex-col gap-3'>
+              <div>近期評論</div>
+              <div className='max-h-[210px] overflow-y-scroll flex flex-col gap-3 md:pl-5'>
+                {
+                  typeof teacherCommentData !== 'string' && teacherCommentData.map(ele =>
+                    <div key={ele.id} className='h-[90px] w-full border border-solid border-[#DDD] flex flex-col gap-2 p-3'>
+                      <h1>學生{ele.studentId}</h1>
+                      <h1>評分：{ele.score}</h1>
+                      <h1>評論：{ele.text}</h1>
+                    </div>
+                  )
+                }
+                {
+                  typeof teacherCommentData === 'string' &&
+                  <div className='h-[100px] w-full flex justify-center items-center text-gray-300 text-2xl'>
+                    Oops...目前還沒收到學生的評論
+                  </div>
+                }
+              </div>
+            </div>
+            <div className='w-full hidden md:block'>
+              <ButtonGroup teacherId={teacherId} />
+            </div>
           </div>
         </div>
-        <div className='w-full hidden md:block'>
-          <TeachingStyle content={teacherPersonalData.style} />
-        </div>
-        <div className='w-full flex flex-col gap-3'>
-          <div>近期評論</div>
-          <div className='max-h-[210px] overflow-y-scroll flex flex-col gap-3 md:pl-5'>
-            {
-              typeof teacherCommentData !== 'string' && teacherCommentData.map(ele =>
-                <div key={ele.id} className='h-[90px] w-full border border-solid border-[#DDD] flex flex-col gap-2 p-3'>
-                  <h1>學生{ele.studentId}</h1>
-                  <h1>評分：{ele.score}</h1>
-                  <h1>評論：{ele.text}</h1>
-                </div>
-              )
-            }
-            {
-              typeof teacherCommentData === 'string' &&
-              <div className='h-[100px] w-full flex justify-center items-center text-gray-300 text-2xl'>
-                Oops...目前還沒收到學生的評論
-              </div>
-            }
+      }
+      {isLoading &&
+        <>
+          <div className='w-full flex flex-col items-center gap-10 md:hidden'>
+            <Skeleton.Avatar
+              size={100}
+              shape="square"
+              active
+              style={{ width: '150px', height: '150px' }}
+            />
+            <Skeleton active paragraph={{ rows: 2 }} style={{ width: '80%' }} />
+            <Skeleton active paragraph={{ rows: 2 }} style={{ width: '80%' }} />
+            <Skeleton active paragraph={{ rows: 2 }} style={{ width: '80%' }} />
           </div>
-        </div>
-        <div className='w-full hidden md:block'>
-          <ButtonGroup teacherId={teacherId} />
-        </div>
-      </div>
-    </div>
+          <div className='hidden md:flex w-full gap-5'>
+            <div className='flex flex-col justify-between h-[500px] w-4/12'>
+              <Skeleton.Avatar
+                size={100}
+                shape="square"
+                active
+                style={{ width: '200px', height: '200px' }}
+              />
+              <Skeleton active paragraph={{ rows: 5 }} />
+            </div>
+            <div className='flex flex-col gap-20 h-[500px] w-8/12'>
+              <Skeleton active paragraph={{ rows: 2 }} />
+              <Skeleton active paragraph={{ rows: 2 }} />
+              <Skeleton active paragraph={{ rows: 2 }} />
+            </div>
+          </div>
+        </>
+      }
+    </>
   )
 }
 
@@ -201,4 +240,9 @@ const ButtonGroup = ({ teacherId }) => {
       </div>
     </div>
   )
+}
+
+function isCompleteUrl(url) {
+  const pattern = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-zA-Z0-9]+([\-\.]{1}[a-zA-Z0-9]+)*\.[a-zA-Z]{2,5}(:[0-9]{1,5})?(\/.*)?$/
+  return pattern.test(url)
 }

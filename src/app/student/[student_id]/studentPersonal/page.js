@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { Button, Modal, Form, Input, Popconfirm, notification } from 'antd'
+import { Button, Modal, Form, Input, Popconfirm, notification, Skeleton } from 'antd'
 
 //
 import {
@@ -25,6 +25,7 @@ export default function StudentPersonal({ params }) {
   const [studentClassesBookedData, setStudentClassesBookedData] = useState([])
   const [imgLink, setImgLInk] = useState('')
   const [classesComplete, setClassesComplete] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   const fetchStudentClassesBookedData = async () => {
     try {
@@ -42,6 +43,7 @@ export default function StudentPersonal({ params }) {
         // console.log('學生個人資料', res.data.data)
         setStudentPersonalData(res.data.data)
         // 照片處理資料
+        if (!res.data.data?.avatar) return
         if (!isCompleteUrl(res.data.data?.avatar)) {
           setImgLInk(`${BASEURL}${res.data.data?.avatar}`)
         } else {
@@ -54,11 +56,12 @@ export default function StudentPersonal({ params }) {
     const fetchStudentClassesCompleteData = async () => {
       try {
         const res = await getAllStudentCompletedClassesData({ id: studentId })
-        console.log('學生完成的課程', res)
+        // console.log('學生完成的課程', res)
         setClassesComplete(res.data.data)
       } catch (error) {
         console.error('學生完成的課程', error)
       }
+      setIsLoading(false)
     }
     fetchStudentPersonalData()
     fetchStudentClassesBookedData()
@@ -69,62 +72,96 @@ export default function StudentPersonal({ params }) {
   // console.log('照片連結', `${BASEURL}${studentPersonalData?.avatar}`)
 
   return (
-    <div className="w-full h-full flex flex-col gap-3 md:flex-row">
-      <div className=' flex flex-col items-start gap-3 md:w-4/12'>
-        <div className='w-full flex justify-center md:justify-start'>
-          <NoPhoto size='big' photo={imgLink} />
-          {/* <NoPhoto size='big' photo={studentPersonalData?.avatar} /> */}
-        </div>
-        <div className='w-full flex flex-col gap-2'>
-          <div className='text-center md:text-start text-2xl py-5'>{studentPersonalData.name}</div>
-          <AboutMe introduction={studentPersonalData.introduction} />
-        </div>
-        <div className='w-full flex justify-center md:justify-start'>
-          <div className='w-full max-w-[300px] md:max-w-[150px]'>
-            <Button
-              block
-              style={{ color: '#fff', background: '#66BFFF', width: '100%' }}
-              onClick={() => router.push(`/student/${studentId}/studentEdit`)}
-            >
-              編輯個人資訊
-            </Button>
+    <>
+      {!isLoading &&
+        <div className="w-full h-full flex flex-col gap-3 md:flex-row" >
+          <div className=' flex flex-col items-start gap-3 md:w-4/12'>
+            <div className='w-full flex justify-center md:justify-start'>
+              <NoPhoto size='big' photo={imgLink} />
+            </div>
+            <div className='w-full flex flex-col gap-2'>
+              <div className='text-center md:text-start text-2xl py-5'>{studentPersonalData.name}</div>
+              <AboutMe introduction={studentPersonalData.introduction} />
+            </div>
+            <div className='w-full flex justify-center md:justify-start'>
+              <div className='w-full max-w-[300px] md:max-w-[150px]'>
+                <Button
+                  block
+                  style={{ color: '#fff', background: '#66BFFF', width: '100%' }}
+                  onClick={() => router.push(`/student/${studentId}/studentEdit`)}
+                >
+                  編輯個人資訊
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div className='w-full md:w-8/12 h-full flex flex-col items-start gap-5 '>
-        <div className='w-full flex flex-col gap-3'>
-          <div className='w-full'>進行中的課程</div>
-          <ClassesYouBooked classes={studentClassesBookedData} fetchStudentClassesBookedData={fetchStudentClassesBookedData} />
-        </div>
-        <div className='w-full flex flex-col gap-3'>
-          <div>學習歷程</div>
-          {
-            typeof classesComplete !== 'string'
-              ? <div className='grid grid-cols-1 md:grid-cols-2 gap-3 md:pl-5'>
-                {
-                  classesComplete.map(ele =>
-                    <LearningHistoryCard
-                      data={ele}
-                      key={ele.dateTimeRange}
-                    />)
-                }
+          <div className='w-full md:w-8/12 h-full flex flex-col items-start gap-5 '>
+            <div className='w-full flex flex-col gap-3'>
+              <div className='w-full'>進行中的課程</div>
+              <ClassesYouBooked classes={studentClassesBookedData} fetchStudentClassesBookedData={fetchStudentClassesBookedData} />
+            </div>
+            <div className='w-full flex flex-col gap-3'>
+              <div>學習歷程</div>
+              {
+                typeof classesComplete !== 'string'
+                  ? <div className='grid grid-cols-1 md:grid-cols-2 gap-3 md:pl-5'>
+                    {
+                      classesComplete.map(ele =>
+                        <LearningHistoryCard
+                          data={ele}
+                          key={ele.dateTimeRange}
+                        />)
+                    }
+                  </div>
+                  : <div className='h-[100px] w-full flex justify-center items-center text-gray-300 text-2xl'>
+                    Oops...沒有已經完成的課程
+                  </div>
+              }
+            </div>
+            <div className='w-full flex flex-col gap-3'>
+              <div>我的學習時數名次</div>
+              <div className='flex flex-col gap-3 md:pl-5'>
+                <div className='min-h-[70px] w-full border border-solid border-[#DDD] flex flex-col justify-center'>
+                  <div>學習時數: {studentPersonalData.totalLearningTime || '尚未開始學習'}</div>
+                  <div>名次: {studentPersonalData.rank || '尚未開始學習'}</div>
+                </div>
               </div>
-              : <div className='h-[100px] w-full flex justify-center items-center text-gray-300 text-2xl'>
-                Oops...沒有已經完成的課程
-              </div>
-          }
-        </div>
-        <div className='w-full flex flex-col gap-3'>
-          <div>我的學習時數名次</div>
-          <div className='flex flex-col gap-3 md:pl-5'>
-            <div className='h-[70px] w-full border border-solid border-[#DDD] flex flex-col justify-center'>
-              <div>學習時數: {studentPersonalData.totalLearningTime || '尚未開始學習'}</div>
-              <div>名次: {studentPersonalData.rank || '尚未開始學習'}</div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      }
+      {isLoading &&
+        <>
+          <div className='w-full flex flex-col items-center gap-10 md:hidden'>
+            <Skeleton.Avatar
+              size={100}
+              shape="square"
+              active
+              style={{ width: '150px', height: '150px' }}
+            />
+            <Skeleton active paragraph={{ rows: 2 }} style={{ width: '80%' }} />
+            <Skeleton active paragraph={{ rows: 2 }} style={{ width: '80%' }} />
+            <Skeleton active paragraph={{ rows: 2 }} style={{ width: '80%' }} />
+          </div>
+          <div className='hidden md:flex w-full gap-5'>
+            <div className='flex flex-col justify-between h-[500px] w-4/12'>
+              <Skeleton.Avatar
+                size={100}
+                shape="square"
+                active
+                style={{ width: '200px', height: '200px' }}
+              />
+              <Skeleton active paragraph={{ rows: 5 }} />
+            </div>
+            <div className='flex flex-col gap-20 h-[500px] w-8/12'>
+              <Skeleton active paragraph={{ rows: 2 }} />
+              <Skeleton active paragraph={{ rows: 2 }} />
+              <Skeleton active paragraph={{ rows: 2 }} />
+            </div>
+          </div>
+        </>
+      }
+    </>
   )
 }
 
