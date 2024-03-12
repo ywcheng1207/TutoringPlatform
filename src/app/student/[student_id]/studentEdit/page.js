@@ -65,7 +65,7 @@ export default function EditTeacher({ params }) {
     const fetchStudentPersonalData = async () => {
       try {
         const res = await getStudentPersonalData({ id: studentId })
-        console.log('學生個人資料', res.data.data.name)
+        // console.log('學生個人資料', res.data.data.name)
         setStudentPersonalData(res.data.data)
         if (res.data.data.avatar) {
           setImageURL(`${BASEURL}${res.data.data.avatar}`)

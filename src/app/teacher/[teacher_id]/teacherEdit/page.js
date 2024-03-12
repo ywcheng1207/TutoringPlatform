@@ -1,22 +1,25 @@
 'use client'
 
 //
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Input, Select, Form, Button, Radio, Upload, Checkbox, notification } from 'antd'
 import { useRouter } from 'next/navigation'
 
 //
 import NoPhoto from '@/components/NoPhoto'
-import { putTeacherData } from '@/apis/apis'
+import { putTeacherData, getTeacherPageData } from '@/apis/apis'
 
 //
 import iconCamera from '@/assets/icon-camera.svg'
+const BASEURL = 'https://tutor-online.zeabur.app'
 
 //
 export default function EditTeacher({ params }) {
   const teacherId = params.teacher_id
   const router = useRouter()
+  const [teacherPersonalData, setTeacherPersonalData] = useState([])
+  const [form] = Form.useForm()
   const [fileList, setFileList] = useState([])
   const [imageURL, setImageURL] = useState(null)
   const [checkedValues, setCheckedValues] = useState([])
@@ -70,6 +73,36 @@ export default function EditTeacher({ params }) {
     }
   }
 
+  useEffect(() => {
+    const fetchTeacherPersonalData = async () => {
+      try {
+        const res = await getTeacherPageData({ id: teacherId })
+        // console.log('老師個人資料', res.data.data)
+        setTeacherPersonalData(res.data.data)
+        // 照片處理資料
+        if (!isCompleteUrl(res.data.data?.avatar)) {
+          setImageURL(`${BASEURL}${res.data.data?.avatar}`)
+          form.setFieldsValue({ upload: res.data.data.avatar })
+        } else {
+          setImageURL(res.data.data?.avatar)
+          form.setFieldsValue({ upload: res.data.data.avatar })
+        }
+        if (res.data.data.name) form.setFieldsValue({ teacherName: res.data.data.name })
+        if (res.data.data.country) form.setFieldsValue({ teacherCountry: res.data.data.country })
+        if (res.data.data.introduction) form.setFieldsValue({ about: res.data.data.introduction })
+        if (res.data.data.style) form.setFieldsValue({ teachStyle: res.data.data.style })
+        if (res.data.data.categoryId) {
+          console.log(res.data.data.categoryId.map(index => options[index]))
+          form.setFieldsValue({ teachType: res.data.data.categoryId.map(index => options[index]) })
+          setCheckedValues(res.data.data.categoryId.map(index => options[index]))
+        }
+      } catch (error) {
+        console.error('老師個人資料', error)
+      }
+    }
+    fetchTeacherPersonalData()
+  }, [])
+
   return (
     <div className='w-full'>
       <Form
@@ -78,6 +111,7 @@ export default function EditTeacher({ params }) {
         colon={false}
         requiredMark={false}
         onFinish={handleSubmitTeacherInfo}
+        form={form}
       >
         <Form.Item
           name="upload"
@@ -99,7 +133,7 @@ export default function EditTeacher({ params }) {
                 <Image src={imageURL} alt='upload' width={200} height={200} />
               </div>
               : <div className='relative'>
-                <NoPhoto size='big' />
+                <NoPhoto size='big' photo={imageURL} />
                 <Image src={iconCamera} alt='camera' className='absolute bottom-2 right-2' />
               </div>
             }
@@ -183,7 +217,7 @@ export default function EditTeacher({ params }) {
               }
             ]}
           >
-            <Checkbox.Group options={options} value={checkedValues} onChange={handleCheckValues}/>
+            <Checkbox.Group options={options} value={checkedValues} onChange={handleCheckValues} />
           </Form.Item>
         </div>
         <div className='flex flex-col justify-between md:flex-row-reverse w-full gap-3'>
@@ -209,4 +243,9 @@ export default function EditTeacher({ params }) {
       </Form>
     </div>
   )
+}
+
+function isCompleteUrl(url) {
+  const pattern = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-zA-Z0-9]+([\-\.]{1}[a-zA-Z0-9]+)*\.[a-zA-Z]{2,5}(:[0-9]{1,5})?(\/.*)?$/
+  return pattern.test(url)
 }
