@@ -18,9 +18,9 @@ export default function TeacherApply() {
   const [fileList, setFileList] = useState([])
   const [imageURL, setImageURL] = useState(null)
   const [checkedValues, setCheckedValues] = useState([])
-  // const change = (checkedValues) => {
-  //   setCheckedValues(checkedValues)
-  // }
+  const handleCheckValues = (checkedValues) => {
+    setCheckedValues(checkedValues)
+  }
 
   const options = ['生活英文', '旅遊英文', '商業英文', '兒童英文']
 
@@ -31,7 +31,6 @@ export default function TeacherApply() {
       if (latestFile.originFileObj) {
         const fileURL = URL.createObjectURL(latestFile.originFileObj)
         setImageURL(fileURL) // 保存圖片URL以便顯示
-        console.log(fileURL) // 輸出查看URL是否正確
       }
     } else {
       setImageURL(null) // 清除圖片URL
@@ -53,7 +52,6 @@ export default function TeacherApply() {
       const res = await postTeacherApply({
         data: formData
       })
-      console.log('申請成為老師成功!', res)
       notification.success({
         message: '申請成為老師成功!',
         duration: 1
@@ -180,7 +178,7 @@ export default function TeacherApply() {
               }
             ]}
           >
-            <Checkbox.Group options={options} value={checkedValues} />
+            <Checkbox.Group options={options} value={checkedValues} onChange={handleCheckValues}/>
           </Form.Item>
         </div>
         <div className='flex flex-col justify-between md:flex-row-reverse w-full gap-3'>

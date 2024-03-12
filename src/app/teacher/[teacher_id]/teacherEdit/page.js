@@ -20,9 +20,9 @@ export default function EditTeacher({ params }) {
   const [fileList, setFileList] = useState([])
   const [imageURL, setImageURL] = useState(null)
   const [checkedValues, setCheckedValues] = useState([])
-  // const change = (checkedValues) => {
-  //   setCheckedValues(checkedValues)
-  // }
+  const handleCheckValues = (checkedValues) => {
+    setCheckedValues(checkedValues)
+  }
 
   const options = ['生活英文', '旅遊英文', '商業英文', '兒童英文']
 
@@ -183,7 +183,7 @@ export default function EditTeacher({ params }) {
               }
             ]}
           >
-            <Checkbox.Group options={options} value={checkedValues} />
+            <Checkbox.Group options={options} value={checkedValues} onChange={handleCheckValues}/>
           </Form.Item>
         </div>
         <div className='flex flex-col justify-between md:flex-row-reverse w-full gap-3'>
