@@ -3,7 +3,7 @@
 //
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { Select, Input, Button, notification } from 'antd'
+import { Select, Input, Button, notification, Skeleton } from 'antd'
 
 //
 import iconHeart from '@/assets/icon-heart.svg'
@@ -19,6 +19,8 @@ export default function TeacherPersonal({ params }) {
   const [classOption, setClassOption] = useState(null)
   const [theTeacherData, setTheTeacherData] = useState([])
   const [classesOpenedInTwoWeeks, setClassesOpenedInTwoWeeks] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+
   let classOptions = ''
   if (typeof classesOpenedInTwoWeeks !== 'string') {
     classOptions = classFilter === 0
@@ -86,75 +88,118 @@ export default function TeacherPersonal({ params }) {
       } catch (error) {
         console.error('學生看老師頁的老師開課資訊', error)
       }
+      setIsLoading(false)
     }
     fetchTeacherPageData()
     fetchTeacherClassesDataData()
   }, [])
 
   return (
-    <div className='flex flex-col gap-3 md:flex-row'>
-      <div className='basis-3/5'>
-        <div className='flex flex-col items-center gap-3 md:flex-row md:mb-10'>
-          <NoPhoto size='big' photo={theTeacherData.avatar} />
-          <div className='flex flex-col gap-3 md:gap-10'>
-            <div className='flex justify-center md:justify-start'>
-              {theTeacherData.name}
+    <>
+      {
+        !isLoading &&
+        <div className='flex flex-col gap-3 md:flex-row'>
+          <div className='basis-3/5'>
+            <div className='flex flex-col items-center gap-3 md:flex-row md:mb-10'>
+              <NoPhoto size='big' photo={theTeacherData.avatar} />
+              <div className='flex flex-col gap-3 md:gap-10'>
+                <div className='flex justify-center md:justify-start'>
+                  {theTeacherData.name}
+                </div>
+                <div className='flex item-center gap-1'>
+                  <h3 className='mr-3'>{theTeacherData.country}</h3>
+                  <Image src={iconHeart} alt='like' width={20} />
+                  <h3 className=''>{theTeacherData.ScoreAvg}</h3>
+                </div>
+              </div>
             </div>
-            <div className='flex item-center gap-1'>
-              <h3 className='mr-3'>{theTeacherData.country}</h3>
-              <Image src={iconHeart} alt='like' width={20} />
-              <h3 className=''>{theTeacherData.ScoreAvg}</h3>
+            <div className='flex justify-center items-center md:justify-start gap-3 py-6'>
+              {theTeacherData.categoryId?.map(ele => <ClassesTypeTag key={ele} text={classType2[ele]} />)}
+            </div>
+            <div className='flex flex-col gap-1'>
+              <h1>簡介</h1>
+              <h6 className='mb-3'>
+                {theTeacherData.introduction}
+              </h6>
+              <h1>教學風格</h1>
+              <h6 className='mb-3'>
+                {theTeacherData.style}
+              </h6>
             </div>
           </div>
+          <div className='flex flex-col flex-1 gap-5'>
+            <Select
+              placeholder='課程種類'
+              value={classFilter}
+              style={{ width: '100%' }}
+              showSearch={true}
+              onChange={handleClassFilter}
+            >
+              {
+                classType.map(ele => <Select.Option value={ele.key} key={ele.key}>{ele.type}</Select.Option>)
+              }
+            </Select>
+            <Select
+              placeholder='選擇課程'
+              value={classOption}
+              style={{ width: '100%' }}
+              showSearch={true}
+              onChange={handleClassOption}
+            >
+              {typeof classOptions !== 'string' &&
+                classOptions.map(ele => <Select.Option value={ele.dateTimeRange} key={ele.id}>
+                  {ele.name} {`(${ele.dateTimeRange})`} <span className='bg-[#66BFFF] text-[#FFF] px-2 rounded-lg '>{classType2[ele.categoryId]}</span>
+                </Select.Option>)
+              }
+            </Select>
+            <Button
+              block
+              style={{ color: '#fff', background: '#66BFFF' }}
+              onClick={handleSendBooking}
+            >
+              預約
+            </Button>
+          </div>
         </div>
-        <div className='flex justify-center items-center md:justify-start gap-3 py-6'>
-          {theTeacherData.categoryId?.map(ele => <ClassesTypeTag key={ele} text={classType2[ele]} />)}
-        </div>
-        <div className='flex flex-col gap-1'>
-          <h1>簡介</h1>
-          <h6 className='mb-3'>
-            {theTeacherData.introduction}
-          </h6>
-          <h1>教學風格</h1>
-          <h6 className='mb-3'>
-            {theTeacherData.style}
-          </h6>
-        </div>
-      </div>
-      <div className='flex flex-col flex-1 gap-5'>
-        <Select
-          placeholder='課程種類'
-          value={classFilter}
-          style={{ width: '100%' }}
-          showSearch={true}
-          onChange={handleClassFilter}
-        >
-          {
-            classType.map(ele => <Select.Option value={ele.key} key={ele.key}>{ele.type}</Select.Option>)
-          }
-        </Select>
-        <Select
-          placeholder='選擇課程'
-          value={classOption}
-          style={{ width: '100%' }}
-          showSearch={true}
-          onChange={handleClassOption}
-        >
-          {typeof classOptions !== 'string' &&
-            classOptions.map(ele => <Select.Option value={ele.dateTimeRange} key={ele.id}>
-              {ele.name} {`(${ele.dateTimeRange})`} <span className='bg-[#66BFFF] text-[#FFF] px-2 rounded-lg '>{classType2[ele.categoryId]}</span>
-            </Select.Option>)
-          }
-        </Select>
-        <Button
-          block
-          style={{ color: '#fff', background: '#66BFFF' }}
-          onClick={handleSendBooking}
-        >
-          預約
-        </Button>
-      </div>
-    </div>
+      }
+      {isLoading &&
+        <>
+          <div className='w-full flex flex-col items-center gap-10 px-10 md:hidden'>
+            <Skeleton.Avatar
+              size={100}
+              shape="square"
+              active
+              style={{ width: '150px', height: '150px' }}
+            />
+            <Skeleton active paragraph={{ rows: 2 }} style={{ width: '100%' }} />
+            <Skeleton active paragraph={{ rows: 2 }} style={{ width: '100%' }} />
+            <div className='w-full'>
+              <Skeleton active title={{ width: '100%' }} paragraph={{ rows: 0 }} />
+              <Skeleton active title={{ width: '100%' }} paragraph={{ rows: 0 }} />
+            </div>
+          </div>
+          <div className='hidden md:flex w-full gap-5'>
+            <div className='flex flex-col justify-between h-[500px] w-8/12'>
+              <div className='flex gap-10'>
+                <Skeleton.Avatar
+                  size={100}
+                  shape="square"
+                  active
+                  style={{ width: '200px', height: '200px' }}
+                />
+                <Skeleton active paragraph={{ rows: 1 }} />
+              </div>
+              <Skeleton active paragraph={{ rows: 5 }} />
+            </div>
+            <div className='flex flex-col h-[500px] w-4/12'>
+              <Skeleton active title={{ width: '100%' }} paragraph={{ rows: 0 }} />
+              <Skeleton active title={{ width: '100%' }} paragraph={{ rows: 0 }} />
+              <Skeleton active title={{ width: '100%' }} paragraph={{ rows: 0 }} />
+            </div>
+          </div>
+        </>
+      }
+    </>
   )
 }
 
