@@ -53,10 +53,11 @@ export default function TeacherApply() {
         data: formData
       })
       notification.success({
-        message: '申請成為老師成功!',
+        message: '申請成功，請重新登入!',
         duration: 1
       })
-      router.push('/home')
+      router.push('/signin')
+      localStorage.clear()
     } catch (error) {
       notification.error({
         message: '申請成為老師失敗!',

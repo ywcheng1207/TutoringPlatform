@@ -42,13 +42,8 @@ export default function StudentPersonal({ params }) {
         const res = await getStudentPersonalData({ id: studentId })
         // console.log('學生個人資料', res.data.data)
         setStudentPersonalData(res.data.data)
-        // 照片處理資料
         if (!res.data.data?.avatar) return
-        if (!isCompleteUrl(res.data.data?.avatar)) {
-          setImgLInk(`${BASEURL}${res.data.data?.avatar}`)
-        } else {
-          setImgLInk(res.data.data?.avatar)
-        }
+        setImgLInk(res.data.data?.avatar)
       } catch (error) {
         console.error('學生個人資料', error)
       }
@@ -67,9 +62,6 @@ export default function StudentPersonal({ params }) {
     fetchStudentClassesBookedData()
     fetchStudentClassesCompleteData()
   }, [])
-  // const BASEURL = 'http://10.0.0.136:3000'
-  const BASEURL = 'https://tutor-online.zeabur.app'
-  // console.log('照片連結', `${BASEURL}${studentPersonalData?.avatar}`)
 
   return (
     <>

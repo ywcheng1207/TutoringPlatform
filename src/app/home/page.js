@@ -125,7 +125,7 @@ const Home = () => {
     const fetchStudentRankDataData = async () => {
       try {
         const res = await getStudentRankData()
-        // console.log('學生排行資料', res.data.data)
+        console.log('學生排行資料', res.data.data)
         setStudentRankData(res.data.data)
       } catch (error) {
         // console.error('學生排行資料錯誤', error)

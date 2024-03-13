@@ -65,19 +65,10 @@ export default function EditTeacher({ params }) {
     const fetchStudentPersonalData = async () => {
       try {
         const res = await getStudentPersonalData({ id: studentId })
-        // console.log('學生個人資料', res.data.data.name)
+        // console.log('學生個人資料', res.data.data)
         setStudentPersonalData(res.data.data)
-        if (res.data.data.avatar) {
-          setImageURL(`${BASEURL}${res.data.data.avatar}`)
-          // 照片處理資料
-          if (!isCompleteUrl(res.data.data?.avatar)) {
-            form.setFieldsValue({ upload: res.data.data.avatar })
-            setImageURL(`${BASEURL}${res.data.data?.avatar}`)
-          } else {
-            form.setFieldsValue({ upload: res.data.data?.avatar })
-            setImageURL(res.data.data?.avatar)
-          }
-        }
+        form.setFieldsValue({ upload: res.data.data?.avatar })
+        setImageURL(res.data.data?.avatar)
         if (res.data.data.name) form.setFieldsValue({ studentName: res.data.data.name })
         if (res.data.data.introduction) form.setFieldsValue({ about: res.data.data.introduction })
       } catch (error) {
@@ -114,9 +105,7 @@ export default function EditTeacher({ params }) {
             showUploadList={false}
           >
             {imageURL
-              ? <div className='p-3 bg-[#ccc]'>
-                <Image src={imageURL} alt='upload' width={200} height={200} />
-              </div>
+              ? < NoPhoto size='big' photo={imageURL} />
               : <div className='relative'>
                 <NoPhoto size='big' />
                 <Image src={iconCamera} alt='camera' className='absolute bottom-2 right-2' />

@@ -79,14 +79,8 @@ export default function EditTeacher({ params }) {
         const res = await getTeacherPageData({ id: teacherId })
         // console.log('老師個人資料', res.data.data)
         setTeacherPersonalData(res.data.data)
-        // 照片處理資料
-        if (!isCompleteUrl(res.data.data?.avatar)) {
-          setImageURL(`${BASEURL}${res.data.data?.avatar}`)
-          form.setFieldsValue({ upload: res.data.data.avatar })
-        } else {
-          setImageURL(res.data.data?.avatar)
-          form.setFieldsValue({ upload: res.data.data.avatar })
-        }
+        setImageURL(res.data.data?.avatar)
+        form.setFieldsValue({ upload: res.data.data.avatar })
         if (res.data.data.name) form.setFieldsValue({ teacherName: res.data.data.name })
         if (res.data.data.country) form.setFieldsValue({ teacherCountry: res.data.data.country })
         if (res.data.data.introduction) form.setFieldsValue({ about: res.data.data.introduction })
@@ -129,9 +123,7 @@ export default function EditTeacher({ params }) {
             showUploadList={false}
           >
             {imageURL
-              ? <div className='p-3 bg-[#ccc]'>
-                <Image src={imageURL} alt='upload' width={200} height={200} />
-              </div>
+              ? <NoPhoto size='big' photo={imageURL} />
               : <div className='relative'>
                 <NoPhoto size='big' photo={imageURL} />
                 <Image src={iconCamera} alt='camera' className='absolute bottom-2 right-2' />

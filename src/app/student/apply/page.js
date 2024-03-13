@@ -45,12 +45,12 @@ export default function StudentApply() {
       const res = await postToBeAStudents({
         data: formData
       })
-      // console.log('申請成為學生成功!', res)
       notification.success({
-        message: '申請成為學生成功!',
+        message: '申請成功，請重新登入!',
         duration: 1
       })
-      router.push('/home')
+      router.push('/signin')
+      localStorage.clear()
     } catch (error) {
       notification.error({
         message: '申請成為學生失敗!',

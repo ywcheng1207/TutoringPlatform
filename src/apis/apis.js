@@ -30,6 +30,17 @@ apiWithToken.interceptors.request.use(config => {
   return Promise.reject(error)
 })
 
+apiWithToken.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response && error.response.data && error.response.data.message ===
+      'Error: JWT doesn\'t exist or is wrong') {
+      window.location.assign('/signin')
+    }
+    return Promise.reject(error)
+  }
+)
+
 const apiWithTokenByFormData = axios.create({
   baseURL: 'https://tutor-online.zeabur.app',
   // baseURL: 'https://boss-shad-deadly.ngrok-free.app',

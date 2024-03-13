@@ -11,6 +11,7 @@ import NoPhoto from './NoPhoto'
 const TeacherCard = ({ id, item }) => {
   const router = useRouter()
   const classType = ['全部', '生活英文', '商業英文', '旅遊英文', '兒童英文']
+  // console.log('抓一下圖片', item?.avatar)
 
   return (
     <div

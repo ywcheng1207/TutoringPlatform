@@ -15,7 +15,6 @@ import {
 
 //
 import iconHeart from '@/assets/icon-heart.svg'
-const BASEURL = 'https://tutor-online.zeabur.app'
 
 //
 export default function StudentPersonal({ params }) {
@@ -35,12 +34,7 @@ export default function StudentPersonal({ params }) {
         const res = await getTeacherPageData({ id: teacherId })
         // console.log('老師個人資料', res.data.data)
         setTeacherPersonalData(res.data.data)
-        // 照片處理資料
-        if (!isCompleteUrl(res.data.data?.avatar)) {
-          setImgLInk(`${BASEURL}${res.data.data?.avatar}`)
-        } else {
-          setImgLInk(res.data.data?.avatar)
-        }
+        setImgLInk(res.data.data?.avatar)
       } catch (error) {
         console.error('老師個人資料', error)
       }
@@ -240,9 +234,4 @@ const ButtonGroup = ({ teacherId }) => {
       </div>
     </div>
   )
-}
-
-function isCompleteUrl(url) {
-  const pattern = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-zA-Z0-9]+([\-\.]{1}[a-zA-Z0-9]+)*\.[a-zA-Z]{2,5}(:[0-9]{1,5})?(\/.*)?$/
-  return pattern.test(url)
 }
