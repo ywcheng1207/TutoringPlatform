@@ -15,22 +15,23 @@ const TeacherCard = ({ id, item }) => {
 
   return (
     <div
-      className='border-[1px] border-solid border-[#66BFFF] rounded-[3px] p-3 flex flex-col gap-3 cursor-pointer hover:bg-[#f0eded] min-w-[200px] md:min-h-[220px]'
+      className='border-[1px] border-solid border-[#66BFFF] rounded-[3px] p-3 flex flex-col gap-3 cursor-pointer hover:bg-[#f0eded] min-w-[200px] lg:min-h-[300px]'
       onClick={() => router.push(`teacher/${item?.id}/booking`)}
     >
-      <div className='flex flex-row items-center'>
+      <div className='flex flex-row items-center gap-1'>
         <div className='flex-1'>
-          <NoPhoto size='small' photo={item?.avatar} />
+          <NoPhoto size='medium' photo={item?.avatar} />
         </div>
-        <div className='flex-1 justify-start'>
-          <div>{item?.name}</div>
+        <div className='flex-1 flex flex-col gap-3 h-[120px]'>
+          <div className='font-bold text-xl'>{item?.name}</div>
           <div>{item?.country}</div>
-          <div className='flex gap-3'>
-            {item?.categories.map(ele => <div key={ele} className='text-[#66BFFF]'>{classType[ele]}</div>)}
-          </div>
         </div>
       </div>
+      <div className='flex flex-wrap gap-1'>
+        {item?.categories.map(ele => <div key={ele} className='bg-[#66BFFF] text-[#FFF] px-2 py-1 lg:py-0 rounded-lg opacity-70'>{classType[ele]}</div>)}
+      </div>
       <div>
+        <h1 className='font-bold text-lg'>介紹</h1>
         {item?.introduction}
       </div>
     </div>

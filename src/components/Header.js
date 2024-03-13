@@ -76,14 +76,14 @@ const Header = () => {
             router.push('/home')
           }}
         />
-        <div className='items-center gap-3 hidden md:flex'>
+        <div className='items-center gap-3 hidden lg:flex'>
           {toBeAteacherBtn()}
         </div>
       </div>
       {
         typeof window !== 'undefined' && window?.localStorage?.getItem('TOKEN') &&
         <div
-          className=' items-center gap-1 cursor-pointer hover:text-[#fff] hidden md:flex'
+          className=' items-center gap-1 cursor-pointer hover:text-[#fff] hidden lg:flex'
           onClick={() => {
             router.push('/signin')
             typeof window !== 'undefined' && window?.localStorage?.clear()
@@ -97,7 +97,7 @@ const Header = () => {
         </div>
       }
       {
-        <div className='flex md:hidden cursor-pointer' onClick={showDrawer}>
+        <div className='flex lg:hidden cursor-pointer' onClick={showDrawer}>
           <Image src={iconBurger} alt='burger' />
         </div>
       }

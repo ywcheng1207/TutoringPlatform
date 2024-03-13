@@ -27,8 +27,8 @@ const NoPhoto = ({ size, photo, username }) => {
       }
       {
         size === 'medium' &&
-        <div className={'w-[150px] h-[150px] bg-[#CCC] bg-opacity-20 flex justify-center items-center'}>
-          <Image src={iconPhoto} alt="photo" width={80} className='max-h-full max-w-full' />
+        <div className={'w-[140px] h-[140px] bg-[#CCC] bg-opacity-20 flex justify-center items-center'}>
+            <Image src={thePhoto || iconPhoto} alt="photo" width={100} height={100} className='max-h-full max-w-full' />
         </div>
       }
       {

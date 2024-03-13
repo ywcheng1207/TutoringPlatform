@@ -74,7 +74,7 @@ export default function TeacherPersonal({ params }) {
     const fetchTeacherPageData = async () => {
       try {
         const res = await getTeacherPageData({ id: teacherId })
-        console.log('學生看老師頁的老師頁資料', res.data.data)
+        // console.log('學生看老師頁的老師頁資料', res.data.data)
         setTheTeacherData(res.data.data)
       } catch (error) {
         console.error('學生看老師頁的老師資料', error)
@@ -83,7 +83,7 @@ export default function TeacherPersonal({ params }) {
     const fetchTeacherClassesDataData = async () => {
       try {
         const res = await getTeacherClassesData({ id: teacherId })
-        console.log('學生看老師頁的老師開課資訊', res.data.data)
+        // console.log('學生看老師頁的老師開課資訊', res.data.data)
         setClassesOpenedInTwoWeeks(res.data.data)
       } catch (error) {
         console.error('學生看老師頁的老師開課資訊', error)
