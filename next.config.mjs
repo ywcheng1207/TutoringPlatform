@@ -6,6 +6,9 @@ const nextConfig = {
   },
   images: {
     domains: ['cloudflare-ipfs.com', 'avatars.githubusercontent.com', '10.0.0.136', 'tutor-online.zeabur.app']
+  },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production'
   }
 }
 

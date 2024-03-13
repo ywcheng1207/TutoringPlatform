@@ -118,7 +118,9 @@ export default function ClassManage({ params }) {
     try {
       const res = await getTeacherClassesData({ id: teacherId })
       // console.log('老師開課資訊', res.data.data)
-      setClassData(res.data.data)
+      if (typeof res.data.data !== 'string') {
+        setClassData(res.data.data)
+      }
     } catch (error) {
       console.error('老師開課資訊', error)
     }
