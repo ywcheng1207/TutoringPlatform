@@ -170,7 +170,6 @@ const ClassesYouBooked = ({ classes, fetchStudentClassesBookedData }) => {
   const [canceling, setCanceling] = useState(false)
 
   const handleDeleteBookedClasses = async (id) => {
-    console.log('取消這堂課', id)
     setCanceling(true)
     try {
       const res = await patchStudentClassesBookedData({ id })
@@ -191,8 +190,7 @@ const ClassesYouBooked = ({ classes, fetchStudentClassesBookedData }) => {
   }
 
   const classesContent = () => {
-    if (typeof classes !== 'string') {
-      // console.log('取得預約中的課程', classes)
+    if (classes.length > 0) {
       return (
         <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-3 md:pl-5'>
           {
