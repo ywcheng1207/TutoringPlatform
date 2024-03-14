@@ -9,7 +9,7 @@ import EmojiPicker from 'emoji-picker-react'
 
 //
 
-const who = JSON.parse(localStorage.getItem('USER')).email
+const who = typeof window !== 'undefined' && (JSON.parse(localStorage.getItem('USER'))?.email || '未登入')
 
 //
 export default function ClassesPage({ params }) {
@@ -59,7 +59,8 @@ function MessageInput({ onSendMessage }) {
       <Button
         type="submit"
         onClick={handleSubmit}
-        className='bg-[#66BFFF] text-[#FFF] w-[100px]'>
+        style={{ background: '#66BFFF', color: 'white', width: 70 }}
+      >
         發送
       </Button>
     </div>
@@ -95,11 +96,11 @@ const MyEmojiPicker = ({ onEmojiSelect }) => {
   return (
     <div className='relative' ref={emojiPickerRef}>
       <div className='w-[50px] flex justify-center'>
-        <SmileOutlined onClick={handleShowEmoji} style={{ color: '#66BFFF' }} />
+        <SmileOutlined onClick={handleShowEmoji} style={{ color: '#66BFFF', fontSize: 25 }} />
       </div>
       {showEmoji && (
         <div className='absolute bottom-0 right-0'>
-          <EmojiPicker onEmojiClick={onEmojiClick} emojiStyle='twitter' />
+          <EmojiPicker onEmojiClick={onEmojiClick} emojiStyle='twitter' lazyLoadEmojis={true} />
         </div>
       )}
     </div>
@@ -116,7 +117,7 @@ function MessageList({ messages }) {
         <li
           key={index}
           className={
-            `text-[#FFF] break-words py-4 pb-6 px-4 rounded-md bg-gray-400
+            `text-[#66BFFF] break-words py-4 pb-6 px-4 rounded-md bg-[#FFF]
             ${message.user === who && 'text-right'} 
             border border-white border-w-1`
           }
