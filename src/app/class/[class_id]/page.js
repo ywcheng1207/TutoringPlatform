@@ -24,12 +24,23 @@ export default function ClassesPage({ params }) {
     // socket.emit('message', newMessage)
     const data = newMessage
     // socket.emit('message', id, data)
-    socket.emit('class1', id, data)
+    socket.emit('message', id, data)
     // setInbox([...inbox, newMessage])
   }
 
   useEffect(() => {
-    const socketInstance = io('http://192.168.88.54:3000/')
+    // const socketInstance = io('http://10.0.0.136:3000')
+    // const socketInstance = io('http://localhost:3001')
+    const socketInstance = io('https://tutor-online.zeabur.app')
+    // const socketInstance = io('https://boss-shad-deadly.ngrok-free.app')
+    // const socketInstance = io('')
+    // console.log(socketInstance)
+    socketInstance.on('connect', () => {
+      console.log('已連線')
+    })
+    socketInstance.on('connect_error', (err) => {
+      console.log(`connect_error due to ${err}`)
+    })
     // const socketInstance = io('')
     // socketInstance.on('message', (newMessage) => {
     //   setInbox((currentInbox) => [...currentInbox, newMessage])

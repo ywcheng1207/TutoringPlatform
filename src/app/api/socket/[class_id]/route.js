@@ -6,22 +6,29 @@ import { Server } from 'socket.io'
 //   return NextResponse.json({ test: classId })
 // }
 
-export default function SocketHandler(req, res) {
-  if (res.socket.server.io) {
-    console.log('Already set up')
-    res.end()
-    return
-  }
+const SocketHandler = (req, res) => {
+  if (!res.socket.server.io) {
+    console.log('Initializing Socket.IO server...')
+    const io = new Server(res.socket.server)
 
-  const io = new Server(res.socket.server)
-  res.socket.server.io = io
-
-  io.on('connection', (socket) => {
-    socket.on('send-message', (obj) => {
-      io.emit('receive-message', obj)
+    io.on('connection', (socket) => {
+      socket.on('send-message', (obj) => {
+        io.emit('receive-message', obj)
+      })
     })
-  })
 
-  console.log('Setting up socket')
+    res.socket.server.io = io
+  } else {
+    console.log('Socket.IO server already initialized.')
+  }
   res.end()
+}
+
+export default function handler(req, res) {
+  try {
+    SocketHandler(req, res)
+  } catch (error) {
+    console.error('Socket.IO error:', error)
+    res.status(500).end()
+  }
 }

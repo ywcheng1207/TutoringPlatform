@@ -6,7 +6,8 @@ const apiWithoutToken = axios.create({
   // baseURL: 'https://boss-shad-deadly.ngrok-free.app',
   // baseURL: 'http://10.0.0.136:3000',
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': '69420'
   }
 })
 
@@ -16,7 +17,8 @@ const apiWithToken = axios.create({
   // baseURL: 'https://boss-shad-deadly.ngrok-free.app',
   // baseURL: 'http://10.0.0.136:3000',
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': '69420'
   }
 })
 
@@ -46,7 +48,8 @@ const apiWithTokenByFormData = axios.create({
   // baseURL: 'https://boss-shad-deadly.ngrok-free.app',
   // baseURL: 'http://10.0.0.136:3000',
   headers: {
-    'Content-Type': 'multipart/form-data'
+    'Content-Type': 'multipart/form-data',
+    'ngrok-skip-browser-warning': '69420'
   }
 })
 
