@@ -6,36 +6,66 @@ import { Button, Input } from 'antd'
 import { SmileOutlined } from '@ant-design/icons'
 import { io } from 'socket.io-client'
 import EmojiPicker from 'emoji-picker-react'
+import axios from 'axios'
 
 //
 
 const who = typeof window !== 'undefined' && (JSON.parse(localStorage.getItem('USER'))?.email || '未登入')
+const id = typeof window !== 'undefined' && (JSON.parse(localStorage.getItem('USER'))?.email || '未登入')
 
 //
 export default function ClassesPage({ params }) {
   const classId = params.class_id
+  const [socket, setSocket] = useState(null)
+  const [inbox, setInbox] = useState([])
+
+  const handleSendMessage = (newMessage) => {
+    // const message = { user: who, text: newMessage }
+    // socket.emit('message', newMessage)
+    const data = newMessage
+    // socket.emit('message', id, data)
+    socket.emit('class1', id, data)
+    // setInbox([...inbox, newMessage])
+  }
+
+  useEffect(() => {
+    const socketInstance = io('http://192.168.88.54:3000/')
+    // const socketInstance = io('')
+    // socketInstance.on('message', (newMessage) => {
+    //   setInbox((currentInbox) => [...currentInbox, newMessage])
+    // })
+
+    setSocket(socketInstance)
+
+    return () => {
+      socketInstance.disconnect()
+    }
+  }, [])
+
   return (
     <div className='w-full'>
       <div className='w-full bg-[#CCC] text-[#fff] text-center py-2 rounded-sm mb-3'>課程編號 - {classId}</div>
-      <ChatWindow />
+      <ChatWindow inbox={inbox} handleSendMessage={handleSendMessage} />
     </div>
   )
 }
 
 //
-function ChatWindow() {
-  const [messages, setMessages] = useState([{ user: '老師001', text: '歡迎光臨，喜歡都可以試穿看看哦 (?' }, { user: who, text: '別鬧' }])
+function ChatWindow({ inbox, handleSendMessage }) {
+  // const [messages, setMessages] = useState([{ user: '老師001', text: '歡迎光臨，喜歡都可以試穿看看哦 (?' }, { user: who, text: '別鬧' }])
 
-  const handleSendMessage = (newMessage) => {
-    const message = { user: who, text: newMessage }
-    setMessages([...messages, message])
-    console.log(who.email)
-  }
+  // const handleSendMessage = (newMessage) => {
+  //   const message = { user: who, text: newMessage }
+  //   setMessages([...messages, message])
+  //   console.log(who.email)
+  // }
 
   return (
     <div className='flex flex-col gap-3'>
-      <MessageList messages={messages} />
+      <MessageList inbox={inbox} />
       <MessageInput onSendMessage={handleSendMessage} />
+      {/* <MessageList messages={messages} />
+      <MessageInput onSendMessage={handleSendMessage} /> */}
     </div>
   )
 }
@@ -113,7 +143,7 @@ function MessageList({ messages }) {
       className='h-[500px] overflow-y-scroll custom-scrollbar
      bg-[#90d1ff] p-5 rounded-lg flex flex-col gap-1'
     >
-      {messages.map((message, index) => (
+      {messages?.map((message, index) => (
         <li
           key={index}
           className={
