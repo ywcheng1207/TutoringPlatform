@@ -39,19 +39,21 @@ const Home = () => {
   const [dataCount, setDataCount] = useState(1)
   const pageSize = 6
   const currentData = teacherListData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
-  const finalData = currentData.filter(item => {
-    // 國家篩選條件，檢查是否符合選定的國家
-    const isCountryMatch = teacherCountry.indexOf(countryFilter) >= 0 && item.country === countryFilter
-    // 關鍵字篩選條件，不區分大小寫地檢查名字中是否包含搜尋關鍵字
-    const isNameMatch = item.name.toLowerCase().includes(searchValue.toLowerCase())
-    const isClassTypeMatch = item.categories?.includes(classFilter)
-    // 如果沒有設置國家篩選（countryFilter為空），則只根據關鍵字篩選
-    // 如果設置了國家篩選，則項目需要同時符合國家和關鍵字的篩選條件
-    return (countryFilter !== '全部' ? isCountryMatch : true) &&
-      (searchValue ? isNameMatch : true) &&
-      (classFilter !== 0 ? isClassTypeMatch : true)
-  })
-
+  console.log('抓一下currentData', currentData)
+  const finalData = currentData.length > 0
+    ? currentData.filter(item => {
+      // 國家篩選條件，檢查是否符合選定的國家
+      const isCountryMatch = teacherCountry.indexOf(countryFilter) >= 0 && item.country === countryFilter
+      // 關鍵字篩選條件，不區分大小寫地檢查名字中是否包含搜尋關鍵字
+      const isNameMatch = item.name?.toLowerCase().includes(searchValue.toLowerCase())
+      const isClassTypeMatch = item.categories?.includes(classFilter)
+      // 如果沒有設置國家篩選（countryFilter為空），則只根據關鍵字篩選
+      // 如果設置了國家篩選，則項目需要同時符合國家和關鍵字的篩選條件
+      return (countryFilter !== '全部' ? isCountryMatch : true) &&
+        (searchValue ? isNameMatch : true) &&
+        (classFilter !== 0 ? isClassTypeMatch : true)
+    })
+    : []
   const handlePage = page => {
     setCurrentPage(page)
   }

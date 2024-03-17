@@ -1,10 +1,12 @@
 import axios from 'axios'
 
+// const BASEURL = 'https://tutor-online.zeabur.app'
+const BASEURL = 'https://boss-shad-deadly.ngrok-free.app'
+// const BASEURL = 'http://10.0.0.136:3000'
+
 // 不需要添加Authorization
 const apiWithoutToken = axios.create({
-  baseURL: 'https://tutor-online.zeabur.app',
-  // baseURL: 'https://boss-shad-deadly.ngrok-free.app',
-  // baseURL: 'http://10.0.0.136:3000',
+  baseURL: BASEURL,
   headers: {
     'Content-Type': 'application/json',
     'ngrok-skip-browser-warning': '69420'
@@ -13,9 +15,7 @@ const apiWithoutToken = axios.create({
 
 // 需要添加Authorization
 const apiWithToken = axios.create({
-  baseURL: 'https://tutor-online.zeabur.app',
-  // baseURL: 'https://boss-shad-deadly.ngrok-free.app',
-  // baseURL: 'http://10.0.0.136:3000',
+  baseURL: BASEURL,
   headers: {
     'Content-Type': 'application/json',
     'ngrok-skip-browser-warning': '69420'
@@ -44,9 +44,7 @@ apiWithToken.interceptors.response.use(
 )
 
 const apiWithTokenByFormData = axios.create({
-  baseURL: 'https://tutor-online.zeabur.app',
-  // baseURL: 'https://boss-shad-deadly.ngrok-free.app',
-  // baseURL: 'http://10.0.0.136:3000',
+  baseURL: BASEURL,
   headers: {
     'Content-Type': 'multipart/form-data',
     'ngrok-skip-browser-warning': '69420'

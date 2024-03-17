@@ -15,7 +15,7 @@ const TeacherCard = ({ id, item }) => {
 
   return (
     <div
-      className='border-[1px] border-solid border-[#66BFFF] rounded-[3px] p-3 flex flex-col gap-3 cursor-pointer hover:bg-[#f0eded] min-w-[200px] lg:min-h-[300px]'
+      className='border-[1px] border-solid border-[#66BFFF] rounded-[3px] p-3 flex flex-col gap-3 cursor-pointer hover:bg-[#f0eded] min-w-[250px] lg:min-h-[300px]'
       onClick={() => router.push(`teacher/${item?.id}/booking`)}
     >
       <div className='flex flex-row items-center gap-1'>

@@ -1,50 +1,51 @@
 'use client'
-
 //
 import { useEffect, useState, useRef } from 'react'
-import { Button, Input } from 'antd'
+import { useRouter } from 'next/navigation'
+import { Button, Input, notification } from 'antd'
 import { SmileOutlined } from '@ant-design/icons'
 import { io } from 'socket.io-client'
 import EmojiPicker from 'emoji-picker-react'
-import axios from 'axios'
 
 //
-
 const who = typeof window !== 'undefined' && (JSON.parse(localStorage.getItem('USER'))?.email || '未登入')
 const id = typeof window !== 'undefined' && (JSON.parse(localStorage.getItem('USER'))?.email || '未登入')
 
 //
 export default function ClassesPage({ params }) {
   const classId = params.class_id
+  const router = useRouter()
   const [socket, setSocket] = useState(null)
   const [inbox, setInbox] = useState([])
+  const [userInClass, setUserInClass] = useState(false)
 
   const handleSendMessage = (newMessage) => {
-    // const message = { user: who, text: newMessage }
-    // socket.emit('message', newMessage)
     const data = newMessage
-    // socket.emit('message', id, data)
     socket.emit('message', id, data)
-    // setInbox([...inbox, newMessage])
+    setInbox([...inbox, { user: id, text: data }])
   }
 
   useEffect(() => {
     // const socketInstance = io('http://10.0.0.136:3000')
     // const socketInstance = io('http://localhost:3001')
-    const socketInstance = io('https://tutor-online.zeabur.app')
-    // const socketInstance = io('https://boss-shad-deadly.ngrok-free.app')
-    // const socketInstance = io('')
-    // console.log(socketInstance)
+    // const socketInstance = io('https://tutor-online.zeabur.app')
+    const socketInstance = io('https://boss-shad-deadly.ngrok-free.app', {
+      extraHeaders: {
+        'ngrok-skip-browser-warning': '69420'
+      }
+    })
     socketInstance.on('connect', () => {
-      console.log('已連線')
+      setUserInClass(true)
     })
-    socketInstance.on('connect_error', (err) => {
-      console.log(`connect_error due to ${err}`)
+    socketInstance.on('connect_error', () => {
+      setUserInClass(false)
     })
     // const socketInstance = io('')
-    // socketInstance.on('message', (newMessage) => {
-    //   setInbox((currentInbox) => [...currentInbox, newMessage])
-    // })
+    socketInstance.on('message', ({ id, data }) => {
+      console.log(id)
+      console.log(data)
+      setInbox((currentInbox) => [...currentInbox, { user: id, text: data }])
+    })
 
     setSocket(socketInstance)
 
@@ -52,6 +53,32 @@ export default function ClassesPage({ params }) {
       socketInstance.disconnect()
     }
   }, [])
+
+  useEffect(() => {
+    if (userInClass) {
+      notification.success({
+        message: `${who}進入課程${classId}!`,
+        duration: 1
+      })
+    } else if (who === '未登入') {
+      notification.error({
+        message: '請先登入後重新嘗試!',
+        duration: 1
+      })
+      router.push('/signin')
+    } else if (!classId) {
+      notification.error({
+        message: '找不到該課程，請稍後重新嘗試!',
+        duration: 1
+      })
+    }
+    // else {
+    //   notification.error({
+    //     message: 'Oops課程出了一點狀況，請稍後重新嘗試!',
+    //     duration: 1
+    //   })
+    // }
+  }, [userInClass])
 
   return (
     <div className='w-full'>
@@ -63,20 +90,15 @@ export default function ClassesPage({ params }) {
 
 //
 function ChatWindow({ inbox, handleSendMessage }) {
-  // const [messages, setMessages] = useState([{ user: '老師001', text: '歡迎光臨，喜歡都可以試穿看看哦 (?' }, { user: who, text: '別鬧' }])
-
-  // const handleSendMessage = (newMessage) => {
-  //   const message = { user: who, text: newMessage }
-  //   setMessages([...messages, message])
-  //   console.log(who.email)
-  // }
-
   return (
-    <div className='flex flex-col gap-3'>
-      <MessageList inbox={inbox} />
-      <MessageInput onSendMessage={handleSendMessage} />
-      {/* <MessageList messages={messages} />
-      <MessageInput onSendMessage={handleSendMessage} /> */}
+    <div className='flex flex-col lg:flex-row gap-3'>
+      <div className="max-w-7/12">
+        <iframe className='w-full min-w-[500px] h-[500px]' src="https://www.youtube.com/embed/w4OeGMFTZak" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div className='flex flex-col w-full gap-3 max-w-3/12'>
+        <MessageList inbox={inbox} />
+        <MessageInput onSendMessage={handleSendMessage} />
+      </div>
     </div>
   )
 }
@@ -94,7 +116,7 @@ function MessageInput({ onSendMessage }) {
   }
 
   return (
-    <div className='flex justify-between items-center'>
+    <div className='w-full flex justify-between items-center'>
       <Input value={text} onChange={e => setText(e.target.value)} onPressEnter={handleSubmit} />
       <MyEmojiPicker onEmojiSelect={handleEmojiSelect} />
       <Button
@@ -148,13 +170,13 @@ const MyEmojiPicker = ({ onEmojiSelect }) => {
   )
 }
 
-function MessageList({ messages }) {
+function MessageList({ messages, inbox }) {
   return (
     <ul
       className='h-[500px] overflow-y-scroll custom-scrollbar
      bg-[#90d1ff] p-5 rounded-lg flex flex-col gap-1'
     >
-      {messages?.map((message, index) => (
+      {inbox?.map((message, index) => (
         <li
           key={index}
           className={

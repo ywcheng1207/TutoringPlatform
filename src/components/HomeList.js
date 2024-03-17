@@ -90,7 +90,7 @@ const HomeList = ({
                   }
                 />
                 <div className='flex flex-col gap-3'>
-                  <div className='flex flex-col items-center'>
+                  <div className='flex flex-col'>
                     <List
                       className='min-h-[600px]'
                       grid={{ column: screens.xl ? 3 : 2 }}
@@ -202,7 +202,7 @@ export default HomeList
 
 const StudyRanking = ({ studentRankData }) => {
   return (
-    <div className='min-h-[100px] border-[1px] border-solid border-[#CCC] rounded-[3px] p-3'>
+    <div className='min-h-[800px] border-[1px] border-solid border-[#CCC] rounded-[3px] p-3'>
       <div className='bg-[#DDD] text-[#fff] py-1 rounded-sm flex justify-center gap-2 items-center mb-3'>
         <Image src={iconBell} alt='bell' />
         <div>學習時數排行</div>
