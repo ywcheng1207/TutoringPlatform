@@ -21,30 +21,32 @@ export default function ClassesPage({ params }) {
 
   const handleSendMessage = (newMessage) => {
     const data = newMessage
-    socket.emit('message', id, data)
+    socket.emit('message', classId, id, data)
     setInbox([...inbox, { user: id, text: data }])
   }
 
   useEffect(() => {
     // const socketInstance = io('http://10.0.0.136:3000')
     // const socketInstance = io('http://localhost:3001')
-    // const socketInstance = io('https://tutor-online.zeabur.app')
-    const socketInstance = io('https://boss-shad-deadly.ngrok-free.app', {
-      extraHeaders: {
-        'ngrok-skip-browser-warning': '69420'
-      }
-    })
+    const socketInstance = io('https://tutor-online.zeabur.app')
+    // const socketInstance = io('https://boss-shad-deadly.ngrok-free.app', {
+    //   extraHeaders: {
+    //     'ngrok-skip-browser-warning': '69420'
+    //   }
+    // })
     socketInstance.on('connect', () => {
+      // console.log('成功連線')
       setUserInClass(true)
     })
     socketInstance.on('connect_error', () => {
       setUserInClass(false)
     })
-    // const socketInstance = io('')
-    socketInstance.on('message', ({ id, data }) => {
-      console.log(id)
-      console.log(data)
-      setInbox((currentInbox) => [...currentInbox, { user: id, text: data }])
+    socketInstance.emit('joinRoom', classId, id, (response) => {
+      console.log('response', response)
+      // setInbox((currentInbox) => [...currentInbox, `${id}準備通話`])
+    })
+    socketInstance.on('message', ({ email, data }) => {
+      setInbox((currentInbox) => [...currentInbox, { user: email, text: data }])
     })
 
     setSocket(socketInstance)
@@ -53,32 +55,6 @@ export default function ClassesPage({ params }) {
       socketInstance.disconnect()
     }
   }, [])
-
-  useEffect(() => {
-    if (userInClass) {
-      notification.success({
-        message: `${who}進入課程${classId}!`,
-        duration: 1
-      })
-    } else if (who === '未登入') {
-      notification.error({
-        message: '請先登入後重新嘗試!',
-        duration: 1
-      })
-      router.push('/signin')
-    } else if (!classId) {
-      notification.error({
-        message: '找不到該課程，請稍後重新嘗試!',
-        duration: 1
-      })
-    }
-    // else {
-    //   notification.error({
-    //     message: 'Oops課程出了一點狀況，請稍後重新嘗試!',
-    //     duration: 1
-    //   })
-    // }
-  }, [userInClass])
 
   return (
     <div className='w-full'>
