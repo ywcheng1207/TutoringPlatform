@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-const BASEURL = 'https://tutor-online.zeabur.app'
-// const BASEURL = 'https://boss-shad-deadly.ngrok-free.app'
+// const BASEURL = 'https://tutor-online.zeabur.app'
+const BASEURL = 'https://boss-shad-deadly.ngrok-free.app'
 // const BASEURL = 'http://10.0.0.136:3000'
 
 // 不需要添加Authorization

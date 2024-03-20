@@ -28,12 +28,12 @@ export default function ClassesPage({ params }) {
   useEffect(() => {
     // const socketInstance = io('http://10.0.0.136:3000')
     // const socketInstance = io('http://localhost:3001')
-    const socketInstance = io('https://tutor-online.zeabur.app')
-    // const socketInstance = io('https://boss-shad-deadly.ngrok-free.app', {
-    //   extraHeaders: {
-    //     'ngrok-skip-browser-warning': '69420'
-    //   }
-    // })
+    // const socketInstance = io('https://tutor-online.zeabur.app')
+    const socketInstance = io('https://boss-shad-deadly.ngrok-free.app', {
+      extraHeaders: {
+        'ngrok-skip-browser-warning': '69420'
+      }
+    })
     socketInstance.on('connect', () => {
       // console.log('成功連線')
       setUserInClass(true)
