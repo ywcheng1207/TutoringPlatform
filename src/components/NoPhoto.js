@@ -5,30 +5,40 @@ import { Tooltip } from 'antd'
 
 //
 import iconPhoto from '@/assets/icon-photo.svg'
-const BASEURL = 'https://tutor-online.zeabur.app'
+// const BASEURL = 'https://tutor-online.zeabur.app'
+const BASEURL = 'https://boss-shad-deadly.ngrok-free.app'
 
 //
 const NoPhoto = ({ size, photo, username }) => {
-  const thePhoto = photo ? `${BASEURL}${photo}` : null
+  console.log('後端', photo)
+
+  let thePhoto
+  if (photo) {
+    if (photo[0] !== '/') {
+      thePhoto = photo
+    } else {
+      thePhoto = photo ? `${BASEURL}${photo}` : null
+    }
+  }
 
   return (
     <>
       {
         size === 'big' &&
         <div className={'w-[230px] h-[230px] bg-[#CCC] bg-opacity-20 flex justify-center items-center p-3'}>
-            <Image src={thePhoto || iconPhoto} alt="photo" width={180} height={180} className='max-h-full max-w-full' />
+          <Image src={thePhoto || iconPhoto} alt="photo" width={180} height={180} className='max-h-full max-w-full' />
         </div>
       }
       {
         size === 'small' &&
         <div className={'w-[110px] h-[110px] bg-[#CCC] bg-opacity-20 flex justify-center items-center p-3'}>
-            <Image src={thePhoto || iconPhoto} alt="photo" width={80} height={80} className='max-h-full max-w-full' />
+          <Image src={thePhoto || iconPhoto} alt="photo" width={80} height={80} className='max-h-full max-w-full' />
         </div>
       }
       {
         size === 'medium' &&
         <div className={'w-[140px] h-[140px] bg-[#CCC] bg-opacity-20 flex justify-center items-center'}>
-            <Image src={thePhoto || iconPhoto} alt="photo" width={100} height={100} className='max-h-full max-w-full' />
+          <Image src={thePhoto || iconPhoto} alt="photo" width={100} height={100} className='max-h-full max-w-full' />
         </div>
       }
       {
@@ -42,7 +52,7 @@ const NoPhoto = ({ size, photo, username }) => {
       {
         size === 'avatar2' &&
         <div className={'w-[70px] h-[70px] bg-[#CCC] bg-opacity-20 flex justify-center items-center rounded-full'}>
-            <Image src={thePhoto || iconPhoto} alt="photo" width={40} height={40} className='max-h-full max-w-full' />
+          <Image src={thePhoto || iconPhoto} alt="photo" width={40} height={40} className='max-h-full max-w-full' />
         </div>
       }
     </>

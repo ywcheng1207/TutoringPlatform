@@ -190,7 +190,7 @@ const ClassesYouBooked = ({ classes, fetchStudentClassesBookedData }) => {
   }
 
   const classesContent = () => {
-    if (classes.length > 0) {
+    if (classes.length > 0 && typeof classes !== 'string') {
       return (
         <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-3 md:pl-5'>
           {

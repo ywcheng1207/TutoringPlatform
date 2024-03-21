@@ -6,7 +6,7 @@ import { Button, Input, notification } from 'antd'
 import { SmileOutlined } from '@ant-design/icons'
 import { io } from 'socket.io-client'
 import EmojiPicker from 'emoji-picker-react'
-
+import { getClassHistoryData } from '@/apis/apis'
 //
 const who = typeof window !== 'undefined' && (JSON.parse(localStorage.getItem('USER'))?.email || '未登入')
 const id = typeof window !== 'undefined' && (JSON.parse(localStorage.getItem('USER'))?.email || '未登入')
@@ -56,6 +56,20 @@ export default function ClassesPage({ params }) {
     }
   }, [])
 
+  useEffect(() => {
+    const fetchClassesHistoryData = async () => {
+      try {
+        const res = await getClassHistoryData({ id: classId })
+        console.log('課程歷史資料', res.data.data)
+        // setStudentRankData(res.data.data)
+      } catch (error) {
+        console.error('課程歷史資料', error)
+      }
+      // setIsLoading(false)
+    }
+    fetchClassesHistoryData()
+  }, [])
+
   return (
     <div className='w-full'>
       <div className='w-full bg-[#CCC] text-[#fff] text-center py-2 rounded-sm mb-3'>課程編號 - {classId}</div>
@@ -69,7 +83,7 @@ function ChatWindow({ inbox, handleSendMessage }) {
   return (
     <div className='flex flex-col lg:flex-row gap-3'>
       <div className="max-w-7/12">
-        <iframe className='w-full min-w-[500px] h-[500px]' src="https://www.youtube.com/embed/w4OeGMFTZak" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe className='w-full min-w-[500px] h-[500px]' src="https://www.youtube.com/embed/w4OeGMFTZak" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
       <div className='flex flex-col w-full gap-3 max-w-3/12'>
         <MessageList inbox={inbox} />

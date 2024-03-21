@@ -202,17 +202,17 @@ export default HomeList
 
 const StudyRanking = ({ studentRankData }) => {
   return (
-    <div className='min-h-[800px] border-[1px] border-solid border-[#CCC] rounded-[3px] p-3'>
+    <div className='min-h-[200px] lg:min-h-[800px] border-[1px] border-solid border-[#CCC] rounded-[3px] p-3'>
       <div className='bg-[#DDD] text-[#fff] py-1 rounded-sm flex justify-center gap-2 items-center mb-3'>
         <Image src={iconBell} alt='bell' />
         <div>學習時數排行</div>
       </div>
       <div className='flex flex-wrap gap-3 lg:justify-center lg:block lg:w-[240px]'>
-        {studentRankData?.map(item => (
+        {typeof studentRankData !== 'string' && studentRankData?.map(item => (
           <div key={item.id} className='flex items-center py-2 lg:w-full '>
             <div className='flex items-center gap-3'>
               <NoPhoto size='avatar' photo={item.avatar} username={item.name} />
-              <h2 className='hidden lg:block flex-1 max-w-[130px] overflow-hidden text-nowrap text-ellipsis '>
+              <h2 className='hidden lg:flex max-w-[130px] overflow-hidden text-nowrap text-ellipsis '>
                 {item.name}
               </h2>
             </div>

@@ -5,7 +5,7 @@ const nextConfig = {
     ignoreDuringBuilds: true
   },
   images: {
-    domains: ['cloudflare-ipfs.com', 'avatars.githubusercontent.com', '10.0.0.136', 'tutor-online.zeabur.app']
+    domains: ['cloudflare-ipfs.com', 'avatars.githubusercontent.com', '10.0.0.136', 'tutor-online.zeabur.app', 'boss-shad-deadly.ngrok-free.app']
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production'

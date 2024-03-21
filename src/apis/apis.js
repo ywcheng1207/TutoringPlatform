@@ -315,3 +315,14 @@ export const deleteClasses = async ({ id }) => {
     throw error
   }
 }
+
+// 取得課程歷史對話紀錄
+export const getClassHistoryData = async ({ id }) => {
+  try {
+    const res = await apiWithToken.get(`/classes/history/${id}`)
+    return res
+  } catch (error) {
+    console.error('GetClassHistoryData Failed:', error)
+    throw error
+  }
+}
