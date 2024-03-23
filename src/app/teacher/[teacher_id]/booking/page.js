@@ -59,7 +59,7 @@ export default function TeacherPersonal({ params }) {
     } catch (error) {
       if (error.response.data.message === 'Error: This class is booked!') {
         return notification.error({
-          message: '您已經預約過這項課程!',
+          message: '這堂課已經被預約!',
           duration: 1
         })
       }

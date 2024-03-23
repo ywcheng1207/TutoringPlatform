@@ -6,12 +6,10 @@ import { Tooltip } from 'antd'
 //
 import iconPhoto from '@/assets/icon-photo.svg'
 // const BASEURL = 'https://tutor-online.zeabur.app'
-const BASEURL = 'https://boss-shad-deadly.ngrok-free.app'
+const BASEURL = 'https://alive-lizard-eagerly.ngrok-free.app'
 
 //
 const NoPhoto = ({ size, photo, username }) => {
-  console.log('後端', photo)
-
   let thePhoto
   if (photo) {
     if (photo[0] !== '/') {

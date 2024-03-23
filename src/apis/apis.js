@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 // const BASEURL = 'https://tutor-online.zeabur.app'
-const BASEURL = 'https://boss-shad-deadly.ngrok-free.app'
+const BASEURL = 'https://alive-lizard-eagerly.ngrok-free.app'
 // const BASEURL = 'http://10.0.0.136:3000'
 
 // 不需要添加Authorization
@@ -284,9 +284,9 @@ export const getClassManagementData = async ({ id }) => {
 }
 
 // 課程管理 - 一次新增一堂課程
-export const postClasses = async ({ name, dateTimeRange, link, category }) => {
+export const postClasses = async ({ name, dateTimeRange, category }) => {
   try {
-    const res = await apiWithToken.post('/classes', { name, dateTimeRange, link, category })
+    const res = await apiWithToken.post('/classes', { name, dateTimeRange, category })
     return res
   } catch (error) {
     console.error('PostClasses Failed:', error)
@@ -295,9 +295,9 @@ export const postClasses = async ({ name, dateTimeRange, link, category }) => {
 }
 
 // 課程管理 - 一次修改一堂課
-export const putClasses = async ({ id, name, dateTimeRange, link, category }) => {
+export const putClasses = async ({ id, name, dateTimeRange, category }) => {
   try {
-    const res = await apiWithToken.put(`/classes/${id}`, { name, dateTimeRange, link, category })
+    const res = await apiWithToken.put(`/classes/${id}`, { name, dateTimeRange, category })
     return res
   } catch (error) {
     console.error('PutClasses Failed:', error)

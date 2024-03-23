@@ -2,6 +2,7 @@
 
 //
 import Image from 'next/image'
+import Link from 'next/link'
 import { Button, Select, Modal, Form, Input, notification, Popconfirm } from 'antd'
 import { useState, useEffect, useRef } from 'react'
 
@@ -142,6 +143,7 @@ export default function ClassManage({ params }) {
       )
     }
     if (data.length > 0 && !isLoading) {
+      console.log('抓一下', data)
       return (
         <div className='flex flex-col gap-3 md:flex-row md:flex-wrap' >
           {data.map(ele =>
@@ -250,7 +252,7 @@ const ClassCard = ({ info, onEdit, onDeleteClass, finalSelection, currentClassDa
           <h1>{info.length}</h1>
         </div>
         <div className='flex md:flex-col'>
-          <a href={info.link} target='_blank' className='text-[#66BFFF] hover:opacity-70'>課程連結</a>
+          <Link href={`/class/${info.roomName}`} className='text-[#66BFFF] hover:opacity-70'>課程連結</Link>
         </div>
       </div>
       <div className='flex justify-between '>
@@ -358,7 +360,7 @@ const EditBtn = ({ type, info, onEdit, finalSelection, currentClassData }) => {
               }
             </Select>
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             name="link"
             label='課程連結'
             rules={[
@@ -369,7 +371,7 @@ const EditBtn = ({ type, info, onEdit, finalSelection, currentClassData }) => {
             ]}
           >
             <Input />
-          </Form.Item>
+          </Form.Item> */}
           <Button
             style={{ color: '#fff', background: '#66BFFF' }}
             htmlType="submit"

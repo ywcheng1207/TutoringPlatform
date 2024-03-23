@@ -39,7 +39,6 @@ const Home = () => {
   const [dataCount, setDataCount] = useState(1)
   const pageSize = 6
   const currentData = teacherListData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
-  console.log('抓一下currentData', currentData)
   const finalData = currentData.length > 0
     ? currentData.filter(item => {
       // 國家篩選條件，檢查是否符合選定的國家

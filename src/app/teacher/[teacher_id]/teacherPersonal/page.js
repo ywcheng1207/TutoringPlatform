@@ -2,6 +2,7 @@
 //
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Button, Modal, Form, Input, Skeleton } from 'antd'
 
@@ -15,6 +16,10 @@ import {
 
 //
 import iconHeart from '@/assets/icon-heart.svg'
+import iconPersonalInfo from '@/assets/icon-personal-info.svg'
+import iconFlag from '@/assets/icon-flag.svg'
+import iconChair from '@/assets/icon-chair.svg'
+import iconSpeak from '@/assets/icon-speak.svg'
 
 //
 export default function StudentPersonal({ params }) {
@@ -68,19 +73,19 @@ export default function StudentPersonal({ params }) {
       {!isLoading &&
         <div className="w-full h-full flex flex-col gap-3 md:flex-row">
           {/* 基礎資訊 */}
-          <div className=' flex flex-col items-start gap-3 md:w-4/12'>
-            <div className='w-full flex justify-center md:justify-start'>
+          <div className=' flex flex-col gap-3 md:w-4/12'>
+            <div className='w-full flex justify-center'>
               <NoPhoto size='big' photo={imgLink} />
             </div>
             <div className='w-full flex flex-col gap-2'>
-              <div className='text-center md:text-start text-2xl py-5'>{teacherPersonalData.name}</div>
-              <div className='text-center md:text-start py-2'>{teacherPersonalData.country}</div>
+              <div className='text-center md:text-start text-2xl font-bold py-5'>{teacherPersonalData.name}</div>
+              <div className='text-center md:text-start text-xl py-2'>{teacherPersonalData.country}</div>
               <div className='flex justify-center md:justify-start gap-10 py-2'>
-                <Image src={iconHeart} alt='like' />
-                <h3>{teacherPersonalData.ScoreAvg}</h3>
+                <Image src={iconHeart} alt='like' width={20} height={20} />
+                <h3>{teacherPersonalData.ScoreAvg || <span className='text-[#ddd] text-sm'>{'尚未有學生評分'}</span>}</h3>
               </div>
-              <div>專業</div>
-              <div className='py-2 md:pl-5'>
+              <div className='text-xl font-medium'>專業</div>
+              <div className='py-5 md:pl-5'>
                 <div className='grid grid-cols-2 gap-2'>
                   {teacherPersonalData.categoryId?.map(ele => <ClassesTypeTag key={ele} text={classType2[ele]} />)}
                 </div>
@@ -97,8 +102,11 @@ export default function StudentPersonal({ params }) {
 
           {/* 主要資訊 */}
           <div className='md:w-8/12 h-full flex flex-col items-start gap-5'>
-            <div className='w-full flex flex-col gap-3'>
-              <div>最新行程</div>
+            <div className='w-full min-h-[180px] flex flex-col gap-3'>
+              <div className='text-xl flex items-center gap-2'>
+                <Image src={iconFlag} width={25} height={25} alt='flagIcon' />
+                最新行程
+              </div>
               <div className='max-h-[210px] overflow-y-scroll flex flex-col gap-3 md:pl-5'>
                 {
                   typeof classesOpenedInTwoWeeks !== 'string' && classesOpenedInTwoWeeks.map(ele =>
@@ -106,7 +114,7 @@ export default function StudentPersonal({ params }) {
                       <div className='flex flex-col gap-2'>
                         <h3>課程：{ele.name}</h3>
                         <h3>日期：{ele.dateTimeRange}</h3>
-                        <a href={ele.link} target='_blank' className='text-[#66BFFF]'>上課連結</a>
+                        <Link href={`/class/${ele.roomName}`} className='text-[#66BFFF] hover:opacity-70'>課程連結</Link>
                       </div>
                     </div>
                   )
@@ -119,11 +127,14 @@ export default function StudentPersonal({ params }) {
                 }
               </div>
             </div>
-            <div className='w-full hidden md:block'>
+            <div className='w-full min-h-[180px] hidden md:block'>
               <TeachingStyle content={teacherPersonalData.style} />
             </div>
-            <div className='w-full flex flex-col gap-3'>
-              <div>近期評論</div>
+            <div className='w-full min-h-[180px] flex flex-col gap-3'>
+              <div className='text-xl flex flex-center gap-2'>
+                <Image src={iconSpeak} width={25} height={25} alt='iconSpeak' />
+                近期評論
+              </div>
               <div className='max-h-[210px] overflow-y-scroll flex flex-col gap-3 md:pl-5'>
                 {
                   typeof teacherCommentData !== 'string' && teacherCommentData.map(ele =>
@@ -186,7 +197,7 @@ export default function StudentPersonal({ params }) {
 const AboutMe = ({ content }) => {
   return (
     <div className='flex flex-col gap-2'>
-      <div>關於我</div>
+      <div className='text-xl'>關於我</div>
       <div className='md:pl-5'>{content}</div>
     </div>
   )
@@ -195,7 +206,10 @@ const AboutMe = ({ content }) => {
 const TeachingStyle = ({ content }) => {
   return (
     <div className='flex flex-col gap-2'>
-      <div>教學風格</div>
+      <div className='text-xl flex items-center gap-2'>
+        <Image src={iconChair} width={25} height={25} alt='iconChair' />
+        教學風格
+      </div>
       <div className='md:pl-5'>{content}</div>
     </div>
   )
@@ -217,8 +231,9 @@ const ButtonGroup = ({ teacherId }) => {
       <div className='w-full md:max-w-[300px]'>
         <Button
           block
-          style={{ color: '#fff', background: '#66BFFF', width: '100%' }}
+          style={{ color: '#fff', background: '#66BFFF', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           onClick={() => router.push(`/teacher/${teacherId}/teacherEdit`)}
+          icon={<Image src={iconPersonalInfo} width={20} height={20} alt='edit' />}
         >
           編輯個人資訊
         </Button>

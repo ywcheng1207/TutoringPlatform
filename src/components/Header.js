@@ -63,16 +63,11 @@ const Header = () => {
   }
 
   return (
-    <div className="bg-neutral-200 h-[80px] px-3 flex item-center justify-between">
+    <div className="bg-neutral-200 h-[80px] px-3 py-[10px] flex item-center justify-between">
       <div className='flex item-center gap-3'>
         <Image src={iconLogo} alt='logo' height={50} className='cursor-pointer'
           onClick={() => {
-            if (!typeof window !== 'undefined' && !window?.localStorage?.getItem('TOKEN')) {
-              return notification.error({
-                message: '請先登入!',
-                duration: 1
-              })
-            }
+            if (!typeof window !== 'undefined' && !window?.localStorage?.getItem('TOKEN')) return
             router.push('/home')
           }}
         />
@@ -97,6 +92,7 @@ const Header = () => {
         </div>
       }
       {
+        typeof window !== 'undefined' && window?.localStorage?.getItem('TOKEN') &&
         <div className='flex lg:hidden cursor-pointer' onClick={showDrawer}>
           <Image src={iconBurger} alt='burger' />
         </div>

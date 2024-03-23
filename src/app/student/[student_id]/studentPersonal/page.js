@@ -2,6 +2,7 @@
 //
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Button, Modal, Form, Input, Popconfirm, notification, Skeleton } from 'antd'
 
@@ -16,6 +17,12 @@ import {
 
 //
 import NoPhoto from '@/components/NoPhoto'
+
+//
+import iconPersonalInfo from '@/assets/icon-personal-info.svg'
+import iconFlag from '@/assets/icon-flag.svg'
+import iconCalendar from '@/assets/icon-calendar.svg'
+import iconStar from '@/assets/icon-star.svg'
 
 //
 export default function StudentPersonal({ params }) {
@@ -68,19 +75,20 @@ export default function StudentPersonal({ params }) {
       {!isLoading &&
         <div className="w-full h-full flex flex-col gap-3 md:flex-row" >
           <div className=' flex flex-col items-start gap-3 md:w-4/12'>
-            <div className='w-full flex justify-center md:justify-start'>
+            <div className='w-full flex justify-center'>
               <NoPhoto size='big' photo={imgLink} />
             </div>
-            <div className='w-full flex flex-col gap-2'>
-              <div className='text-center md:text-start text-2xl py-5'>{studentPersonalData.name}</div>
+            <div className='w-full flex flex-col gap-2 min-h-[180px] py-5'>
+              <div className='text-center md:text-start text-2xl font-bold py-5'>{studentPersonalData.name}</div>
               <AboutMe introduction={studentPersonalData.introduction} />
             </div>
             <div className='w-full flex justify-center md:justify-start'>
-              <div className='w-full max-w-[300px] md:max-w-[150px]'>
+              <div className='w-full lg:max-w-[150px]'>
                 <Button
                   block
-                  style={{ color: '#fff', background: '#66BFFF', width: '100%' }}
+                  style={{ color: '#fff', background: '#66BFFF', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                   onClick={() => router.push(`/student/${studentId}/studentEdit`)}
+                  icon={<Image src={iconPersonalInfo} width={20} height={20} alt='edit' />}
                 >
                   編輯個人資訊
                 </Button>
@@ -88,12 +96,18 @@ export default function StudentPersonal({ params }) {
             </div>
           </div>
           <div className='w-full md:w-8/12 h-full flex flex-col items-start gap-5 '>
-            <div className='w-full flex flex-col gap-3'>
-              <div className='w-full'>進行中的課程</div>
+            <div className='w-full flex flex-col gap-3 min-h-[180px]'>
+              <div className='w-full flex items-center gap-2'>
+                <Image src={iconFlag} width={25} height={25} alt='flagIcon' />
+                進行中的課程
+              </div>
               <ClassesYouBooked classes={studentClassesBookedData} fetchStudentClassesBookedData={fetchStudentClassesBookedData} />
             </div>
-            <div className='w-full flex flex-col gap-3'>
-              <div>學習歷程</div>
+            <div className='w-full flex flex-col gap-3 min-h-[180px]'>
+              <div className='flex items-center gap-2'>
+                <Image src={iconCalendar} width={25} height={25} alt='iconCalendar' />
+                學習歷程
+              </div>
               {
                 typeof classesComplete !== 'string'
                   ? <div className='grid grid-cols-1 md:grid-cols-2 gap-3 md:pl-5'>
@@ -110,8 +124,11 @@ export default function StudentPersonal({ params }) {
                   </div>
               }
             </div>
-            <div className='w-full flex flex-col gap-3'>
-              <div>我的學習時數名次</div>
+            <div className='w-full flex flex-col gap-3 min-h-[180px]'>
+              <div className=' flex items-center gap-2'>
+                <Image src={iconStar} width={25} height={25} alt='iconStar' />
+                我的學習時數名次
+              </div>
               <div className='flex flex-col gap-3 md:pl-5'>
                 <div className='min-h-[70px] w-full border border-solid border-[#DDD] flex flex-col justify-center'>
                   <div>學習時數: {studentPersonalData.totalLearningTime || '尚未開始學習'}</div>
@@ -160,7 +177,7 @@ export default function StudentPersonal({ params }) {
 const AboutMe = ({ introduction }) => {
   return (
     <>
-      <div>關於我</div>
+      <div className='text-xl'>關於我</div>
       <div className='md:pl-5'>{introduction}</div>
     </>
   )
@@ -200,7 +217,7 @@ const ClassesYouBooked = ({ classes, fetchStudentClassesBookedData }) => {
                   <h3>課程：{ele.name}</h3>
                   <h3>老師：{ele.Teacher.name}</h3>
                   <h3>日期：{ele.dateTimeRange}</h3>
-                  <a href={ele.link} target='_blank' className='text-[#66BFFF]'>上課連結</a>
+                  <Link href={`/class/${ele.roomName}`} className='text-[#66BFFF] hover:opacity-70'>課程連結</Link>
                 </div>
                 <Popconfirm
                   title="取消這項課程"

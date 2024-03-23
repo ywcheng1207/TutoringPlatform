@@ -29,11 +29,11 @@ function SignUp() {
         password: e.password,
         passwordCheck: e.confirm
       })
-      router.push('/home')
       notification.success({
         message: '註冊成功!',
         duration: 1
       })
+      router.push('/home')
       // console.log('註冊資訊回傳', res)
     } catch (error) {
       notification.error({
@@ -142,7 +142,7 @@ function SignUp() {
           />
         </Form.Item>
         <h6
-         className='flex items-center  text-[#66BFFF] text-[18px] font-[700] cursor-pointer'
+          className='flex items-center  text-[#66BFFF] text-[18px] font-[700] cursor-pointer'
           onClick={handleGoogleLogin}
         >
           <Image src={iconGoogle} alt='google' width={25} />

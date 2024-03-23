@@ -6,6 +6,7 @@ import styles from './page.module.css'
 const RootPage = () => {
   const router = useRouter()
 
+  console.log('測試')
   useEffect(() => {
     router.push('/signin') // 使用replace而不是push，以避免將根頁面加入歷史紀錄
   }, [router])

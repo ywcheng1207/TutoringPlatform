@@ -102,7 +102,7 @@ const HomeList = ({
                       )}
                     />
                     <Pagination
-                      className='customPagination'
+                      className='customPagination text-center'
                       current={currentPage}
                       onChange={onPage}
                       total={dataCount}
@@ -117,6 +117,7 @@ const HomeList = ({
               <StudyRanking studentRankData={studentRankData} />
             </div>
           </div >
+          {/* --------------- mobile --------------- */}
           < div className='min-h-[700px] flex flex-col gap-5 lg:hidden' >
             <Select placeholder='課程' value={classFilter} style={{ width: '100%' }} onChange={(e) => handleClassFilter(e)}>
               {
@@ -157,6 +158,7 @@ const HomeList = ({
           </div >
         </>
       }
+      {/* --------------- isLoading --------------- */}
       {isLoading &&
         <>
           <div className='w-full flex flex-col items-center gap-3 p-3 lg:hidden'>
@@ -244,7 +246,7 @@ const StudentRankCardSkeleton = () => {
   return (
     <div className='flex items-center gap-3 pl-5'>
       <Skeleton.Avatar
-        size={50} // 直接指定 size 属性来设置大小
+        size={50}
         shape="circle"
         active
       />
