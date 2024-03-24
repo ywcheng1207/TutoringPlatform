@@ -34,9 +34,9 @@ const RootLayout = ({ children }) => {
           <AntdRegistry>
             <GoogleOAuthProvider clientId='303422650660-1vqckog59tsnnvf423324ni7uepcpu4f.apps.googleusercontent.com'>
               <Provider>
-                <div className='flex flex-col justify-between min-h-screen gap-5'>
+                <div className='flex flex-col justify-between min-h-screen gap-5 m-w-[300px]'>
                   <Header />
-                  <div className='h-full flex-1 w-full  px-3 md:mx-auto md:max-w-[1480px] md:px-10 md:h-[800px] flex items-center'>
+                  <div className='h-full w-full  px-3 md:mx-auto md:max-w-[1480px] md:px-10 min-h-[700px] flex items-center'>
                     {children}
                   </div>
                   <Footer />

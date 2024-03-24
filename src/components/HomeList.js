@@ -77,11 +77,11 @@ const HomeList = ({
                     </div>
                   ))}
                 </div>
-                <Input
+                <Input.Search
                   placeholder='搜尋老師的名字' style={{ width: '100%' }}
                   onChange={handleSearchTyping}
                   onPressEnter={handleSearch}
-                  suffix={
+                  enterButton={
                     <Button
                       onClick={handleSearch}
                       style={{ color: '#fff', background: '#66BFFF' }}>
@@ -139,11 +139,11 @@ const HomeList = ({
                 )
               }
             </Select>
-            <Input
+            <Input.Search
               placeholder='搜尋老師的名字' style={{ width: '100%' }}
               onChange={handleSearchTyping}
               onPressEnter={handleSearch}
-              suffix={
+              enterButton={
                 <Button
                   onClick={handleSearch}
                   style={{ color: '#fff', background: '#66BFFF' }}>

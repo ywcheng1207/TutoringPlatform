@@ -21,19 +21,21 @@ export default function ClassesPage({ params }) {
 
   const handleSendMessage = (newMessage) => {
     const data = newMessage
-    socket.emit('message', classId, id, data)
+    socket.emit('message', classId, id, data, (res) => {
+      console.log('發送成功!', res)
+    })
     setInbox([...inbox, { user: id, text: data }])
   }
 
   useEffect(() => {
     // const socketInstance = io('http://10.0.0.136:3000')
     // const socketInstance = io('http://localhost:3001')
-    // const socketInstance = io('https://tutor-online.zeabur.app')
-    const socketInstance = io('https://alive-lizard-eagerly.ngrok-free.app', {
-      extraHeaders: {
-        'ngrok-skip-browser-warning': '69420'
-      }
-    })
+    const socketInstance = io('https://tutor-online.zeabur.app')
+    // const socketInstance = io('https://alive-lizard-eagerly.ngrok-free.app', {
+    //   extraHeaders: {
+    //     'ngrok-skip-browser-warning': '69420'
+    //   }
+    // })
     socketInstance.on('connect', () => {
       // console.log('成功連線')
       setUserInClass(true)
@@ -60,10 +62,21 @@ export default function ClassesPage({ params }) {
     const fetchClassesHistoryData = async () => {
       try {
         const res = await getClassHistoryData({ id: classId })
-        console.log('課程歷史資料', res.data.data)
-        // setStudentRankData(res.data.data)
+        // console.log('課程歷史資料', res.data.data)
+        if (typeof res?.data?.data !== 'string') {
+          const transformedArray = res?.data?.data?.map(item => ({
+            text: item.data,
+            user: item.email
+          }))
+          setInbox(transformedArray)
+        }
       } catch (error) {
-        console.error('課程歷史資料', error)
+        // console.error('課程歷史資料', error)
+        notification.error({
+          message: '資料讀取失敗，請重新嘗試!',
+          duration: 1
+        })
+        router.push('/home')
       }
       // setIsLoading(false)
     }
@@ -160,7 +173,7 @@ const MyEmojiPicker = ({ onEmojiSelect }) => {
   )
 }
 
-function MessageList({ messages, inbox }) {
+function MessageList({ inbox }) {
   return (
     <ul
       className='h-[500px] overflow-y-scroll custom-scrollbar
@@ -181,53 +194,3 @@ function MessageList({ messages, inbox }) {
     </ul>
   )
 }
-// export default function ClassesPage({ params }) {
-//   const classId = params.class_id
-//   const [socket, setSocket] = useState(null)
-//   const [inbox, setInbox] = useState([])
-//   const [message, setMessage] = useState('')
-//   const [roomName, setRoomName] = useState('')
-//   const theUser = '使用者A'
-
-//   const handleSendMessage = () => {
-//     socket.emit('message', message, roomName, theUser)
-//   }
-
-//   const handleJoinRoom = () => {
-//     socket.emit('joinRoom', roomName, theUser)
-//     setInbox((currentInbox) => [...currentInbox, `${theUser} 進入聊天室 ${roomName}`])
-//   }
-
-//   useEffect(() => {
-//     const socketInstance = io('http://localhost:3001')
-
-//     socketInstance.on('message', (newMessage) => {
-//       setInbox((currentInbox) => [...currentInbox, newMessage])
-//     })
-
-//     setSocket(socketInstance)
-
-//     return () => {
-//       socketInstance.disconnect()
-//     }
-//   }, [])
-
-//   return (
-//     <div className='h-full'>
-//       <div className="text-[20px] text-[#66BFFF]">課程編號 {classId} 頁面施工中...</div>
-
-//       <div className='min-h-[300px] bg-black text-[#fff]'>
-//         {
-//           inbox.map((message, index) => (
-//             <div key={index}>{message}</div>
-//           ))
-//         }
-//       </div>
-//       <Input onChange={e => setRoomName(e.target.value)} />
-//       <Button onClick={handleJoinRoom}>進入聊天室</Button>
-
-//       <Input onChange={e => setMessage(e.target.value)} />
-//       <Button onClick={handleSendMessage}>發送訊息</Button>
-//     </div>
-//   )
-// }

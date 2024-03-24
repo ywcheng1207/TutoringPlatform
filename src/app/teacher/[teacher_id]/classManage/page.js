@@ -252,7 +252,7 @@ const ClassCard = ({ info, onEdit, onDeleteClass, finalSelection, currentClassDa
           <h1>{info.length}</h1>
         </div>
         <div className='flex md:flex-col'>
-          <Link href={`/class/${info.roomName}`} className='text-[#66BFFF] hover:opacity-70'>課程連結</Link>
+          <Link href={`/class/${info.id}`} className='text-[#66BFFF] hover:opacity-70'>課程連結</Link>
         </div>
       </div>
       <div className='flex justify-between '>

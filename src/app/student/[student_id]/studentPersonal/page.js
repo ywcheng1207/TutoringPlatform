@@ -217,7 +217,7 @@ const ClassesYouBooked = ({ classes, fetchStudentClassesBookedData }) => {
                   <h3>課程：{ele.name}</h3>
                   <h3>老師：{ele.Teacher.name}</h3>
                   <h3>日期：{ele.dateTimeRange}</h3>
-                  <Link href={`/class/${ele.roomName}`} className='text-[#66BFFF] hover:opacity-70'>課程連結</Link>
+                  <Link href={`/class/${ele.id}`} className='text-[#66BFFF] hover:opacity-70'>課程連結</Link>
                 </div>
                 <Popconfirm
                   title="取消這項課程"
@@ -251,10 +251,11 @@ const ClassesYouBooked = ({ classes, fetchStudentClassesBookedData }) => {
 const LearningHistoryCard = ({ data }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const showModal = () => setIsModalOpen(!isModalOpen)
+  const router = useRouter()
 
   const handleModalSubmit = async (e) => {
     try {
-      const res = await postComments({ id: data.Teacher.id, text: e.text, score: e.score })
+      const res = await postComments({ id: data.teacherId, classId: data.id, text: e.text, score: e.score })
       console.log(res)
       notification.success({
         message: `感謝您對${data.Teacher.name}老師的評價!`,
@@ -276,18 +277,25 @@ const LearningHistoryCard = ({ data }) => {
       <div className=''>
         <NoPhoto size='avatar2' photo={data.Teacher.avatar} />
       </div>
-      <div className='min-h-[70px] w-full border border-solid border-[#DDD] flex justify-between  p-3'>
+      <div className='min-h-[70px] w-full border border-solid border-[#DDD] flex justify-between  p-3 gap-2'>
         <div className='flex flex-col gap-1'>
           <div>課程：{data.name}</div>
           <div>老師：{data.Teacher.name}</div>
           <div>日期：{data.dateTimeRange}</div>
         </div>
-        <Button
-          style={{ color: '#fff', background: '#66BFFF' }}
-          onClick={showModal}
-        >
-          評分
-        </Button>
+        <div className='flex flex-col gap-3'>
+          <Button
+            style={{ color: '#fff', background: '#66BFFF' }}
+            onClick={showModal}
+          >
+            {data.isCommented ? '重新評分' : '評分'}
+          </Button>
+          <div
+            className='text-center text-[#66BFFF] cursor-pointer'
+            onClick={() => router.push(`/history/${data.id}`)}
+          >歷史紀錄
+          </div>
+        </div>
       </div>
       <Modal
         title={<div className='py-4 text-2xl'>評分這位老師： {data.Teacher.name}</div>}

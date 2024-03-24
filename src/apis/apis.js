@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-// const BASEURL = 'https://tutor-online.zeabur.app'
-const BASEURL = 'https://alive-lizard-eagerly.ngrok-free.app'
+const BASEURL = 'https://tutor-online.zeabur.app'
+// const BASEURL = 'https://alive-lizard-eagerly.ngrok-free.app'
 // const BASEURL = 'http://10.0.0.136:3000'
 
 // 不需要添加Authorization
@@ -240,9 +240,9 @@ export const getAllStudentCompletedClassesData = async ({ id }) => {
 }
 
 // 學生個人頁 - 增加一則評論
-export const postComments = async ({ id, text, score }) => {
+export const postComments = async ({ id, classId, text, score }) => {
   try {
-    const res = await apiWithToken.post(`/comments/${id}`, { text, score })
+    const res = await apiWithToken.post(`/comments/${id}`, { classId, text, score })
     return res
   } catch (error) {
     console.error('PostComments Failed:', error)
@@ -323,6 +323,17 @@ export const getClassHistoryData = async ({ id }) => {
     return res
   } catch (error) {
     console.error('GetClassHistoryData Failed:', error)
+    throw error
+  }
+}
+
+// 取得課程歷史對話紀錄
+export const getAdminDashBoardData = async () => {
+  try {
+    const res = await apiWithToken.get('/admin/users')
+    return res
+  } catch (error) {
+    console.error('GetAdminDashBoardData Failed:', error)
     throw error
   }
 }

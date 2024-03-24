@@ -30,7 +30,7 @@ const Header = () => {
   }
 
   const toBeAteacherBtn = () => {
-    if (memberInfo) {
+    if (memberInfo && !memberInfo?.isAdmin) {
       return (
         <>
           {memberInfo?.studentId

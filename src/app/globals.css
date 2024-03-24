@@ -141,14 +141,19 @@ table {
   box-sizing: border-box;
 }
 
- .custom-scrollbar::-webkit-scrollbar {
-   display: none;
-   /* 對於 Webkit 瀏覽器 */
- }
+::selection {
+  background-color: #ddd;
+  color: #fff;
+}
 
- .custom-scrollbar {
-   -ms-overflow-style: none;
-   /* IE 和 Edge */
-   scrollbar-width: none;
-   /* 對於 Firefox */
- }
+.custom-scrollbar::-webkit-scrollbar {
+  display: none;
+  /* 對於 Webkit 瀏覽器 */
+}
+
+.custom-scrollbar {
+  -ms-overflow-style: none;
+  /* IE 和 Edge */
+  scrollbar-width: none;
+  /* 對於 Firefox */
+}

@@ -23,7 +23,7 @@ const TeacherCard = ({ id, item }) => {
           <NoPhoto size='medium' photo={item?.avatar} />
         </div>
         <div className='flex-1 flex flex-col gap-3 h-[120px]'>
-          <div className='font-bold text-xl'>{item?.name}</div>
+          <div className='font-bold text-xl max-w-[150px] truncate'>{item?.name}</div>
           <div>{item?.country}</div>
         </div>
       </div>

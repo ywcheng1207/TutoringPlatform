@@ -114,7 +114,7 @@ export default function StudentPersonal({ params }) {
                       <div className='flex flex-col gap-2'>
                         <h3>課程：{ele.name}</h3>
                         <h3>日期：{ele.dateTimeRange}</h3>
-                        <Link href={`/class/${ele.roomName}`} className='text-[#66BFFF] hover:opacity-70'>課程連結</Link>
+                        <Link href={`/class/${ele.id}`} className='text-[#66BFFF] hover:opacity-70'>課程連結</Link>
                       </div>
                     </div>
                   )

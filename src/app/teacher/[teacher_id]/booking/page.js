@@ -4,9 +4,11 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Select, Input, Button, notification, Skeleton } from 'antd'
+import { WarningOutlined, TagOutlined } from '@ant-design/icons'
 
 //
 import iconHeart from '@/assets/icon-heart.svg'
+import iconChair from '@/assets/icon-chair.svg'
 
 //
 import NoPhoto from '@/components/NoPhoto'
@@ -103,7 +105,7 @@ export default function TeacherPersonal({ params }) {
             <div className='flex flex-col items-center gap-3 md:flex-row md:mb-10'>
               <NoPhoto size='big' photo={theTeacherData.avatar} />
               <div className='flex flex-col gap-3 md:gap-10'>
-                <div className='flex justify-center md:justify-start'>
+                <div className='flex justify-center text-3xl font-bold md:justify-start'>
                   {theTeacherData.name}
                 </div>
                 <div className='flex item-center gap-1'>
@@ -113,15 +115,29 @@ export default function TeacherPersonal({ params }) {
                 </div>
               </div>
             </div>
-            <div className='flex justify-center items-center md:justify-start gap-3 py-6'>
-              {theTeacherData.categoryId?.map(ele => <ClassesTypeTag key={ele} text={classType2[ele]} />)}
+            <div className='flex flex-col gap-2 py-6'>
+              <div className='flex items-center gap-2 text-xl'>
+                <TagOutlined />
+                擅長的領域
+              </div>
+              <div className='flex justify-center items-center md:justify-start gap-3'>
+                {theTeacherData.categoryId?.map(ele => <ClassesTypeTag key={ele} text={classType2[ele]} />)}
+              </div>
+              {theTeacherData.categoryId?.length <= 0 &&
+                <div className='text-[#ddd]'>
+                  Oops...老師尚未填寫教學風格
+                </div>
+              }
             </div>
             <div className='flex flex-col gap-1'>
-              <h1>簡介</h1>
+              <h1 className='text-xl'>簡介</h1>
               <h6 className='mb-3'>
                 {theTeacherData.introduction}
               </h6>
-              <h1>教學風格</h1>
+              <h1 className='flex items-center gap-2 text-xl'>
+                <Image src={iconChair} width={25} height={25} alt='iconChair' />
+                教學風格
+              </h1>
               <h6 className='mb-3'>
                 {theTeacherData.style}
               </h6>
@@ -159,6 +175,14 @@ export default function TeacherPersonal({ params }) {
             >
               預約
             </Button>
+            <div className='text-[red] text-xs'>
+              <div className='flex items-center gap-1'>
+                <WarningOutlined />
+                提醒：
+              </div>
+              <div>1. 每堂課程只能有一名學生預約哦！要搶要快！</div>
+              <div>2. 若欲預約的課程與原先的安排時間重疊，會預約失敗哦！請先確認自己的行程！</div>
+            </div>
           </div>
         </div>
       }
