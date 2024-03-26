@@ -337,3 +337,25 @@ export const getAdminDashBoardData = async () => {
     throw error
   }
 }
+
+// 訂閱電子報
+export const postSubscribe = async ({ id, email }) => {
+  try {
+    const res = await apiWithToken.post(`/submail/${id}`, { subMail: email })
+    return res
+  } catch (error) {
+    console.error('PostSubscribe Failed:', error)
+    throw error
+  }
+}
+
+// 發送電子報
+export const postNews = async ({ id }) => {
+  try {
+    const res = await apiWithToken.post(`/submail/${id}/send`)
+    return res
+  } catch (error) {
+    console.error('PostNews Failed:', error)
+    throw error
+  }
+}
