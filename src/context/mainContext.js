@@ -1,9 +1,11 @@
 import { createContext, useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 
 export const mainContext = createContext()
 
 export const MainContextProvider = ({ children }) => {
   const [memberInfo, setMemberInfo] = useState([])
+  const path = usePathname()
 
   const handleMemberInfo = (e) => {
     setMemberInfo(e)
@@ -12,7 +14,7 @@ export const MainContextProvider = ({ children }) => {
   useEffect(() => {
     const userInfo = localStorage.getItem('USER')
     setMemberInfo(userInfo ? JSON.parse(userInfo) : null)
-  }, [])
+  }, [path])
 
   const value = {
     memberInfo,

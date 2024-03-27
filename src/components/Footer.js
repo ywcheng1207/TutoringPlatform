@@ -4,7 +4,7 @@
 import { useState, useEffect, useContext } from 'react'
 import { mainContext } from '@/context/mainContext'
 import Image from 'next/image'
-import { Input, Button, Form } from 'antd'
+import { Input, Button, notification } from 'antd'
 
 //
 import iconExpress from '@/assets/icon-express.svg'
@@ -25,6 +25,7 @@ import { postSubscribe } from '@/apis/apis'
 const Footer = () => {
   const [email, setEmail] = useState('')
   const [allowSend, setAllowSend] = useState(false)
+  const [sending, setSending] = useState(false)
   const { memberInfo } = useContext(mainContext)
 
   const handleEmailChange = (e) => {
@@ -39,8 +40,20 @@ const Footer = () => {
 
   const handleEmail = async () => {
     if (allowSend) {
-      const res = await postSubscribe({ id: memberInfo.id, email })
-      console.log(res)
+      setSending(true)
+      try {
+        const res = await postSubscribe({ id: memberInfo.id, email })
+        notification.success({
+          message: '訂閱成功!',
+          duration: 1
+        })
+      } catch (error) {
+        notification.error({
+          message: '訂閱失敗，請稍後重新嘗試!',
+          duration: 1
+        })
+      }
+      setSending(false)
     }
   }
 
@@ -70,7 +83,7 @@ const Footer = () => {
           </div>
         </div>
         {
-          memberInfo &&
+          memberInfo?.isAdmin === false &&
           <div className='flex flex-col gap-3 w-6/12 md:w-auto'>
             <div className='flex flex-col gap-3'>
               <div className='text-xl font-bold'>訂閱電子報</div>
@@ -81,6 +94,7 @@ const Footer = () => {
                   onChange={(e) => handleEmailChange(e)}
                 />
                 <Button
+                  loading={sending && true}
                   style={{ background: '#666', color: 'white', opacity: !allowSend && 0.2 }}
                   disabled={!allowSend && true}
                   onClick={() => handleEmail()}
