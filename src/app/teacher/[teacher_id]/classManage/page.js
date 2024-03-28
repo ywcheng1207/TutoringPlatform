@@ -20,6 +20,8 @@ import iconArrow from '@/assets/icon-arrow.svg'
 import iconRunningMan from '@/assets/icon-running-man.svg'
 import iconDelete from '@/assets/icon-delete.svg'
 
+const classTypes = ['生活英文', '商業英文', '旅遊英文', '兒童英文']
+
 //
 export default function ClassManage({ params }) {
   const teacherId = params.teacher_id
@@ -241,7 +243,7 @@ const ClassCard = ({ info, onEdit, onDeleteClass, finalSelection, currentClassDa
         </div>
         <div className='flex'>
           <h1>課程分類：</h1>
-          <h1>{info.categoryId}</h1>
+          <h1>{classTypes[info.categoryId - 1]}</h1>
         </div>
         <div className='flex md:flex-col'>
           <h1>上課時間：</h1>
@@ -305,7 +307,7 @@ const EditBtn = ({ type, info, onEdit, finalSelection, currentClassData }) => {
           onFinish={handleModalSubmit}
           initialValues={{
             name: info?.name || null,
-            category: info?.categoryId || null,
+            category: classTypes[info?.categoryId - 1] || null,
             dateTimeRange: info?.dateTimeRange || null,
             link: info?.link || null
           }}
@@ -320,7 +322,7 @@ const EditBtn = ({ type, info, onEdit, finalSelection, currentClassData }) => {
               }
             ]}
           >
-            <Input />
+            <Input placeholder='請輸入課程名稱' />
           </Form.Item>
           <Form.Item
             name="category"
@@ -332,11 +334,11 @@ const EditBtn = ({ type, info, onEdit, finalSelection, currentClassData }) => {
               }
             ]}
           >
-            <Select>
-              <Select.Option value='1'>1</Select.Option>
-              <Select.Option value='2'>2</Select.Option>
-              <Select.Option value='3'>3</Select.Option>
-              <Select.Option value='4'>4</Select.Option>
+            <Select placeholder='請選擇課程分類'>
+              <Select.Option value='1'>生活英文</Select.Option>
+              <Select.Option value='2'>商業英文</Select.Option>
+              <Select.Option value='3'>旅遊英文</Select.Option>
+              <Select.Option value='4'>兒童英文</Select.Option>
             </Select>
           </Form.Item>
           <Form.Item
@@ -360,18 +362,6 @@ const EditBtn = ({ type, info, onEdit, finalSelection, currentClassData }) => {
               }
             </Select>
           </Form.Item>
-          {/* <Form.Item
-            name="link"
-            label='課程連結'
-            rules={[
-              {
-                required: true,
-                message: '請輸入課程連結'
-              }
-            ]}
-          >
-            <Input />
-          </Form.Item> */}
           <Button
             style={{ color: '#fff', background: '#66BFFF' }}
             htmlType="submit"

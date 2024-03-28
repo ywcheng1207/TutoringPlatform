@@ -33,7 +33,7 @@ function SignUp() {
         message: '註冊成功!',
         duration: 1
       })
-      router.push('/home')
+      router.push('/signin')
       // console.log('註冊資訊回傳', res)
     } catch (error) {
       notification.error({

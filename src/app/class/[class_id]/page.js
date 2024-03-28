@@ -21,21 +21,19 @@ export default function ClassesPage({ params }) {
 
   const handleSendMessage = (newMessage) => {
     const data = newMessage
-    socket.emit('message', classId, id, data, (res) => {
-      console.log('發送成功!', res)
-    })
+    socket.emit('message', classId, id, data)
     setInbox([...inbox, { user: id, text: data }])
   }
 
   useEffect(() => {
     // const socketInstance = io('http://10.0.0.136:3000')
     // const socketInstance = io('http://localhost:3001')
-    const socketInstance = io('https://tutor-online.zeabur.app')
-    // const socketInstance = io('https://alive-lizard-eagerly.ngrok-free.app', {
-    //   extraHeaders: {
-    //     'ngrok-skip-browser-warning': '69420'
-    //   }
-    // })
+    // const socketInstance = io('https://tutor-online.zeabur.app')
+    const socketInstance = io('https://alive-lizard-eagerly.ngrok-free.app', {
+      extraHeaders: {
+        'ngrok-skip-browser-warning': '69420'
+      }
+    })
     socketInstance.on('connect', () => {
       // console.log('成功連線')
       setUserInClass(true)
@@ -110,6 +108,7 @@ function MessageInput({ onSendMessage }) {
 
   const handleSubmit = (e) => {
     e?.preventDefault()
+    if (text.length === 0) return
     onSendMessage(text)
     setText('')
   }
