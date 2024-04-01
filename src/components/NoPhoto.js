@@ -7,7 +7,7 @@ import { Tooltip } from 'antd'
 import iconPhoto from '@/assets/icon-photo.svg'
 // const BASEURL = 'https://tutor-online.zeabur.app'
 // const BASEURL = 'https://alive-lizard-eagerly.ngrok-free.app'
-const BASEURL = 'http://54.199.223.11:3000'
+const BASEURL = 'https://tutor-online2024wb.uk'
 
 //
 const NoPhoto = ({ size, photo, username }) => {
