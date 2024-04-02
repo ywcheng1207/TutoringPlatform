@@ -2,7 +2,7 @@
 //
 import { useState } from 'react'
 import Image from 'next/image'
-import { Input, Button, List, Pagination, Grid, Select, Skeleton } from 'antd'
+import { Input, Button, List, Pagination, Grid, Select, Skeleton, Card } from 'antd'
 // import style from './HomeList.module.css'
 
 //
@@ -89,7 +89,7 @@ const HomeList = ({
                     </Button>
                   }
                 />
-                <div className='flex flex-col gap-3'>
+                <div className='flex flex-col gap-3 relative lg:min-h-[800px]'>
                   <div className='flex flex-col'>
                     <List
                       className='min-h-[600px]'
@@ -102,7 +102,7 @@ const HomeList = ({
                       )}
                     />
                     <Pagination
-                      className='customPagination text-center'
+                      className='customPagination text-center absolute bottom-0 left-[35%]'
                       current={currentPage}
                       onChange={onPage}
                       total={dataCount}
@@ -204,7 +204,7 @@ export default HomeList
 
 const StudyRanking = ({ studentRankData }) => {
   return (
-    <div className='min-h-[200px] lg:min-h-[800px] border-[1px] border-solid border-[#CCC] rounded-[3px] p-3'>
+    <Card className='min-h-[200px] lg:min-h-[800px] rounded-[3px] p-3'>
       <div className='bg-[#DDD] text-[#fff] py-1 rounded-sm flex justify-center gap-2 items-center mb-3'>
         <Image src={iconBell} alt='bell' />
         <div>學習時數排行</div>
@@ -214,14 +214,17 @@ const StudyRanking = ({ studentRankData }) => {
           <div key={item.id} className='flex items-center py-2 lg:w-full '>
             <div className='flex items-center gap-3'>
               <NoPhoto size='avatar' photo={item.avatar} username={item.name} />
-              <h2 className='hidden lg:flex max-w-[130px] overflow-hidden text-nowrap text-ellipsis '>
-                {item.name}
-              </h2>
+              <div className='flex flex-col gap-3'>
+                <h2 className='hidden lg:flex'>
+                  {item.name}
+                </h2>
+                <h2 className='text-[#ccc]'>學習總時數：{item.totalLearningTime || 0}</h2>
+              </div>
             </div>
           </div>
         ))}
       </div>
-    </div>
+    </Card>
   )
 }
 

@@ -2,6 +2,7 @@
 //
 import Image from 'next/image'
 import iconPhoto from '@/assets/icon-photo.svg'
+import { Card } from 'antd'
 import { useRouter } from 'next/navigation'
 
 //
@@ -14,8 +15,8 @@ const TeacherCard = ({ id, item }) => {
   // console.log('抓一下圖片', item?.avatar)
 
   return (
-    <div
-      className='border-[1px] border-solid border-[#66BFFF] rounded-[3px] p-3 flex flex-col gap-3 cursor-pointer hover:bg-[#f0eded] min-w-[250px] lg:min-h-[300px]'
+    <Card
+      className='rounded-[3px] p-3 flex flex-col gap-3 cursor-pointer hover:bg-[#979696] hover:text-[#fff] min-w-[250px] overflow-hidden lg:h-[310px]'
       onClick={() => router.push(`teacher/${item?.id}/booking`)}
     >
       <div className='flex flex-row items-center gap-1'>
@@ -27,15 +28,22 @@ const TeacherCard = ({ id, item }) => {
           <div>{item?.country}</div>
         </div>
       </div>
-      <div className='flex flex-wrap gap-1'>
+      <div className='flex flex-wrap gap-1 py-2'>
         {item?.categories.map(ele => <div key={ele} className='bg-[#66BFFF] text-[#FFF] px-2 py-1 lg:py-0 rounded-lg opacity-70'>{classType[ele]}</div>)}
       </div>
-      <div>
+      <div className='flex flex-col gap-1'>
         <h1 className='font-bold text-lg'>介紹</h1>
-        {item?.introduction}
+        {truncateString(item?.introduction)}
       </div>
-    </div>
+    </Card>
   )
 }
 
 export default TeacherCard
+
+function truncateString(str) {
+  if (str.length > 80) {
+    return str.substring(0, 50) + '...'
+  }
+  return str
+}
