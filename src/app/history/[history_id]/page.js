@@ -11,6 +11,7 @@ const who = typeof window !== 'undefined' && (JSON.parse(localStorage.getItem('U
 export default function History({ params }) {
   const historyId = params.history_id
   const [inbox, setInbox] = useState([])
+  const [loading, setLoading] = useState(true)
   const router = useRouter()
 
   useEffect(() => {
@@ -31,6 +32,7 @@ export default function History({ params }) {
         })
         router.push('/home')
       }
+      setLoading(false)
     }
     fetchClassesHistoryData()
   }, [])
@@ -38,12 +40,12 @@ export default function History({ params }) {
   return (
     <div className='w-full'>
       <div className='w-full bg-[#CCC] text-[#fff] text-center py-2 rounded-sm mb-3'>課程編號 - {historyId}</div>
-      <MessageList inbox={inbox} />
+      <MessageList inbox={inbox} loading={loading} />
     </div>
   )
 }
 
-function MessageList({ inbox }) {
+function MessageList({ inbox, loading }) {
   return (
     <ul
       className='h-[500px] w-full overflow-y-scroll custom-scrollbar
@@ -62,7 +64,7 @@ function MessageList({ inbox }) {
         </li>
       ))}
       {
-        inbox?.length === 0 && <div className='w-full h-full flex justify-center items-center text-4xl text-[#fff]'>這堂課沒有聊天紀錄哦!</div>
+        inbox?.length === 0 && <div className='w-full h-full flex justify-center items-center text-4xl text-[#fff]'>{loading ? '紀錄載入中...' : '這堂課沒有聊天紀錄哦!'}</div>
       }
     </ul>
   )

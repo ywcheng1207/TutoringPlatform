@@ -243,7 +243,7 @@ export const getAllStudentCompletedClassesData = async ({ id }) => {
 // 學生個人頁 - 增加一則評論
 export const postComments = async ({ id, classId, text, score }) => {
   try {
-    const res = await apiWithToken.post(`/comments/${id}`, { classId, text, score })
+    const res = await apiWithToken.put(`/comments/${id}`, { classId, text, score })
     return res
   } catch (error) {
     console.error('PostComments Failed:', error)

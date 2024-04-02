@@ -2,7 +2,7 @@
 //
 import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button, Input, notification } from 'antd'
+import { Button, Input, notification, Statistic } from 'antd'
 import { SmileOutlined } from '@ant-design/icons'
 import { io } from 'socket.io-client'
 import EmojiPicker from 'emoji-picker-react'
@@ -17,6 +17,7 @@ export default function ClassesPage({ params }) {
   const router = useRouter()
   const [socket, setSocket] = useState(null)
   const [inbox, setInbox] = useState([])
+  const deadline = Date.now() + 1000 * 60 * 1
   const [userInClass, setUserInClass] = useState(false)
 
   const handleSendMessage = (newMessage) => {
@@ -43,7 +44,7 @@ export default function ClassesPage({ params }) {
       setUserInClass(false)
     })
     socketInstance.emit('joinRoom', classId, id, (response) => {
-      console.log('response', response)
+      // console.log('response', response)
       // setInbox((currentInbox) => [...currentInbox, `${id}準備通話`])
     })
     socketInstance.on('message', ({ email, data }) => {
@@ -86,6 +87,17 @@ export default function ClassesPage({ params }) {
     <div className='w-full'>
       <div className='w-full bg-[#CCC] text-[#fff] text-center py-2 rounded-sm mb-3'>課程編號 - {classId}</div>
       <ChatWindow inbox={inbox} handleSendMessage={handleSendMessage} />
+      <Statistic.Countdown
+        title="課程剩餘時間"
+        value={deadline}
+        format="mm分ss秒"
+        onFinish={() => {
+          notification.info({
+            message: '課程時間到囉!',
+            duration: 1
+          })
+        }}
+      />
     </div>
   )
 }

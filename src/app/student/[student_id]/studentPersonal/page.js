@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Button, Modal, Form, Input, Popconfirm, notification, Skeleton } from 'antd'
+import { Button, Modal, Form, Input, Popconfirm, notification, Skeleton, Rate } from 'antd'
 
 //
 import {
@@ -130,7 +130,7 @@ export default function StudentPersonal({ params }) {
                 我的學習時數名次
               </div>
               <div className='flex flex-col gap-3 md:pl-5'>
-                <div className='min-h-[70px] w-full border border-solid border-[#DDD] flex flex-col justify-center'>
+                <div className='min-h-[70px] w-full border border-solid border-[#DDD] flex flex-col justify-center pl-3'>
                   <div>學習時數: {studentPersonalData.totalLearningTime || '尚未開始學習'}</div>
                   <div>名次: {studentPersonalData.rank || '尚未開始學習'}</div>
                 </div>
@@ -275,20 +275,21 @@ const LearningHistoryCard = ({ data }) => {
   return (
     <div className='flex items-center gap-3 '>
       <div className=''>
-        <NoPhoto size='avatar2' photo={data.Teacher.avatar} />
+        <NoPhoto size='avatar2' photo={data?.Teacher.avatar} />
       </div>
       <div className='min-h-[70px] w-full border border-solid border-[#DDD] flex justify-between  p-3 gap-2'>
         <div className='flex flex-col gap-1'>
-          <div>課程：{data.name}</div>
-          <div>老師：{data.Teacher.name}</div>
-          <div>日期：{data.dateTimeRange}</div>
+          <div>課程：{data?.name}</div>
+          <div>老師：{data?.Teacher.name}</div>
+          <div>日期：{data?.dateTimeRange}</div>
         </div>
         <div className='flex flex-col gap-3'>
           <Button
             style={{ color: '#fff', background: '#66BFFF' }}
             onClick={showModal}
           >
-            {data.isCommented ? '重新評分' : '評分'}
+            {/* {data?.isCommented ? '重新評分' : '評分'} */}
+            試試看
           </Button>
           <div
             className='text-center text-[#66BFFF] cursor-pointer'
@@ -298,7 +299,7 @@ const LearningHistoryCard = ({ data }) => {
         </div>
       </div>
       <Modal
-        title={<div className='py-4 text-2xl'>評分這位老師： {data.Teacher.name}</div>}
+        title={<div className='py-4 text-2xl'>評分這位老師： {data?.Teacher.name}</div>}
         open={isModalOpen}
         onCancel={showModal}
         footer={[]}
@@ -321,7 +322,7 @@ const LearningHistoryCard = ({ data }) => {
             ]}
             className='w-full'
           >
-            <Input />
+            <Rate allowHalf={true}/>
           </Form.Item>
           <Form.Item
             name="text"

@@ -54,6 +54,7 @@ const Footer = () => {
         })
       }
       setSending(false)
+      setEmail('')
     }
   }
 
