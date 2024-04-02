@@ -37,7 +37,7 @@ function SignUp() {
       // console.log('註冊資訊回傳', res)
     } catch (error) {
       notification.error({
-        message: '註冊失敗! 註冊都能失敗，搞笑?',
+        message: '註冊失敗，請稍後重新嘗試。',
         duration: 1
       })
       // console.log('錯誤', error)

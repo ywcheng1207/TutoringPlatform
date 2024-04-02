@@ -288,8 +288,7 @@ const LearningHistoryCard = ({ data }) => {
             style={{ color: '#fff', background: '#66BFFF' }}
             onClick={showModal}
           >
-            {/* {data?.isCommented ? '重新評分' : '評分'} */}
-            試試看
+            {data?.isCommented ? '重新評分' : '評分'}
           </Button>
           <div
             className='text-center text-[#66BFFF] cursor-pointer'

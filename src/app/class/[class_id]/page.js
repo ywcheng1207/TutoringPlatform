@@ -85,8 +85,6 @@ export default function ClassesPage({ params }) {
 
   return (
     <div className='w-full'>
-      <div className='w-full bg-[#CCC] text-[#fff] text-center py-2 rounded-sm mb-3'>課程編號 - {classId}</div>
-      <ChatWindow inbox={inbox} handleSendMessage={handleSendMessage} />
       <Statistic.Countdown
         title="課程剩餘時間"
         value={deadline}
@@ -98,6 +96,8 @@ export default function ClassesPage({ params }) {
           })
         }}
       />
+      <div className='w-full bg-[#CCC] text-[#fff] text-center py-2 rounded-sm mb-3'>課程編號 - {classId}</div>
+      <ChatWindow inbox={inbox} handleSendMessage={handleSendMessage} />
     </div>
   )
 }
