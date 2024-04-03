@@ -30,12 +30,12 @@ export default function ClassesPage({ params }) {
     // const socketInstance = io('http://10.0.0.136:3000')
     // const socketInstance = io('http://localhost:3001')
     // const socketInstance = io('https://tutor-online.zeabur.app')
-    const socketInstance = io('https://tutor-online2024wb.uk')
-    // const socketInstance = io('https://alive-lizard-eagerly.ngrok-free.app', {
-    //   extraHeaders: {
-    //     'ngrok-skip-browser-warning': '69420'
-    //   }
-    // })
+    // const socketInstance = io('https://tutor-online2024wb.uk')
+    const socketInstance = io('https://alive-lizard-eagerly.ngrok-free.app', {
+      extraHeaders: {
+        'ngrok-skip-browser-warning': '69420'
+      }
+    })
     socketInstance.on('connect', () => {
       // console.log('成功連線')
       setUserInClass(true)
