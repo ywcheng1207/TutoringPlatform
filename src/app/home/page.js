@@ -38,9 +38,8 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [dataCount, setDataCount] = useState(1)
   const pageSize = 6
-  const currentData = teacherListData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
-  const finalData = currentData.length > 0
-    ? currentData.filter(item => {
+  const finalData = teacherListData.length > 0
+    ? teacherListData.filter(item => {
       // 國家篩選條件，檢查是否符合選定的國家
       const isCountryMatch = teacherCountry.indexOf(countryFilter) >= 0 && item.country === countryFilter
       // 關鍵字篩選條件，不區分大小寫地檢查名字中是否包含搜尋關鍵字
@@ -53,6 +52,9 @@ const Home = () => {
         (classFilter !== 0 ? isClassTypeMatch : true)
     })
     : []
+
+  const currentPageData = finalData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+
   const handlePage = page => {
     setCurrentPage(page)
   }
@@ -86,7 +88,6 @@ const Home = () => {
     const fetchStudentRankDataData = async () => {
       try {
         const res = await getStudentRankData()
-        // console.log('學生排行資料', res.data.data)
         setStudentRankData(res.data.data)
       } catch (error) {
         // console.error('學生排行資料錯誤', error)
@@ -99,7 +100,6 @@ const Home = () => {
           page: currentPage,
           limit: 999999
         })
-        // console.log('老師清單資料', res)
         setTeacherListData(res.data.data.teacherLimit)
         setDataCount(res.data.data.count)
       } catch (error) {
@@ -119,6 +119,7 @@ const Home = () => {
         pageSize={pageSize}
         dataCount={dataCount}
         currentData={finalData}
+        currentPageData={currentPageData}
         classType={classType}
         classFilter={classFilter}
         handleClassFilter={handleClassFilter}

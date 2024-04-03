@@ -37,7 +37,6 @@ export default function StudentPersonal({ params }) {
     const fetchTeacherPersonalData = async () => {
       try {
         const res = await getTeacherPageData({ id: teacherId })
-        // console.log('老師個人資料', res.data.data)
         setTeacherPersonalData(res.data.data)
         setImgLInk(res.data.data?.avatar)
       } catch (error) {
@@ -47,8 +46,7 @@ export default function StudentPersonal({ params }) {
     const fetchTeacherClassesDataData = async () => {
       try {
         const res = await getTeacherClassesData({ id: teacherId })
-        // console.log('老師開課資訊', res.data.data)
-        setClassesOpenedInTwoWeeks(res.data.data)
+        setClassesOpenedInTwoWeeks(res?.data?.data?.filter(ele => ele.isCompleted !== 1))
       } catch (error) {
         console.error('老師開課資訊', error)
       }
@@ -56,7 +54,6 @@ export default function StudentPersonal({ params }) {
     const fetchTeacherCommentsData = async () => {
       try {
         const res = await getTeacherCommentData({ id: teacherId })
-        // console.log('老師得到的評論', res.data.data)
         setTeacherCommentData(res.data.data)
       } catch (error) {
         console.error('老師得到的評論', error)
@@ -67,6 +64,17 @@ export default function StudentPersonal({ params }) {
     fetchTeacherClassesDataData()
     fetchTeacherCommentsData()
   }, [])
+
+
+  const noData = () => {
+    if (typeof classesOpenedInTwoWeeks === 'string') {
+      return true
+    } else if (classesOpenedInTwoWeeks.length === 0) {
+      return true
+    } else {
+      return false
+    }
+  }
 
   return (
     <>
@@ -109,7 +117,7 @@ export default function StudentPersonal({ params }) {
               </div>
               <div className='max-h-[210px] overflow-y-scroll flex flex-col gap-3 md:pl-5'>
                 {
-                  typeof classesOpenedInTwoWeeks !== 'string' && classesOpenedInTwoWeeks.map(ele =>
+                  !noData() && classesOpenedInTwoWeeks.map(ele =>
                     <div className='min-h-[90px] w-full border border-solid border-[#DDD] flex justify-between p-3' key={ele.id}>
                       <div className='flex flex-col gap-2'>
                         <h3>課程：{ele.name}</h3>
@@ -120,7 +128,7 @@ export default function StudentPersonal({ params }) {
                   )
                 }
                 {
-                  typeof classesOpenedInTwoWeeks === 'string' &&
+                  noData() &&
                   <div className='h-[100px] w-full flex justify-center items-center text-gray-300 text-2xl'>
                     Oops...目前沒有安排行程
                   </div>

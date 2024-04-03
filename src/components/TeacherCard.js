@@ -12,11 +12,10 @@ import NoPhoto from './NoPhoto'
 const TeacherCard = ({ id, item }) => {
   const router = useRouter()
   const classType = ['全部', '生活英文', '商業英文', '旅遊英文', '兒童英文']
-  // console.log('抓一下圖片', item?.avatar)
 
   return (
     <Card
-      className='rounded-[3px] p-3 flex flex-col gap-3 cursor-pointer hover:bg-[#979696] hover:text-[#fff] min-w-[250px] overflow-hidden lg:h-[310px]'
+      className='rounded-[3px] p-3 flex flex-col gap-3 cursor-pointer hover:bg-[#ddd] hover:text-[#fff] min-w-[250px] overflow-hidden lg:h-[310px]'
       onClick={() => router.push(`teacher/${item?.id}/booking`)}
     >
       <div className='flex flex-row items-center gap-1'>
@@ -42,7 +41,7 @@ const TeacherCard = ({ id, item }) => {
 export default TeacherCard
 
 function truncateString(str) {
-  if (str.length > 80) {
+  if (str?.length > 80) {
     return str.substring(0, 50) + '...'
   }
   return str

@@ -36,7 +36,6 @@ export default function EditTeacher({ params }) {
       if (latestFile.originFileObj) {
         const fileURL = URL.createObjectURL(latestFile.originFileObj)
         setImageURL(fileURL) // 保存圖片URL以便顯示
-        console.log(fileURL) // 輸出查看URL是否正確
       }
     } else {
       setImageURL(null) // 清除圖片URL
@@ -44,7 +43,6 @@ export default function EditTeacher({ params }) {
   }
 
   const handleSubmitTeacherInfo = async (e) => {
-    // console.log(e)
     const imgFile = e.upload[0].originFileObj
     const formData = new FormData()
     formData.append('name', e.teacherName)
@@ -59,7 +57,6 @@ export default function EditTeacher({ params }) {
         id: teacherId,
         data: formData
       })
-      // console.log('編輯老師資料成功!', res)
       notification.success({
         message: '編輯老師資料成功!',
         duration: 1
@@ -77,7 +74,6 @@ export default function EditTeacher({ params }) {
     const fetchTeacherPersonalData = async () => {
       try {
         const res = await getTeacherPageData({ id: teacherId })
-        // console.log('老師個人資料', res.data.data)
         setTeacherPersonalData(res.data.data)
         setImageURL(res.data.data?.avatar)
         form.setFieldsValue({ upload: res.data.data.avatar })
@@ -86,7 +82,6 @@ export default function EditTeacher({ params }) {
         if (res.data.data.introduction) form.setFieldsValue({ about: res.data.data.introduction })
         if (res.data.data.style) form.setFieldsValue({ teachStyle: res.data.data.style })
         if (res.data.data.categoryId) {
-          console.log(res.data.data.categoryId.map(index => options[index]))
           form.setFieldsValue({ teachType: res.data.data.categoryId.map(index => options[index]) })
           setCheckedValues(res.data.data.categoryId.map(index => options[index]))
         }

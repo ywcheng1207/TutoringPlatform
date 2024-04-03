@@ -29,7 +29,6 @@ export default function EditTeacher({ params }) {
       if (latestFile.originFileObj) {
         const fileURL = URL.createObjectURL(latestFile.originFileObj)
         setImageURL(fileURL) // 保存圖片URL以便顯示
-        console.log(fileURL) // 輸出查看URL是否正確
       }
     } else {
       setImageURL(null) // 清除圖片URL
@@ -48,14 +47,12 @@ export default function EditTeacher({ params }) {
         id: studentId,
         data: formData
       })
-      console.log('修改學生個資成功', res)
       notification.success({
         message: '修改資料成功!',
         duration: 1
       })
       router.push(`/student/${studentId}/studentPersonal`)
     } catch (error) {
-      console.log('修改學生個資失敗', error)
     }
   }
   // const BASEURL = 'http://10.0.0.136:3000'
@@ -65,7 +62,6 @@ export default function EditTeacher({ params }) {
     const fetchStudentPersonalData = async () => {
       try {
         const res = await getStudentPersonalData({ id: studentId })
-        // console.log('學生個人資料', res.data.data)
         setStudentPersonalData(res.data.data)
         form.setFieldsValue({ upload: res.data.data?.avatar })
         setImageURL(res.data.data?.avatar)

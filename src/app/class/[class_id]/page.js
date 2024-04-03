@@ -6,7 +6,7 @@ import { Button, Input, notification, Statistic } from 'antd'
 import { SmileOutlined } from '@ant-design/icons'
 import { io } from 'socket.io-client'
 import EmojiPicker from 'emoji-picker-react'
-import { getClassHistoryData } from '@/apis/apis'
+import { getClassHistoryData, patchCompleteClasses } from '@/apis/apis'
 //
 const who = typeof window !== 'undefined' && (JSON.parse(localStorage.getItem('USER'))?.email || '未登入')
 const id = typeof window !== 'undefined' && (JSON.parse(localStorage.getItem('USER'))?.email || '未登入')
@@ -17,7 +17,7 @@ export default function ClassesPage({ params }) {
   const router = useRouter()
   const [socket, setSocket] = useState(null)
   const [inbox, setInbox] = useState([])
-  const deadline = Date.now() + 1000 * 60 * 1
+  const deadline = Date.now() + 1000 * 60 * 3
   const [userInClass, setUserInClass] = useState(false)
 
   const handleSendMessage = (newMessage) => {
@@ -30,21 +30,19 @@ export default function ClassesPage({ params }) {
     // const socketInstance = io('http://10.0.0.136:3000')
     // const socketInstance = io('http://localhost:3001')
     // const socketInstance = io('https://tutor-online.zeabur.app')
-    // const socketInstance = io('https://tutor-online2024wb.uk')
-    const socketInstance = io('https://alive-lizard-eagerly.ngrok-free.app', {
-      extraHeaders: {
-        'ngrok-skip-browser-warning': '69420'
-      }
-    })
+    const socketInstance = io('https://tutor-online2024wb.uk')
+    // const socketInstance = io('https://alive-lizard-eagerly.ngrok-free.app', {
+    //   extraHeaders: {
+    //     'ngrok-skip-browser-warning': '69420'
+    //   }
+    // })
     socketInstance.on('connect', () => {
-      // console.log('成功連線')
       setUserInClass(true)
     })
     socketInstance.on('connect_error', () => {
       setUserInClass(false)
     })
     socketInstance.emit('joinRoom', classId, id, (response) => {
-      // console.log('response', response)
       // setInbox((currentInbox) => [...currentInbox, `${id}準備通話`])
     })
     socketInstance.on('message', ({ email, data }) => {
@@ -62,7 +60,6 @@ export default function ClassesPage({ params }) {
     const fetchClassesHistoryData = async () => {
       try {
         const res = await getClassHistoryData({ id: classId })
-        // console.log('課程歷史資料', res.data.data)
         if (typeof res?.data?.data !== 'string') {
           const transformedArray = res?.data?.data?.map(item => ({
             text: item.data,
@@ -86,14 +83,19 @@ export default function ClassesPage({ params }) {
   return (
     <div className='w-full'>
       <Statistic.Countdown
-        title="課程剩餘時間"
+        title={<div><div className='text-red-500 text-2xl font-bold'>DEMO</div><div>課程剩餘時間</div></div>}
         value={deadline}
         format="mm分ss秒"
-        onFinish={() => {
-          notification.info({
-            message: '課程時間到囉!',
-            duration: 1
-          })
+        onFinish={async () => {
+          try {
+            const res = await patchCompleteClasses({ id: classId })
+            router.push('/home')
+            notification.info({
+              message: '課程時間結束!',
+              duration: 1
+            })
+          } catch (error) {
+          }
         }}
       />
       <div className='w-full bg-[#CCC] text-[#fff] text-center py-2 rounded-sm mb-3'>課程編號 - {classId}</div>

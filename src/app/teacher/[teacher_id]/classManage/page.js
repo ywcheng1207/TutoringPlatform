@@ -59,7 +59,6 @@ export default function ClassManage({ params }) {
 
   const handleEditClass = async (e, type) => {
     if (type === 'edit') {
-      // console.log('編個輯', e)
       try {
         const res = await putClasses({ id: teacherId, ...e })
         notification.success({
@@ -120,7 +119,6 @@ export default function ClassManage({ params }) {
   const fetchTeacherClassesDataData = async () => {
     try {
       const res = await getTeacherClassesData({ id: teacherId })
-      // console.log('老師開課資訊', res.data.data)
       if (typeof res.data.data !== 'string') {
         setClassData(res.data.data)
       }
@@ -145,7 +143,6 @@ export default function ClassManage({ params }) {
       )
     }
     if (data.length > 0 && !isLoading) {
-      console.log('抓一下', data)
       return (
         <div className='flex flex-col gap-3 md:flex-row md:flex-wrap' >
           {data.map(ele =>

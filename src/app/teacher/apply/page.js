@@ -38,7 +38,6 @@ export default function TeacherApply() {
   }
 
   const handleSubmitTeacherInfo = async (e) => {
-    // console.log(e)
     const imgFile = e.upload[0].originFileObj
     const formData = new FormData()
     formData.append('name', e.teacherName)
@@ -56,8 +55,8 @@ export default function TeacherApply() {
         message: '申請成功，請重新登入!',
         duration: 1
       })
-      router.push('/signin')
-      localStorage.clear()
+      typeof window !== 'undefined' && window?.localStorage?.setItem('USER', JSON.stringify(res.data.data.user))
+      router.push('/home')
     } catch (error) {
       notification.error({
         message: '申請成為老師失敗!',
@@ -179,7 +178,7 @@ export default function TeacherApply() {
               }
             ]}
           >
-            <Checkbox.Group options={options} value={checkedValues} onChange={handleCheckValues}/>
+            <Checkbox.Group options={options} value={checkedValues} onChange={handleCheckValues} />
           </Form.Item>
         </div>
         <div className='flex flex-col justify-between md:flex-row-reverse w-full gap-3'>

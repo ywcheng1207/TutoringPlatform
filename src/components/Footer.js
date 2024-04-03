@@ -59,7 +59,7 @@ const Footer = () => {
   }
 
   return (
-    <div className="bg-[#D9D9D9] h-[250px] flex flex-col">
+    <div className="bg-[#D9D9D9] h-[300px] flex flex-col">
       <div className="flex-1 flex flex-col justify-center items-center gap-3 md:flex-row">
         <div className='flex flex-col gap-3 w-6/12 md:w-auto'>
           <div className='flex items-center gap-10 min-w-[300px]'>

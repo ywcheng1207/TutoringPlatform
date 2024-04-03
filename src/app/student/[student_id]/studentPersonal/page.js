@@ -37,7 +37,6 @@ export default function StudentPersonal({ params }) {
   const fetchStudentClassesBookedData = async () => {
     try {
       const res = await getStudentClassesBookedData({ id: studentId })
-      // console.log('學生預訂的課程', res.data.data)
       setStudentClassesBookedData(res.data.data)
     } catch (error) {
       console.error('學生預訂的課程', error)
@@ -47,7 +46,6 @@ export default function StudentPersonal({ params }) {
     const fetchStudentPersonalData = async () => {
       try {
         const res = await getStudentPersonalData({ id: studentId })
-        // console.log('學生個人資料', res.data.data)
         setStudentPersonalData(res.data.data)
         if (!res.data.data?.avatar) return
         setImgLInk(res.data.data?.avatar)
@@ -58,7 +56,6 @@ export default function StudentPersonal({ params }) {
     const fetchStudentClassesCompleteData = async () => {
       try {
         const res = await getAllStudentCompletedClassesData({ id: studentId })
-        // console.log('學生完成的課程', res)
         setClassesComplete(res.data.data)
       } catch (error) {
         console.error('學生完成的課程', error)
@@ -130,7 +127,7 @@ export default function StudentPersonal({ params }) {
                 我的學習時數名次
               </div>
               <div className='flex flex-col gap-3 md:pl-5'>
-                <div className='min-h-[70px] w-full border border-solid border-[#DDD] flex flex-col justify-center pl-3'>
+                <div className='min-h-[70px] w-full flex flex-col justify-center pl-3 gap-2 text-[#ccc]'>
                   <div>學習時數: {studentPersonalData.totalLearningTime || '尚未開始學習'}</div>
                   <div>名次: {studentPersonalData.rank || '尚未開始學習'}</div>
                 </div>
@@ -191,7 +188,6 @@ const ClassesYouBooked = ({ classes, fetchStudentClassesBookedData }) => {
     try {
       const res = await patchStudentClassesBookedData({ id })
       fetchStudentClassesBookedData()
-      console.log(res)
       notification.success({
         message: '課程取消成功!',
         duration: 1
@@ -256,7 +252,6 @@ const LearningHistoryCard = ({ data }) => {
   const handleModalSubmit = async (e) => {
     try {
       const res = await postComments({ id: data.teacherId, classId: data.id, text: e.text, score: e.score })
-      console.log(res)
       notification.success({
         message: `感謝您對${data.Teacher.name}老師的評價!`,
         duration: 1
@@ -271,7 +266,6 @@ const LearningHistoryCard = ({ data }) => {
 
     showModal()
   }
-
   return (
     <div className='flex items-center gap-3 '>
       <div className=''>
@@ -321,7 +315,7 @@ const LearningHistoryCard = ({ data }) => {
             ]}
             className='w-full'
           >
-            <Rate allowHalf={true}/>
+            <Rate allowHalf={true} />
           </Form.Item>
           <Form.Item
             name="text"

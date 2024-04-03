@@ -34,19 +34,16 @@ function SignUp() {
         duration: 1
       })
       router.push('/signin')
-      // console.log('註冊資訊回傳', res)
     } catch (error) {
       notification.error({
         message: '註冊失敗，請稍後重新嘗試。',
         duration: 1
       })
-      // console.log('錯誤', error)
     }
   }
 
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      // console.log('這是傳給後端的token', tokenResponse.access_token)
       try {
         const res = await postGoogle({ token: tokenResponse.access_token })
         typeof window !== 'undefined' && window?.localStorage?.setItem('TOKEN', res.data.token)
@@ -58,7 +55,6 @@ function SignUp() {
         if (res.data.user.isAdmin) return router.push('/admin/dashboard')
         router.push('/home')
       } catch (error) {
-        // console.error('傳送 Token 至後端時發生錯誤', error)
         notification.success({
           message: 'Google登入失敗，請重新嘗試!',
           duration: 1

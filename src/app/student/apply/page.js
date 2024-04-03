@@ -27,7 +27,6 @@ export default function StudentApply() {
       if (latestFile.originFileObj) {
         const fileURL = URL.createObjectURL(latestFile.originFileObj)
         setImageURL(fileURL)
-        console.log(fileURL)
       }
     } else {
       setImageURL(null)
@@ -49,8 +48,8 @@ export default function StudentApply() {
         message: '申請成功，請重新登入!',
         duration: 1
       })
-      router.push('/signin')
-      localStorage.clear()
+      typeof window !== 'undefined' && window?.localStorage?.setItem('USER', JSON.stringify(res.data.data.user))
+      router.push('/home')
     } catch (error) {
       notification.error({
         message: '申請成為學生失敗!',

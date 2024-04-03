@@ -22,6 +22,7 @@ const teacherCountryType = [
 //
 const HomeList = ({
   currentData,
+  currentPageData,
   currentPage,
   onPage,
   pageSize,
@@ -89,12 +90,12 @@ const HomeList = ({
                     </Button>
                   }
                 />
-                <div className='flex flex-col gap-3 relative lg:min-h-[800px]'>
+                <div className='flex flex-col gap-3  min-h-[800px]'>
                   <div className='flex flex-col'>
                     <List
                       className='min-h-[600px]'
                       grid={{ column: screens.xl ? 3 : 2 }}
-                      dataSource={currentData}
+                      dataSource={currentPageData}
                       renderItem={(item, index) => (
                         <div style={{ padding: '10px' }}>
                           <TeacherCard id={item.id} item={item} />
@@ -102,10 +103,10 @@ const HomeList = ({
                       )}
                     />
                     <Pagination
-                      className='customPagination text-center absolute bottom-0 left-[35%]'
+                      className='customPagination text-center'
                       current={currentPage}
                       onChange={onPage}
-                      total={dataCount}
+                      total={currentData?.length}
                       pageSize={pageSize}
                       showQuickJumper
                     />

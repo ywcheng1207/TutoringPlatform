@@ -32,7 +32,6 @@ function SignIn() {
       typeof window !== 'undefined' && window?.localStorage?.setItem('USER', JSON.stringify(res.data.user))
       if (res.data.user.isAdmin) return router.push('/admin/dashboard')
       router.push('/home')
-      // console.log('登入資料', res)
     } catch (error) {
       notification.success({
         message: '登入失敗，請重新嘗試!',
@@ -44,7 +43,6 @@ function SignIn() {
 
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      // console.log('確定一下', tokenResponse)
       try {
         const res = await postGoogle({ token: tokenResponse.access_token })
         typeof window !== 'undefined' && window?.localStorage?.setItem('TOKEN', res.data.token)
@@ -56,7 +54,6 @@ function SignIn() {
         if (res.data.user.isAdmin) return router.push('/admin/dashboard')
         router.push('/home')
       } catch (error) {
-        // console.error('傳送 Token 至後端時發生錯誤', error)
         notification.success({
           message: 'Google登入失敗，請重新嘗試!',
           duration: 1

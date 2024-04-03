@@ -47,7 +47,6 @@ export default function TeacherPersonal({ params }) {
   }
 
   const handleClassOption = (e) => {
-    // console.log(e)
     setClassOption(e)
   }
 
@@ -61,7 +60,7 @@ export default function TeacherPersonal({ params }) {
     } catch (error) {
       if (error.response.data.message === 'Error: This class is booked!') {
         return notification.error({
-          message: '這堂課已經被預約!',
+          message: '這堂課已經被預約或是與您的行程時間衝突!',
           duration: 1
         })
       }
@@ -76,7 +75,6 @@ export default function TeacherPersonal({ params }) {
     const fetchTeacherPageData = async () => {
       try {
         const res = await getTeacherPageData({ id: teacherId })
-        // console.log('學生看老師頁的老師頁資料', res.data.data)
         setTheTeacherData(res.data.data)
       } catch (error) {
         console.error('學生看老師頁的老師資料', error)
@@ -85,7 +83,6 @@ export default function TeacherPersonal({ params }) {
     const fetchTeacherClassesDataData = async () => {
       try {
         const res = await getTeacherClassesData({ id: teacherId })
-        // console.log('學生看老師頁的老師開課資訊', res.data.data)
         setClassesOpenedInTwoWeeks(res.data.data)
       } catch (error) {
         console.error('學生看老師頁的老師開課資訊', error)
@@ -100,7 +97,7 @@ export default function TeacherPersonal({ params }) {
     <>
       {
         !isLoading &&
-        <div className='flex flex-col gap-3 md:flex-row'>
+        <div className='w-full flex flex-col gap-3 md:flex-row'>
           <div className='basis-3/5'>
             <div className='flex flex-col items-center gap-3 md:flex-row md:mb-10'>
               <NoPhoto size='big' photo={theTeacherData.avatar} />
