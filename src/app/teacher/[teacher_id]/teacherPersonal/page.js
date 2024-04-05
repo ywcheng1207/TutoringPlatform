@@ -146,8 +146,8 @@ export default function StudentPersonal({ params }) {
               <div className='max-h-[210px] overflow-y-scroll flex flex-col gap-3 md:pl-5'>
                 {
                   typeof teacherCommentData !== 'string' && teacherCommentData.map(ele =>
-                    <div key={ele.id} className='h-[90px] w-full border border-solid border-[#DDD] flex flex-col gap-2 p-3'>
-                      <h1>學生{ele.studentId}</h1>
+                    <div key={ele.id} className='min-h-[130px] w-full border border-solid border-[#DDD] flex flex-col gap-2 p-3'>
+                      <h1 className='font-bold text-xl'>{ele.Student.name}</h1>
                       <h1>評分：{ele.score}</h1>
                       <h1>評論：{ele.text}</h1>
                     </div>

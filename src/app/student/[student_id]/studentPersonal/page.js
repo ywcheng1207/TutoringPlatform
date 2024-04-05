@@ -12,7 +12,8 @@ import {
   getStudentClassesBookedData,
   getAllStudentCompletedClassesData,
   patchStudentClassesBookedData,
-  postComments
+  postComments,
+  putComments
 } from '@/apis/apis'
 
 //
@@ -42,6 +43,16 @@ export default function StudentPersonal({ params }) {
       console.error('學生預訂的課程', error)
     }
   }
+  const fetchStudentClassesCompleteData = async () => {
+    try {
+      const res = await getAllStudentCompletedClassesData({ id: studentId })
+      setClassesComplete(res.data.data.classData)
+    } catch (error) {
+      console.error('學生完成的課程', error)
+    }
+    setIsLoading(false)
+  }
+
   useEffect(() => {
     const fetchStudentPersonalData = async () => {
       try {
@@ -52,15 +63,6 @@ export default function StudentPersonal({ params }) {
       } catch (error) {
         console.error('學生個人資料', error)
       }
-    }
-    const fetchStudentClassesCompleteData = async () => {
-      try {
-        const res = await getAllStudentCompletedClassesData({ id: studentId })
-        setClassesComplete(res.data.data)
-      } catch (error) {
-        console.error('學生完成的課程', error)
-      }
-      setIsLoading(false)
     }
     fetchStudentPersonalData()
     fetchStudentClassesBookedData()
@@ -107,12 +109,13 @@ export default function StudentPersonal({ params }) {
               </div>
               {
                 typeof classesComplete !== 'string'
-                  ? <div className='grid grid-cols-1 md:grid-cols-2 gap-3 md:pl-5'>
+                  ? <div className='grid grid-cols-1 lg:grid-cols-2 gap-3 md:pl-5'>
                     {
-                      classesComplete.map(ele =>
+                      classesComplete?.map(ele =>
                         <LearningHistoryCard
                           data={ele}
                           key={ele.dateTimeRange}
+                          fetchStudentClassesCompleteData={fetchStudentClassesCompleteData}
                         />)
                     }
                   </div>
@@ -244,26 +247,43 @@ const ClassesYouBooked = ({ classes, fetchStudentClassesBookedData }) => {
   )
 }
 
-const LearningHistoryCard = ({ data }) => {
+const LearningHistoryCard = ({ data, fetchStudentClassesCompleteData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const showModal = () => setIsModalOpen(!isModalOpen)
   const router = useRouter()
 
   const handleModalSubmit = async (e) => {
-    try {
-      const res = await postComments({ id: data.teacherId, classId: data.id, text: e.text, score: e.score })
-      notification.success({
-        message: `感謝您對${data.Teacher.name}老師的評價!`,
-        duration: 1
-      })
-    } catch (error) {
-      console.error(error)
-      notification.error({
-        message: '評價送出失敗，請稍後再試一次!',
-        duration: 1
-      })
+    if (data?.isCommented) {
+      try {
+        const res = await putComments({ id: data.Teacher.Comments[0].id, classId: data.id, text: e.text, score: e.score })
+        notification.success({
+          message: `修改您對${data.Teacher.name}老師的評價成功!`,
+          duration: 1
+        })
+        fetchStudentClassesCompleteData()
+      } catch (error) {
+        console.error(error)
+        notification.error({
+          message: '評價送出失敗，請稍後再試一次!',
+          duration: 1
+        })
+      }
+    } else {
+      try {
+        const res = await postComments({ id: data.teacherId, classId: data.id, text: e.text, score: e.score })
+        notification.success({
+          message: `感謝您對${data.Teacher.name}老師的評價!`,
+          duration: 1
+        })
+        fetchStudentClassesCompleteData()
+      } catch (error) {
+        console.error(error)
+        notification.error({
+          message: '評價送出失敗，請稍後再試一次!',
+          duration: 1
+        })
+      }
     }
-
     showModal()
   }
   return (

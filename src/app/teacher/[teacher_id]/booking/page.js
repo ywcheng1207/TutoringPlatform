@@ -9,10 +9,11 @@ import { WarningOutlined, TagOutlined } from '@ant-design/icons'
 //
 import iconHeart from '@/assets/icon-heart.svg'
 import iconChair from '@/assets/icon-chair.svg'
+import iconSpeak from '@/assets/icon-speak.svg'
 
 //
 import NoPhoto from '@/components/NoPhoto'
-import { getTeacherPageData, getTeacherClassesData, patchTeacherClasses } from '@/apis/apis'
+import { getTeacherPageData, getTeacherClassesData, patchTeacherClasses, getTeacherCommentData } from '@/apis/apis'
 
 //
 export default function TeacherPersonal({ params }) {
@@ -20,6 +21,7 @@ export default function TeacherPersonal({ params }) {
   const [classFilter, setClassFilter] = useState(0)
   const [classOption, setClassOption] = useState(null)
   const [theTeacherData, setTheTeacherData] = useState([])
+  const [teacherCommentData, setTeacherCommentData] = useState([])
   const [classesOpenedInTwoWeeks, setClassesOpenedInTwoWeeks] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
@@ -80,6 +82,15 @@ export default function TeacherPersonal({ params }) {
         console.error('學生看老師頁的老師資料', error)
       }
     }
+    const fetchTeacherCommentsData = async () => {
+      try {
+        const res = await getTeacherCommentData({ id: teacherId })
+        setTeacherCommentData(res.data.data)
+      } catch (error) {
+        console.error('老師得到的評論', error)
+      }
+      setIsLoading(false)
+    }
     const fetchTeacherClassesDataData = async () => {
       try {
         const res = await getTeacherClassesData({ id: teacherId })
@@ -90,6 +101,7 @@ export default function TeacherPersonal({ params }) {
       setIsLoading(false)
     }
     fetchTeacherPageData()
+    fetchTeacherCommentsData()
     fetchTeacherClassesDataData()
   }, [])
 
@@ -138,6 +150,29 @@ export default function TeacherPersonal({ params }) {
               <h6 className='mb-3'>
                 {theTeacherData.style}
               </h6>
+              <div className='w-full min-h-[180px] flex flex-col gap-3'>
+                <div className='text-xl flex flex-center gap-2'>
+                  <Image src={iconSpeak} width={25} height={25} alt='iconSpeak' />
+                  近期評論
+                </div>
+                <div className='max-h-[210px] overflow-y-scroll flex flex-col gap-3'>
+                  {
+                    typeof teacherCommentData !== 'string' && teacherCommentData.map(ele =>
+                      <div key={ele.id} className='min-h-[130px] w-full border border-solid border-[#DDD] flex flex-col gap-2 p-3'>
+                        <h1 className='font-bold text-xl'>{ele.Student.name}</h1>
+                        <h1>評分：{ele.score}</h1>
+                        <h1>評論：{ele.text}</h1>
+                      </div>
+                    )
+                  }
+                  {
+                    typeof teacherCommentData === 'string' &&
+                    <div className='h-[100px] w-full flex justify-center items-center text-gray-300 text-2xl'>
+                      Oops...目前還沒收到學生的評論
+                    </div>
+                  }
+                </div>
+              </div>
             </div>
           </div>
           <div className='flex flex-col flex-1 gap-5'>
