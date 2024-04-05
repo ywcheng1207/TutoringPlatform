@@ -165,13 +165,13 @@ export default function TeacherPersonal({ params }) {
                       </div>
                     )
                   }
+                </div>
                   {
                     typeof teacherCommentData === 'string' &&
-                    <div className='h-[100px] w-full flex justify-center items-center text-gray-300 text-2xl'>
+                    <div className='h-[100px] w-full text-[#ddd]'>
                       Oops...目前還沒收到學生的評論
                     </div>
                   }
-                </div>
               </div>
             </div>
           </div>
