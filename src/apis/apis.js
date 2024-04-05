@@ -1,9 +1,9 @@
 import axios from 'axios'
 
 // const BASEURL = 'https://tutor-online.zeabur.app'
-const BASEURL = 'https://alive-lizard-eagerly.ngrok-free.app'
+// const BASEURL = 'https://alive-lizard-eagerly.ngrok-free.app'
 // const BASEURL = 'http://10.0.0.136:3000'
-// const BASEURL = 'https://tutor-online2024wb.uk'
+const BASEURL = 'https://tutor-online2024wb.uk'
 
 // 不需要添加Authorization
 const apiWithoutToken = axios.create({

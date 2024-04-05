@@ -11,31 +11,45 @@ import { getClassHistoryData, patchCompleteClasses } from '@/apis/apis'
 const who = typeof window !== 'undefined' && (JSON.parse(localStorage.getItem('USER'))?.email || '未登入')
 const id = typeof window !== 'undefined' && (JSON.parse(localStorage.getItem('USER'))?.email || '未登入')
 
+const deadline = Date.now() + 1000 * 60 * 3
 //
 export default function ClassesPage({ params }) {
   const classId = params.class_id
   const router = useRouter()
   const [socket, setSocket] = useState(null)
   const [inbox, setInbox] = useState([])
-  const deadline = Date.now() + 1000 * 60 * 3
+  const [text, setText] = useState('')
+  const [isComposing, setIsComposing] = useState(false)
+
   const [userInClass, setUserInClass] = useState(false)
 
-  const handleSendMessage = (newMessage) => {
-    const data = newMessage
+  const handleComposing = (x) => setIsComposing(x)
+
+  const handleSendMessage = () => {
+    if (text.length === 0) return
+    if (isComposing) return
+    const data = text
     socket.emit('message', classId, id, data)
     setInbox([...inbox, { user: id, text: data }])
+    setText('')
+  }
+
+  const handleChangeMessage = (e) => setText(e)
+
+  const handleEmojiSelect = (emoji) => {
+    setText(text + emoji)
   }
 
   useEffect(() => {
     // const socketInstance = io('http://10.0.0.136:3000')
     // const socketInstance = io('http://localhost:3001')
     // const socketInstance = io('https://tutor-online.zeabur.app')
-    // const socketInstance = io('https://tutor-online2024wb.uk')
-    const socketInstance = io('https://alive-lizard-eagerly.ngrok-free.app', {
-      extraHeaders: {
-        'ngrok-skip-browser-warning': '69420'
-      }
-    })
+    const socketInstance = io('https://tutor-online2024wb.uk')
+    // const socketInstance = io('https://alive-lizard-eagerly.ngrok-free.app', {
+    //   extraHeaders: {
+    //     'ngrok-skip-browser-warning': '69420'
+    //   }
+    // })
     socketInstance.on('connect', () => {
       setUserInClass(true)
     })
@@ -99,13 +113,20 @@ export default function ClassesPage({ params }) {
         }}
       />
       <div className='w-full bg-[#CCC] text-[#fff] text-center py-2 rounded-sm mb-3'>課程編號 - {classId}</div>
-      <ChatWindow inbox={inbox} handleSendMessage={handleSendMessage} />
+      <ChatWindow
+        inbox={inbox}
+        handleChangeMessage={handleChangeMessage}
+        handleSendMessage={handleSendMessage}
+        handleEmojiSelect={handleEmojiSelect}
+        handleComposing={handleComposing}
+        text={text}
+      />
     </div>
   )
 }
 
 //
-function ChatWindow({ inbox, handleSendMessage }) {
+function ChatWindow({ inbox, handleChangeMessage, handleSendMessage, handleEmojiSelect, handleComposing, text }) {
   return (
     <div className='flex flex-col lg:flex-row gap-3'>
       <div className="max-w-7/12">
@@ -113,32 +134,31 @@ function ChatWindow({ inbox, handleSendMessage }) {
       </div>
       <div className='flex flex-col w-full gap-3 max-w-3/12'>
         <MessageList inbox={inbox} />
-        <MessageInput onSendMessage={handleSendMessage} />
+        <MessageInput
+          text={text}
+          onChangeMessage={handleChangeMessage}
+          onSendMessage={handleSendMessage}
+          onEmojiSelect={handleEmojiSelect}
+          onComposing={handleComposing}
+        />
       </div>
     </div>
   )
 }
-function MessageInput({ onSendMessage }) {
-  const [text, setText] = useState('')
-
-  const handleSubmit = (e) => {
-    e?.preventDefault()
-    if (text.length === 0) return
-    onSendMessage(text)
-    setText('')
-  }
-
-  const handleEmojiSelect = (emoji) => {
-    setText(text + emoji)
-  }
-
+function MessageInput({ text, onChangeMessage, onSendMessage, onEmojiSelect, onComposing }) {
   return (
     <div className='w-full flex justify-between items-center'>
-      <Input value={text} onChange={e => setText(e.target.value)} onPressEnter={handleSubmit} />
-      <MyEmojiPicker onEmojiSelect={handleEmojiSelect} />
+      <Input
+        value={text}
+        onChange={e => onChangeMessage(e.target.value)}
+        onPressEnter={onSendMessage}
+        onCompositionStart={() => onComposing(true)}
+        onCompositionEnd={() => onComposing(false)}
+      />
+      <MyEmojiPicker onEmojiSelect={onEmojiSelect} />
       <Button
         type="submit"
-        onClick={handleSubmit}
+        onClick={onSendMessage}
         style={{ background: '#66BFFF', color: 'white', width: 70 }}
       >
         發送
