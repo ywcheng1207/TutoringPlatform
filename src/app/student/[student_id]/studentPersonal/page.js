@@ -96,7 +96,7 @@ export default function StudentPersonal({ params }) {
             <div className='w-full flex flex-col gap-3 min-h-[180px]'>
               <div className='w-full flex items-center gap-2'>
                 <Image src={iconFlag} width={25} height={25} alt='flagIcon' />
-                進行中的課程
+                一週內進行中的課程
               </div>
               <ClassesYouBooked classes={studentClassesBookedData} fetchStudentClassesBookedData={fetchStudentClassesBookedData} />
             </div>
@@ -210,8 +210,8 @@ const ClassesYouBooked = ({ classes, fetchStudentClassesBookedData }) => {
             classes.map(ele =>
               <div className='min-h-[70px] w-full border border-solid border-[#DDD] flex justify-between p-3' key={ele.id}>
                 <div className='flex flex-col gap-2'>
-                  <h3>課程：{ele.name}</h3>
-                  <h3>老師：{ele.Teacher.name}</h3>
+                  <h3 className='max-w-[200px] text-wrap truncate'>課程：{ele.name}</h3>
+                  <h3 className='max-w-[200px] text-wrap truncate'>老師：{ele.Teacher.name}</h3>
                   <h3>日期：{ele.dateTimeRange}</h3>
                   <Link href={`/class/${ele.id}`} className='text-[#66BFFF] hover:opacity-70'>課程連結</Link>
                 </div>
@@ -273,8 +273,8 @@ const LearningHistoryCard = ({ data }) => {
       </div>
       <div className='min-h-[70px] w-full border border-solid border-[#DDD] flex justify-between  p-3 gap-2'>
         <div className='flex flex-col gap-1'>
-          <div>課程：{data?.name}</div>
-          <div>老師：{data?.Teacher.name}</div>
+          <div className='max-w-[200px] text-wrap truncate'>課程：{data?.name}</div>
+          <div className='max-w-[200px] text-wrap truncate'>老師：{data?.Teacher.name}</div>
           <div>日期：{data?.dateTimeRange}</div>
         </div>
         <div className='flex flex-col gap-3'>
@@ -340,9 +340,4 @@ const LearningHistoryCard = ({ data }) => {
       </Modal>
     </div>
   )
-}
-
-function isCompleteUrl(url) {
-  const pattern = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)[a-zA-Z0-9]+([\-\.]{1}[a-zA-Z0-9]+)*\.[a-zA-Z]{2,5}(:[0-9]{1,5})?(\/.*)?$/
-  return pattern.test(url)
 }

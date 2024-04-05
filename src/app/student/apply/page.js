@@ -45,7 +45,7 @@ export default function StudentApply() {
         data: formData
       })
       notification.success({
-        message: '申請成功，請重新登入!',
+        message: '申請成功!',
         duration: 1
       })
       typeof window !== 'undefined' && window?.localStorage?.setItem('USER', JSON.stringify(res.data.data.user))

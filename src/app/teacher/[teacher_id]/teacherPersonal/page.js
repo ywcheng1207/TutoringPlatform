@@ -113,7 +113,7 @@ export default function StudentPersonal({ params }) {
             <div className='w-full min-h-[180px] flex flex-col gap-3'>
               <div className='text-xl flex items-center gap-2'>
                 <Image src={iconFlag} width={25} height={25} alt='flagIcon' />
-                最新行程
+                一週內最新行程
               </div>
               <div className='max-h-[210px] overflow-y-scroll flex flex-col gap-3 md:pl-5'>
                 {
