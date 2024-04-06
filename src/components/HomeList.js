@@ -39,7 +39,6 @@ const HomeList = ({
   isLoading
 }) => {
   const screens = useBreakpoint()
-
   return (
     <>
       {

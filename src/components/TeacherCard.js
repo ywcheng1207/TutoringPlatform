@@ -15,14 +15,14 @@ const TeacherCard = ({ id, item }) => {
 
   return (
     <Card
-      className='rounded-[3px] p-3 flex flex-col gap-3 cursor-pointer hover:bg-[#ddd] hover:text-[#fff] min-w-[250px] overflow-hidden lg:h-[310px]'
+      className='rounded-[3px] p-3 flex flex-col gap-3 cursor-pointer hover:bg-[#ddd] hover:text-[#fff] min-w-[250px] overflow-hidden lg:h-[320px]'
       onClick={() => router.push(`teacher/${item?.id}/booking`)}
     >
       <div className='flex flex-row items-center gap-1'>
         <div className='flex-1'>
           <NoPhoto size='medium' photo={item?.avatar} />
         </div>
-        <div className='flex-1 flex flex-col gap-3 h-[120px]'>
+        <div className='flex-1 flex flex-col gap-3 min-h-[120px]'>
           <div className='font-bold text-xl max-w-[150px] truncate'>{item?.name}</div>
           <div>{item?.country}</div>
         </div>

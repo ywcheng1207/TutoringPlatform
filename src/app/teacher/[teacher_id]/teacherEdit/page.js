@@ -50,7 +50,7 @@ export default function EditTeacher({ params }) {
     formData.append('introduction', e.about)
     formData.append('style', e.teachStyle)
     formData.append('avatar', imgFile)
-    formData.append('categoryArray', JSON.stringify(e.teachType.map(option => options.indexOf(option))))
+    formData.append('categoryArray', JSON.stringify(e.teachType.map(option => options.indexOf(option) + 1)))
 
     try {
       const res = await putTeacherData({

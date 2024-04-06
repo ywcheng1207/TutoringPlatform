@@ -130,7 +130,7 @@ export default function StudentPersonal({ params }) {
                 我的學習時數名次
               </div>
               <div className='flex flex-col gap-3 md:pl-5'>
-                <div className='min-h-[70px] w-full flex flex-col justify-center pl-3 gap-2 text-[#ccc]'>
+                <div className='min-h-[70px] w-full flex flex-col justify-center pl-3 gap-2 text-[#666]'>
                   <div>學習時數: {studentPersonalData.totalLearningTime || '尚未開始學習'}</div>
                   <div>名次: {studentPersonalData.rank || '尚未開始學習'}</div>
                 </div>

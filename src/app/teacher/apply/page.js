@@ -19,6 +19,7 @@ export default function TeacherApply() {
   const [imageURL, setImageURL] = useState(null)
   const [checkedValues, setCheckedValues] = useState([])
   const handleCheckValues = (checkedValues) => {
+    console.log(checkedValues)
     setCheckedValues(checkedValues)
   }
 
@@ -45,7 +46,7 @@ export default function TeacherApply() {
     formData.append('introduction', e.about)
     formData.append('style', e.teachStyle)
     formData.append('avatar', imgFile)
-    formData.append('categoryArray', JSON.stringify(e.teachType.map(option => options.indexOf(option))))
+    formData.append('categoryArray', JSON.stringify(e.teachType.map(option => options.indexOf(option) + 1)))
 
     try {
       const res = await postTeacherApply({

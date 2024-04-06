@@ -23,6 +23,7 @@ export default function TeacherPersonal({ params }) {
   const [theTeacherData, setTheTeacherData] = useState([])
   const [teacherCommentData, setTeacherCommentData] = useState([])
   const [classesOpenedInTwoWeeks, setClassesOpenedInTwoWeeks] = useState([])
+  const [nothingRest, setNothingRest] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
 
   let classOptions = ''
@@ -31,8 +32,6 @@ export default function TeacherPersonal({ params }) {
       ? classesOpenedInTwoWeeks
       : classesOpenedInTwoWeeks?.filter(ele => ele.categoryId === classFilter)
   }
-  // const currentClassesType =
-  //   Array.from(new Set(classesOpenedInTwoWeeks.map(item => item.categoryId))).sort((a, b) => a - b)
 
   const classType = [
     { key: 0, type: '全部' },
@@ -95,6 +94,8 @@ export default function TeacherPersonal({ params }) {
       try {
         const res = await getTeacherClassesData({ id: teacherId })
         setClassesOpenedInTwoWeeks(res.data.data)
+        console.log(res.data.data)
+        if (typeof res.data.data !== 'string' && res.data.data.length > 0) setNothingRest(false)
       } catch (error) {
         console.error('學生看老師頁的老師開課資訊', error)
       }
@@ -166,22 +167,24 @@ export default function TeacherPersonal({ params }) {
                     )
                   }
                 </div>
-                  {
-                    typeof teacherCommentData === 'string' &&
-                    <div className='h-[100px] w-full text-[#ddd]'>
-                      Oops...目前還沒收到學生的評論
-                    </div>
-                  }
+                {
+                  typeof teacherCommentData === 'string' &&
+                  <div className='h-[100px] w-full text-[#ddd]'>
+                    Oops...目前還沒收到學生的評論
+                  </div>
+                }
               </div>
             </div>
           </div>
           <div className='flex flex-col flex-1 gap-5'>
+              {nothingRest && <div className='text-[#66BFFF] font-bold'>老師尚未開課或是課程都被預約完了！快去看看其他老師的課程吧~🤩</div>}
             <Select
               placeholder='課程種類'
               value={classFilter}
               style={{ width: '100%' }}
               showSearch={true}
               onChange={handleClassFilter}
+              disabled={nothingRest}
             >
               {
                 classType.map(ele => <Select.Option value={ele.key} key={ele.key}>{ele.type}</Select.Option>)
@@ -193,6 +196,7 @@ export default function TeacherPersonal({ params }) {
               style={{ width: '100%' }}
               showSearch={true}
               onChange={handleClassOption}
+              disabled={nothingRest}
             >
               {typeof classOptions !== 'string' &&
                 classOptions.map(ele => <Select.Option value={ele.dateTimeRange} key={ele.id}>
@@ -202,8 +206,9 @@ export default function TeacherPersonal({ params }) {
             </Select>
             <Button
               block
-              style={{ color: '#fff', background: '#66BFFF' }}
+              style={{ color: '#fff', background: '#66BFFF', opacity: nothingRest && 0.3 }}
               onClick={handleSendBooking}
+              disabled={nothingRest}
             >
               預約
             </Button>

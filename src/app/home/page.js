@@ -61,10 +61,12 @@ const Home = () => {
 
   const handleClassFilter = (item) => {
     setClassFilter(item)
+    setCurrentPage(1)
   }
 
   const handleCountryFilter = (item) => {
     setCountryFilter(item)
+    setCurrentPage(1)
   }
 
   let searchingKeyWord = ''
@@ -76,6 +78,18 @@ const Home = () => {
     setSearchValue(searchingKeyWord)
   }
 
+  const fetchTeacherListDataData = async () => {
+    try {
+      const res = await getTeacherListData({
+        page: currentPage,
+        limit: 999999
+      })
+      setTeacherListData(res.data.data.teacherLimit)
+      setDataCount(res.data.data.count)
+    } catch (error) {
+      console.error('老師清單資料錯誤', error)
+    }
+  }
   useEffect(() => {
     if (!typeof window !== 'undefined' && !window?.localStorage?.getItem('TOKEN')) {
       notification.error({
@@ -93,18 +107,6 @@ const Home = () => {
         // console.error('學生排行資料錯誤', error)
       }
       setIsLoading(false)
-    }
-    const fetchTeacherListDataData = async () => {
-      try {
-        const res = await getTeacherListData({
-          page: currentPage,
-          limit: 999999
-        })
-        setTeacherListData(res.data.data.teacherLimit)
-        setDataCount(res.data.data.count)
-      } catch (error) {
-        console.error('老師清單資料錯誤', error)
-      }
     }
     fetchTeacherListDataData()
     fetchStudentRankDataData()
