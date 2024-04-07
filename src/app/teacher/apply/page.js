@@ -23,7 +23,7 @@ export default function TeacherApply() {
     setCheckedValues(checkedValues)
   }
 
-  const options = ['生活英文', '旅遊英文', '商業英文', '兒童英文']
+  const options = ['生活英文', '商業英文', '旅遊英文', '兒童英文']
 
   const handleUploadChange = ({ fileList: newFileList }) => {
     setFileList(newFileList)

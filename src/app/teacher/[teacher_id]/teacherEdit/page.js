@@ -27,7 +27,7 @@ export default function EditTeacher({ params }) {
     setCheckedValues(checkedValues)
   }
 
-  const options = ['生活英文', '旅遊英文', '商業英文', '兒童英文']
+  const options = ['生活英文', '商業英文', '旅遊英文', '兒童英文']
 
   const handleUploadChange = ({ fileList: newFileList }) => {
     setFileList(newFileList)
@@ -82,7 +82,7 @@ export default function EditTeacher({ params }) {
         if (res.data.data.introduction) form.setFieldsValue({ about: res.data.data.introduction })
         if (res.data.data.style) form.setFieldsValue({ teachStyle: res.data.data.style })
         if (res.data.data.categoryId) {
-          form.setFieldsValue({ teachType: res.data.data.categoryId.map(index => options[index]) })
+          form.setFieldsValue({ teachType: res.data.data.categoryId.map(index => options[index - 1]) })
           setCheckedValues(res.data.data.categoryId.map(index => options[index]))
         }
       } catch (error) {
